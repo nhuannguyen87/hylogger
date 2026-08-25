@@ -1,0 +1,19 @@
+# NVCL drill-core pipeline: download.py -> etl.py -> extract.py -> site.py -> serve.py
+#
+# download.py / etl.py
+nvcl_kit>=0.5
+requests>=2.28
+urllib3>=1.26
+
+# extract.py
+pandas>=1.5
+numpy>=1.23
+
+# site.py (reads collars.xlsx)
+openpyxl>=3.1
+
+# serve.py uses only the standard library.
+#
+# pytsg is no longer required: mineral data now comes from the NVCL service via
+# etl.py rather than from local TSG/BIP zips. Re-add it only if you go back to
+# reading .zip cores directly.

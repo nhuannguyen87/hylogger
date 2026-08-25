@@ -1,0 +1,38 @@
+# Python
+__pycache__/
+*.py[cod]
+*.egg-info/
+.pytest_cache/
+.venv/
+venv/
+env/
+
+# Node / Next.js
+node_modules/
+frontend/.next/
+frontend/.env.local
+frontend/npm-debug.log*
+
+# Environment files (keep the .example templates)
+.env
+!.env.example
+!frontend/.env.local.example
+
+# Generated data (regenerate with make_sample_data.py / the ETL pipeline)
+data/*.csv
+data/raw/
+files/data/
+
+# Django
+backend/**/migrations/**/*.pyc
+*.sqlite3
+staticfiles/
+
+# OS / editor cruft
+.DS_Store
+.idea/
+.vscode/
+*.swp
+
+# leftover cleanup scratch
+_to_delete/

@@ -1,0 +1,27 @@
+# The database. This is the only thing running in Docker - Django and Next.js
+# run directly on your Mac so you can see their output and edit code live.
+#
+#   docker compose up -d      start it
+#   docker compose down       stop it
+#   docker compose down -v    stop it AND delete all the data
+
+services:
+  db:
+    image: postgis/postgis:16-3.4
+    container_name: hylogger-db
+    environment:
+      POSTGRES_DB: hylogger
+      POSTGRES_USER: hylogger
+      POSTGRES_PASSWORD: hylogger
+    ports:
+      - "5432:5432"
+    volumes:
+      - hylogger-pgdata:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U hylogger -d hylogger"]
+      interval: 3s
+      timeout: 3s
+      retries: 20
+
+volumes:
+  hylogger-pgdata:
