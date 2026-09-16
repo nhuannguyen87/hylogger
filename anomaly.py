@@ -360,17 +360,51 @@ def score_reliability_of(coverage: float, n_samples: int) -> str:
     return "high"
 
 
+def feature_group_name(name: str) -> str:
+    """
+    Collapse related HyLogger mineral-call features into a common group.
+
+    Examples:
+      'Min1 sTSAS = Talc'      -> 'Min1 = Talc'
+      'Min1 uTSAS = Talc'      -> 'Min1 = Talc'
+      'Min1 sjCLST = Talc'     -> 'Min1 = Talc'
+      'Grp1 uTSAS = SMECTITE'  -> 'Grp1 = SMECTITE'
+    """
+    parts = name.split(" = ", 1)
+
+    if len(parts) != 2:
+        return name
+
+    column, category = parts
+    tokens = column.split()
+
+    if len(tokens) >= 2 and tokens[0].startswith(("Min", "Grp")):
+        return f"{tokens[0]} = {category}"
+
+    return name
+
+
+
+
 def top_contributors(row: np.ndarray, names: list[str], limit: int = 3) -> str:
     """Which scaled features drove this row's distance, for explainability."""
     if row.size == 0:
         return ""
 
-    order = np.argsort(-np.abs(row))[:limit]
+    order = np.argsort(-np.abs(row))
     parts = []
+    seen_groups = set()
 
     for index in order:
         if abs(row[index]) < 1.0:
             continue
+
+        grouped_name = feature_group_name(names[index])
+
+        if grouped_name in seen_groups:
+            continue
+
+        seen_groups.add(grouped_name)
 
         direction = "high" if row[index] > 0 else "low"
         value = abs(row[index])
@@ -380,10 +414,12 @@ def top_contributors(row: np.ndarray, names: list[str], limit: int = 3) -> str:
         else:
             magnitude = f"{value:.1f} sd"
 
-        parts.append(f"{names[index]} ({direction}, {magnitude})")
+        parts.append(f"{grouped_name} ({direction}, {magnitude})")
+
+        if len(parts) >= limit:
+            break
 
     return "; ".join(parts)
-
 
 
 def load_hole_locations(csv_root: Path) -> pd.DataFrame | None:
