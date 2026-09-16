@@ -140,35 +140,33 @@ geological oddity.
 
 ## About the anomaly model
 
-`backend/holes/ml/anomaly.py`. Deliberately simple:
+The anomaly pipeline identifies statistically unusual depth intervals and drill holes
+across the current HyLogger dataset.
 
-```
-band values → StandardScaler → PCA → Isolation Forest → score 0..1
-                                 └→ reconstruction error (cross-check)
-```
+Because there are no labelled examples of geological anomalies, the model is
+unsupervised. It compares each interval with the rest of the available data rather
+than attempting to predict ore or economic mineralisation.
 
-No labels exist saying "this depth is anomalous", so this is unsupervised: the
-model learns what a typical spectrum looks like and flags the ones that don't fit.
+### Interval-level detection
 
-Tune it without touching code:
+Measurements are first aggregated into fixed depth intervals so holes with different
+sampling densities can be compared consistently.
 
-```bash
-cd backend
-python manage.py detect_anomalies --contamination 0.05 --components 8
-```
+The current pipeline uses several complementary anomaly signals:
 
-**A flag means "statistically unusual", not "there is ore here."** Keep that
-distinction in the UI and in your report — it's the difference between a result
-a geologist will trust and one they'll dismiss. Three different things get
-confused under the word "anomaly":
-
-| | What it is | Where it's handled |
-|---|---|---|
-| Data quality | missing or weak signal | `quality_flag`, `confidence` |
-| Statistical anomaly | unlike the rest of the dataset | the model |
-| Geological anomaly | actually interesting rock | a geologist, looking at both of the above |
-
----
+```text
+HyLogger measurements
+        ↓
+fixed-depth interval aggregation
+        ↓
+robust scaling
+        ↓
+├── robust distance
+├── PCA Mahalanobis distance
+├── PCA reconstruction error
+└── Isolation Forest
+        ↓
+combined percentile anomaly score
 
 ## Where to take it next
 
