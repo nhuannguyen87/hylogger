@@ -90,25 +90,31 @@ def load_measurements(csv_root: Path) -> pd.DataFrame:
 
 
 def split_column_types(data: pd.DataFrame) -> tuple[list[str], list[str]]:
-    """Sort measurement columns into numeric and categorical.
-
-    NVCL scalar logs mix the two freely - a TSA mineral column holds names
-    like 'Kaolinite' while a reflectance column holds floats. A column is
-    treated as numeric only if most non-blank values actually parse.
-    """
+    """Sort measurement columns into numeric and categorical."""
     numeric, categorical = [], []
+
     for column in data.columns:
-        if column.lower() in ID_COLUMNS:
+        lower = column.lower()
+
+        if lower in ID_COLUMNS:
             continue
+
+        if lower.startswith(("date", "holeid", "tray", "secsamp", "subpix")):
+            continue
+
         values = data[column]
         present = values.notna() & (values.astype(str).str.strip() != "")
+
         if not present.any():
             continue
+
         parsed = pd.to_numeric(values[present], errors="coerce")
+
         if parsed.notna().mean() >= MIN_NUMERIC_FRACTION:
             numeric.append(column)
         else:
             categorical.append(column)
+
     return numeric, categorical
 
 
@@ -153,7 +159,7 @@ def build_interval_features(
 
     for column in categorical:
         text = frame[column].astype(str).str.strip()
-        blank = text.str.lower().isin(["", "nan", "none", "null", "na", "n/a"])
+        blank = text.str.lower().isin(["", "nan", "none", "null", "na", "n/a", "invalid"])
         text = text.where(~blank)
         top = text.value_counts().head(MAX_CATEGORIES).index.tolist()
         for category in top:
