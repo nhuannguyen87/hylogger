@@ -117,6 +117,101 @@ def split_column_types(data: pd.DataFrame) -> tuple[list[str], list[str]]:
 
     return numeric, categorical
 
+def report_channel_agreement(data: pd.DataFrame, min_overlap: int = 100) -> None:
+    """Compare related HyLogger mineral classification channels."""
+
+    feature_groups = (
+        "Min1",
+        "Min2",
+        "Min3",
+        "Grp1",
+        "Grp2",
+        "Grp3",
+    )
+
+    channel_types = (
+        "sTSAS",
+        "uTSAS",
+        "sjCLST",
+        "ujCLST",
+        "sTSAV",
+    )
+
+    missing_values = {
+        "",
+        "nan",
+        "none",
+        "null",
+        "na",
+        "n/a",
+        "invalid",
+    }
+
+    results = []
+
+    for feature_group in feature_groups:
+        columns = [
+            f"{feature_group} {channel}"
+            for channel in channel_types
+            if f"{feature_group} {channel}" in data.columns
+        ]
+
+        for i in range(len(columns)):
+            for j in range(i + 1, len(columns)):
+                column_a = columns[i]
+                column_b = columns[j]
+
+                values_a = data[column_a].astype("string").str.strip()
+                values_b = data[column_b].astype("string").str.strip()
+
+                valid = (
+                    values_a.notna()
+                    & values_b.notna()
+                    & ~values_a.str.lower().isin(missing_values)
+                    & ~values_b.str.lower().isin(missing_values)
+                )
+
+                overlap = int(valid.sum())
+
+                if overlap < min_overlap:
+                    continue
+
+                agreement = (
+                    values_a[valid].str.casefold()
+                    == values_b[valid].str.casefold()
+                ).mean()
+
+                results.append(
+                    {
+                        "feature": feature_group,
+                        "channel_a": column_a,
+                        "channel_b": column_b,
+                        "overlap": overlap,
+                        "agreement_pct": agreement * 100,
+                    }
+                )
+
+    if not results:
+        print("\nchannel agreement: no comparable channel pairs found")
+        return
+
+    report = pd.DataFrame(results)
+
+    report = report.sort_values(
+        ["feature", "agreement_pct"],
+        ascending=[True, False],
+    )
+
+    print("\nHyLogger channel agreement")
+    print(
+        report.to_string(
+            index=False,
+            formatters={
+                "agreement_pct": lambda value: f"{value:.1f}%"
+            },
+        )
+    )
+
 
 # ---------------------------------------------------------------------------
 # feature building
@@ -659,11 +754,14 @@ def main() -> int:
         )
 
     numeric, categorical = split_column_types(data)
+
     print(
         f"loaded {len(data):,} samples from {hole_count} holes "
         f"({len(numeric)} numeric, {len(categorical)} categorical columns)",
         flush=True,
     )
+
+    report_channel_agreement(data)
 
     table, matrix, names, prescaled = build_interval_features(
         data, numeric, categorical, args.bin_size
