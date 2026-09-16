@@ -43,13 +43,21 @@ except Exception:
 
 
 HERE = Path(__file__).resolve().parent
-ID_COLUMNS = {"hole_id", "sample_no", "depth_from_m", "depth_to_m"}
+ID_COLUMNS = {
+    "hole_id",
+    "holeid",
+    "sample_no",
+    "depth_from_m",
+    "depth_to_m",
+}
 MAX_CATEGORIES = 12
 MIN_NUMERIC_FRACTION = 0.80
 VARIANCE_TARGET = 0.95
 INLIER_FRACTION = 0.80
 PRIOR_WEIGHT = 10.0
 
+EARTH_RADIUS_KM = 6371.0088
+LOCAL_NEIGHBOURS = 5
 
 # ---------------------------------------------------------------------------
 # loading
@@ -90,7 +98,7 @@ def split_column_types(data: pd.DataFrame) -> tuple[list[str], list[str]]:
     """
     numeric, categorical = [], []
     for column in data.columns:
-        if column in ID_COLUMNS:
+        if column.lower() in ID_COLUMNS:
             continue
         values = data[column]
         present = values.notna() & (values.astype(str).str.strip() != "")
@@ -344,7 +352,7 @@ def flag_of(score: float, coverage: float, max_z: float) -> str:
     return "watch"
 
 
-def confidence_of(coverage: float, n_samples: int) -> str:
+def score_reliability_of(coverage: float, n_samples: int) -> str:
     if coverage < 0.30 or n_samples < 2:
         return "low"
     if coverage < 0.60 or n_samples < 4:
@@ -366,6 +374,48 @@ def top_contributors(row: np.ndarray, names: list[str], limit: int = 3) -> str:
     return "; ".join(parts)
 
 
+
+def load_hole_locations(csv_root: Path) -> pd.DataFrame | None:
+    """Load drill-hole coordinates produced by ETL."""
+    path = csv_root / "holes.csv"
+
+    if not path.is_file():
+        print("warning: holes.csv not found; geographic anomaly scoring disabled")
+        return None
+
+    locations = pd.read_csv(path)
+
+    required = {"hole_id", "latitude", "longitude"}
+    if not required.issubset(locations.columns):
+        print("warning: holes.csv has no latitude/longitude; geographic scoring disabled")
+        return None
+
+    locations = locations[list(required)].copy()
+    locations["hole_id"] = locations["hole_id"].astype(str)
+    locations["latitude"] = pd.to_numeric(locations["latitude"], errors="coerce")
+    locations["longitude"] = pd.to_numeric(locations["longitude"], errors="coerce")
+
+    return locations.dropna(subset=["latitude", "longitude"])
+
+
+def haversine_km(lat1, lon1, lat2, lon2):
+    """Great-circle distance between coordinates in kilometres."""
+    lat1, lon1, lat2, lon2 = map(
+        np.radians, [lat1, lon1, lat2, lon2]
+    )
+
+    dlat = lat2 - lat1
+    dlon = lon2 - lon1
+
+    a = (
+        np.sin(dlat / 2) ** 2
+        + np.cos(lat1) * np.cos(lat2) * np.sin(dlon / 2) ** 2
+    )
+
+    return 2 * EARTH_RADIUS_KM * np.arcsin(np.sqrt(a))
+
+
+
 # ---------------------------------------------------------------------------
 # hole level
 # ---------------------------------------------------------------------------
@@ -374,6 +424,7 @@ def score_holes(
     table: pd.DataFrame,
     scaled: np.ndarray,
     names: list[str],
+    locations: pd.DataFrame | None = None,
 ) -> pd.DataFrame:
     """Reduce each hole to a profile, then compare profiles to each other."""
     profiles, hole_ids = [], []
@@ -403,6 +454,53 @@ def score_holes(
     np.fill_diagonal(gram, np.inf)
     nearest = gram.argmin(axis=1)
 
+    local_score = np.full(len(hole_ids), np.nan)
+    nearest_geo = [None] * len(hole_ids)
+    nearest_geo_km = np.full(len(hole_ids), np.nan)
+
+    if locations is not None:
+        location_map = locations.set_index("hole_id")
+
+        for i, hole_id in enumerate(hole_ids):
+            if hole_id not in location_map.index:
+                continue
+
+            current = location_map.loc[hole_id]
+
+            candidates = []
+
+            for j, other_id in enumerate(hole_ids):
+                if i == j or other_id not in location_map.index:
+                    continue
+
+                other = location_map.loc[other_id]
+
+                distance_km = haversine_km(
+                    current["latitude"],
+                    current["longitude"],
+                    other["latitude"],
+                    other["longitude"],
+                )
+
+                candidates.append((distance_km, j, other_id))
+
+            candidates.sort(key=lambda x: x[0])
+            neighbours = candidates[:LOCAL_NEIGHBOURS]
+
+            if not neighbours:
+                continue
+
+            nearest_geo[i] = neighbours[0][2]
+            nearest_geo_km[i] = neighbours[0][0]
+
+            feature_distances = [
+                np.linalg.norm(profile_matrix[i] - profile_matrix[j])
+                / np.sqrt(max(profile_matrix.shape[1], 1))
+                for _, j, _ in neighbours
+            ]
+
+            local_score[i] = float(np.mean(feature_distances))
+
     result = pd.DataFrame(
         {
             "hole_id": hole_ids,
@@ -411,6 +509,9 @@ def score_holes(
             "anomaly_score": np.round(score, 2),
             "rank": (-score).argsort().argsort() + 1,
             "most_like": [hole_ids[i] for i in nearest],
+            "nearest_geographic_hole": nearest_geo,
+            "nearest_geographic_km": np.round(nearest_geo_km, 2),
+            "local_anomaly_distance": np.round(local_score, 4),
             "distinctive_features": [
                 top_contributors(centred[i], profile_names) for i in range(len(hole_ids))
             ],
@@ -466,7 +567,7 @@ def write_outputs(
                     "depth_to_m": float(r.depth_to_m),
                     "score": float(r.anomaly_score),
                     "flag": r.flag,
-                    "confidence": r.confidence,
+                    "score_reliability": r.score_reliability,
                 }
                 for r in group.itertuples()
             ]
@@ -496,6 +597,7 @@ def main() -> int:
     csv_root = Path(args.csv_root).resolve() if args.csv_root else data_root / "csv"
 
     data = load_measurements(csv_root)
+    locations = load_hole_locations(csv_root)
     hole_count = data["hole_id"].nunique()
     if hole_count < 2:
         raise SystemExit(
@@ -544,13 +646,18 @@ def main() -> int:
     max_z = np.abs(scaled).max(axis=1)
     intervals["max_z"] = np.round(max_z, 2)
     intervals["flag"] = [flag_of(s, c, z) for s, c, z in zip(score, cover, max_z)]
-    intervals["confidence"] = [
-        confidence_of(c, n) for c, n in zip(cover, table["n_samples"])
+    intervals["score_reliability"] = [
+        score_reliability_of(c, n) for c, n in zip(cover, table["n_samples"])
     ]
     intervals["why"] = [top_contributors(scaled[i], kept_names) for i in range(len(intervals))]
     intervals = intervals.sort_values(["hole_id", "depth_from_m"]).reset_index(drop=True)
 
-    holes = score_holes(table.reset_index(drop=True), scaled, kept_names)
+    holes = score_holes(
+    table.reset_index(drop=True),
+    scaled,
+    kept_names,
+    locations,
+)
 
     meta = {
         "holes": int(hole_count),
@@ -575,16 +682,16 @@ def main() -> int:
 
     flagged = intervals[intervals["flag"].isin({"high", "elevated", "watch"})]
     print(f"\nmost anomalous intervals ({len(flagged)} flagged)")
-    columns = ["hole_id", "depth_from_m", "depth_to_m", "anomaly_score", "max_z", "flag", "confidence", "why"]
+    columns = ["hole_id", "depth_from_m", "depth_to_m", "anomaly_score", "max_z", "flag", "score_reliability", "why"]
     print(
         flagged.sort_values("anomaly_score", ascending=False)
         .head(args.top)[columns]
         .to_string(index=False)
     )
 
-    low = int((intervals["confidence"] == "low").sum())
+    low = int((intervals["score_reliability"] == "low").sum())
     if low:
-        print(f"\n{low} intervals scored at low confidence - treat those scores as provisional")
+        print(f"\n{low} intervals scored at low reliability - treat those scores as provisional")
 
     print("\nwrote:")
     for path in written[-3:]:
