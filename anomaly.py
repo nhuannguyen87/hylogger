@@ -364,13 +364,24 @@ def top_contributors(row: np.ndarray, names: list[str], limit: int = 3) -> str:
     """Which scaled features drove this row's distance, for explainability."""
     if row.size == 0:
         return ""
+
     order = np.argsort(-np.abs(row))[:limit]
     parts = []
+
     for index in order:
         if abs(row[index]) < 1.0:
             continue
+
         direction = "high" if row[index] > 0 else "low"
-        parts.append(f"{names[index]} ({direction}, {row[index]:+.1f} sd)")
+        value = abs(row[index])
+
+        if value >= 24.99:
+            magnitude = ">=25.0 sd"
+        else:
+            magnitude = f"{value:.1f} sd"
+
+        parts.append(f"{names[index]} ({direction}, {magnitude})")
+
     return "; ".join(parts)
 
 
