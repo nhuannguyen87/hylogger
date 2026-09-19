@@ -212,6 +212,87 @@ def report_channel_agreement(data: pd.DataFrame, min_overlap: int = 100) -> None
         )
     )
 
+def remove_redundant_classification_channels(
+    data: pd.DataFrame,
+    categorical: list[str],
+    agreement_threshold: float = 0.999,
+    min_overlap: int = 1000,
+) -> tuple[list[str], list[str]]:
+    """
+    Remove classification channels that are effectively duplicates.
+    """
+
+    feature_groups = (
+        "Min1",
+        "Min2",
+        "Min3",
+        "Grp1",
+        "Grp2",
+        "Grp3",
+    )
+
+    candidate_pairs = (
+        ("sTSAS", "uTSAS"),
+        ("sjCLST", "ujCLST"),
+    )
+
+    missing_values = {
+        "",
+        "nan",
+        "none",
+        "null",
+        "na",
+        "n/a",
+        "invalid",
+    }
+
+    dropped = set()
+
+    for feature_group in feature_groups:
+        for keep_channel, candidate_channel in candidate_pairs:
+            column_a = f"{feature_group} {keep_channel}"
+            column_b = f"{feature_group} {candidate_channel}"
+
+            if column_a not in categorical or column_b not in categorical:
+                continue
+
+            values_a = data[column_a].astype("string").str.strip()
+            values_b = data[column_b].astype("string").str.strip()
+
+            valid = (
+                values_a.notna()
+                & values_b.notna()
+                & ~values_a.str.lower().isin(missing_values)
+                & ~values_b.str.lower().isin(missing_values)
+            )
+
+            overlap = int(valid.sum())
+
+            if overlap < min_overlap:
+                continue
+
+            agreement = (
+                values_a[valid].str.casefold()
+                == values_b[valid].str.casefold()
+            ).mean()
+
+            if agreement >= agreement_threshold:
+                dropped.add(column_b)
+
+                print(
+                    f"dropping redundant channel {column_b} "
+                    f"(matches {column_a}: {agreement * 100:.1f}% "
+                    f"over {overlap:,} samples)"
+                )
+
+    filtered = [
+        column
+        for column in categorical
+        if column not in dropped
+    ]
+
+    return filtered, sorted(dropped)
+
 
 # ---------------------------------------------------------------------------
 # feature building
@@ -762,6 +843,18 @@ def main() -> int:
     )
 
     report_channel_agreement(data)
+
+    categorical, dropped_channels = remove_redundant_classification_channels(
+    data,
+    categorical,
+)
+    print(
+    f"using {len(categorical)} categorical columns after redundancy filtering "
+    f"({len(dropped_channels)} removed)",
+    flush=True,
+)
+    
+    
 
     table, matrix, names, prescaled = build_interval_features(
         data, numeric, categorical, args.bin_size
