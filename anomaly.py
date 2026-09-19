@@ -25,12 +25,15 @@ import argparse
 import json
 import sys
 from pathlib import Path
+from unittest import signals
+from flask import signals
 
 import numpy as np
 import pandas as pd
 
 try:
     from sklearn.ensemble import IsolationForest
+    from sklearn.neighbors import LocalOutlierFactor
 
     HAVE_SKLEARN = True
 except ImportError:  # optional third signal
@@ -572,6 +575,21 @@ def isolation_scores(scaled: np.ndarray, seed: int = 0) -> np.ndarray | None:
     model.fit(scaled)
     return -model.score_samples(scaled)
 
+def lof_scores(scaled: np.ndarray) -> np.ndarray | None:
+    """Local Outlier Factor score, higher meaning more locally unusual."""
+    if not HAVE_SKLEARN or scaled.shape[0] < 20:
+        return None
+
+    n_neighbors = min(20, scaled.shape[0] - 1)
+
+    model = LocalOutlierFactor(
+        n_neighbors=n_neighbors,
+        contamination="auto",
+    )
+
+    model.fit_predict(scaled)
+
+    return -model.negative_outlier_factor_
 
 def to_percentile(values: np.ndarray) -> np.ndarray:
     """Rank-transform to 0-100 so different scorers can be averaged."""
@@ -941,6 +959,8 @@ def main() -> int:
     forest = isolation_scores(scaled, args.seed)
     if forest is not None:
         signals.append(forest)
+    lof = lof_scores(scaled)
+
     score = combine(signals)
 
     intervals = pd.DataFrame(
@@ -958,6 +978,11 @@ def main() -> int:
     )
     if forest is not None:
         intervals["isolation_score"] = np.round(forest, 4)
+
+    if lof is not None:
+        intervals["lof_score"] = np.round(lof, 4)
+
+
     max_z = np.abs(scaled).max(axis=1)
     intervals["max_z"] = np.round(max_z, 2)
     intervals["flag"] = [flag_of(s, c, z) for s, c, z in zip(score, cover, max_z)]
@@ -981,8 +1006,7 @@ def main() -> int:
         "features_used": int(scaled.shape[1]),
         "pca_components": int(components),
         "variance_target": VARIANCE_TARGET,
-        "signals": ["robust_distance", "mahalanobis", "reconstruction_error"]
-        + (["isolation_forest"] if forest is not None else []),
+        "signals": ["robust_distance", "mahalanobis", "reconstruction_error"] + (["isolation_forest"] if forest is not None else []),
         "note": (
             "anomaly_score is a 0-100 percentile within this batch, not an absolute "
             "measure; flag combines that rank with max_z, an absolute test, so a "
