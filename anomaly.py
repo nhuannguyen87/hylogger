@@ -212,6 +212,77 @@ def report_channel_agreement(data: pd.DataFrame, min_overlap: int = 100) -> None
         )
     )
 
+
+def report_channel_disagreements(
+    data: pd.DataFrame,
+    limit: int = 5,
+) -> None:
+    """Show the most common disagreements between CLST channel pairs."""
+
+    feature_groups = (
+        "Min1",
+        "Min2",
+        "Min3",
+        "Grp1",
+        "Grp2",
+        "Grp3",
+    )
+
+    missing_values = {
+        "",
+        "nan",
+        "none",
+        "null",
+        "na",
+        "n/a",
+        "invalid",
+    }
+
+    print("\nHyLogger CLST disagreement examples")
+
+    for feature_group in feature_groups:
+        column_a = f"{feature_group} sjCLST"
+        column_b = f"{feature_group} ujCLST"
+
+        if column_a not in data.columns or column_b not in data.columns:
+            continue
+
+        values_a = data[column_a].astype("string").str.strip()
+        values_b = data[column_b].astype("string").str.strip()
+
+        valid = (
+            values_a.notna()
+            & values_b.notna()
+            & ~values_a.str.lower().isin(missing_values)
+            & ~values_b.str.lower().isin(missing_values)
+        )
+
+        different = valid & (
+            values_a.str.casefold() != values_b.str.casefold()
+        )
+
+        count = int(different.sum())
+
+        print(f"\n{feature_group}: {count:,} disagreements")
+
+        if count == 0:
+            continue
+
+        pairs = (
+            pd.DataFrame(
+                {
+                    "sjCLST": values_a[different],
+                    "ujCLST": values_b[different],
+                }
+            )
+            .value_counts()
+            .head(limit)
+        )
+
+        print(pairs.to_string())
+
+
+
 def remove_redundant_classification_channels(
     data: pd.DataFrame,
     categorical: list[str],
@@ -843,7 +914,7 @@ def main() -> int:
     )
 
     report_channel_agreement(data)
-
+    report_channel_disagreements(data)
     categorical, dropped_channels = remove_redundant_classification_channels(
     data,
     categorical,
