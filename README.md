@@ -57,9 +57,9 @@ CITS5553/team/
 ├── docker-compose.yml        Postgres + PostGIS
 │
 ├── data/
-│   ├── make_sample_data.py   fake data so the site works today
-│   ├── holes.csv             <- replace with your etl.py output
-│   └── measurements.csv      <- replace with your etl.py output
+│   ├── make_sample_data.py   
+│   ├── holes.csv             
+│   └── measurements.csv      
 │
 ├── backend/                  Django + DRF
 │   ├── hylogger/settings.py  database, CORS, paths
@@ -74,7 +74,7 @@ CITS5553/team/
 │           └── detect_anomalies.py  train + score
 │
 └── frontend/                 Next.js
-    ├── config.js             ** colours, map style, thresholds - start here **
+    ├── config.js             colours, map style, thresholds
     ├── lib/api.js            every API call
     ├── app/                  the three pages
     └── components/
