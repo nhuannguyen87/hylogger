@@ -6,6 +6,8 @@ import { useEffect, useState } from "react";
 import dynamic from "next/dynamic";
 import { getHoles, getNearby, getTrace } from "@/lib/api";
 import { DEFAULT_VERTICAL_EXAGGERATION } from "@/config";
+import { distinctName } from "@/lib/format";
+import CoreStripPanel from "@/components/CoreStripPanel";
 
 const Hole3D = dynamic(() => import("@/components/Hole3D"), { ssr: false });
 
@@ -20,7 +22,7 @@ export default function Viewer3DPage() {
   const [error, setError] = useState(null);
 
   useEffect(() => {
-    getHoles({ limit: 2000 })
+    getHoles()
       .then((data) => {
         setHoles(data);
         if (data.length) setChosen([data[0].hole_id]);
@@ -82,7 +84,7 @@ export default function Viewer3DPage() {
               onClick={() => toggle(hole.hole_id)}
             >
               <span className="id">{hole.hole_id}</span>
-              <span className="name">{hole.hole_name}</span>
+              {distinctName(hole) && <span className="name">{distinctName(hole)}</span>}
               <span className="len">{Math.round(hole.borehole_length_m || 0)} m</span>
             </button>
           ))}
@@ -92,6 +94,7 @@ export default function Viewer3DPage() {
       <div className="map-area">
         <Hole3D
           traces={traces}
+          holes={holes}
           verticalExaggeration={exaggeration}
           colourBy={colourBy}
         />
@@ -118,6 +121,8 @@ export default function Viewer3DPage() {
             stretched to make them visible. Set this to 1 for true scale.
           </p>
         </div>
+
+        <CoreStripPanel holeId={chosen[0]} />
       </div>
     </div>
   );
