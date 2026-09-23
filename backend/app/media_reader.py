@@ -287,28 +287,48 @@ def read_result(conn, log, axis_id, sample_no):
 
         block = blocks[0]
 
-        asset, path = local_asset(
-            conn,
-            array["asset_id"],
-        )
+        if asset_backend() == "s3":
+            store = get_s3_store()
+            asset = store.asset(
+                conn,
+                array["asset_id"],
+            )
 
-        if path is None:
-            return {
-                **base,
-                "status": "asset_unavailable",
-                "value": None,
-            }
+            if asset is None:
+                return {
+                    **base,
+                    "status": "asset_unavailable",
+                    "value": None,
+                }
 
-        stat = path.stat()
+            data = store.block(
+                asset,
+                block,
+            )
 
-        data = spectral_bytes(
-            str(path),
-            stat.st_size,
-            stat.st_mtime_ns,
-            block["byte_offset"],
-            block["byte_length"],
-            block["sha256"],
-        )
+        else:
+            asset, path = local_asset(
+                conn,
+                array["asset_id"],
+            )
+
+            if path is None:
+                return {
+                    **base,
+                    "status": "asset_unavailable",
+                    "value": None,
+                }
+
+            stat = path.stat()
+
+            data = spectral_bytes(
+                str(path),
+                stat.st_size,
+                stat.st_mtime_ns,
+                block["byte_offset"],
+                block["byte_length"],
+                block["sha256"],
+            )
 
         offset = (
             source_row - block["source_row_from"]
