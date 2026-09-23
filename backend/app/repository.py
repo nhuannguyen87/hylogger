@@ -88,7 +88,11 @@ def get_sample_by_revision(
         )
 
 def get_image_asset_for_active_release(asset_id: str):
-    from app.media_reader import local_asset
+    from app.media_reader import (
+        asset_backend,
+        get_s3_store,
+        local_asset,
+    )
 
     with get_connection() as conn:
         asset = conn.execute(
@@ -119,9 +123,32 @@ def get_image_asset_for_active_release(asset_id: str):
         if asset is None:
             return None
 
-        verified_asset, path = local_asset(conn, asset_id)
+        if asset_backend() == "s3":
+            store = get_s3_store()
+            verified_asset = store.asset(
+                conn,
+                asset_id,
+            )
 
-        if verified_asset is None or path is None:
+            if verified_asset is None:
+                raise ValueError("Image asset is unavailable")
+
+            content = store.full(verified_asset)
+
+            return {
+                "id": str(asset["id"]),
+                "media_type": asset["media_type"],
+                "byte_size": asset["byte_size"],
+                "sha256": asset["sha256"],
+                "content": content,
+            }
+
+        verified_asset, local_path = local_asset(
+            conn,
+            asset_id,
+        )
+
+        if verified_asset is None or local_path is None:
             raise ValueError("Image asset is unavailable")
 
         return {
@@ -129,7 +156,7 @@ def get_image_asset_for_active_release(asset_id: str):
             "media_type": asset["media_type"],
             "byte_size": asset["byte_size"],
             "sha256": asset["sha256"],
-            "path": path,
+            "path": local_path,
         }
 
 

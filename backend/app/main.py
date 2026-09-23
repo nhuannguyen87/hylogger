@@ -3,7 +3,7 @@ from uuid import UUID
 
 from fastapi import FastAPI, HTTPException, Query
 from fastapi.middleware.cors import CORSMiddleware
-from fastapi.responses import FileResponse
+from fastapi.responses import FileResponse, Response
 
 from app.repository import (
     get_all_holes,
@@ -241,12 +241,21 @@ def get_image_asset_content(asset_id: UUID):
             detail="Image asset not found in active release",
         )
 
+    headers = {
+        "ETag": f'"{asset["sha256"]}"',
+    }
+
+    if "content" in asset:
+        return Response(
+            content=asset["content"],
+            media_type=asset["media_type"],
+            headers=headers,
+        )
+
     return FileResponse(
         path=asset["path"],
         media_type=asset["media_type"],
-        headers={
-            "ETag": f'"{asset["sha256"]}"',
-        },
+        headers=headers,
     )
 
 
