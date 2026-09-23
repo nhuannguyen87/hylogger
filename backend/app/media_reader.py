@@ -4,6 +4,7 @@ from functools import lru_cache
 from pathlib import Path
 
 import numpy as np
+import pyarrow as pa
 import pyarrow.parquet as pq
 from dotenv import load_dotenv
 
@@ -403,27 +404,49 @@ def read_result(conn, log, axis_id, sample_no):
 
     chunk = chunks[0]
 
-    asset, path = local_asset(
-        conn,
-        chunk["asset_id"],
-    )
+    if asset_backend() == "s3":
+        store = get_s3_store()
+        asset = store.asset(
+            conn,
+            chunk["asset_id"],
+        )
 
-    if path is None:
-        return {
-            **base,
-            "status": "asset_unavailable",
-            "value": None,
-        }
+        if asset is None:
+            return {
+                **base,
+                "status": "asset_unavailable",
+                "value": None,
+            }
 
-    stat = path.stat()
+        with pq.ParquetFile(
+            pa.BufferReader(store.full(asset))
+        ) as parquet:
+            table = parquet.read_row_group(
+                chunk["row_group"]
+            )
 
-    table = parquet_group(
-        str(path),
-        chunk["sha256"],
-        stat.st_size,
-        stat.st_mtime_ns,
-        chunk["row_group"],
-    )
+    else:
+        asset, path = local_asset(
+            conn,
+            chunk["asset_id"],
+        )
+
+        if path is None:
+            return {
+                **base,
+                "status": "asset_unavailable",
+                "value": None,
+            }
+
+        stat = path.stat()
+
+        table = parquet_group(
+            str(path),
+            chunk["sha256"],
+            stat.st_size,
+            stat.st_mtime_ns,
+            chunk["row_group"],
+        )
 
     row = table.slice(
         sample_no - chunk["source_row_from"],
