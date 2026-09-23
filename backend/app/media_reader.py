@@ -7,10 +7,67 @@ import numpy as np
 import pyarrow.parquet as pq
 from dotenv import load_dotenv
 
+from app.s3_storage import S3Store
+
 
 load_dotenv()
 
 ETL4_ROOT = Path(os.environ.get("ETL4_ROOT", "")).resolve()
+
+
+def asset_backend():
+    backend = os.getenv(
+        "ETL4_ASSET_BACKEND",
+        "local",
+    ).strip().lower()
+
+    if backend not in ("local", "s3"):
+        raise RuntimeError(
+            "ETL4_ASSET_BACKEND must be either 'local' or 's3'."
+        )
+
+    return backend
+
+
+@lru_cache(maxsize=1)
+def get_s3_store():
+    if asset_backend() != "s3":
+        return None
+
+    bucket = os.getenv("ETL4_S3_BUCKET")
+    prefix = os.getenv("ETL4_S3_PREFIX")
+    region = os.getenv("ETL4_AWS_REGION")
+    root_key = os.getenv(
+        "ETL4_S3_ROOT_KEY",
+        "etl4_s3_primary",
+    )
+
+    if not bucket or not prefix or not region:
+        raise RuntimeError(
+            "ETL4_S3_BUCKET, ETL4_S3_PREFIX and "
+            "ETL4_AWS_REGION are required for S3 mode."
+        )
+
+    try:
+        import boto3
+    except ImportError as exc:
+        raise RuntimeError(
+            "AWS S3 access requires boto3. "
+            "Install backend/requirements-aws.txt."
+        ) from exc
+
+    client = boto3.client(
+        "s3",
+        region_name=region,
+    )
+
+    return S3Store(
+        client,
+        bucket,
+        root_key,
+        prefix,
+    )
+
 
 INDICATOR = {
     "range_basis": "row_sample_interval",
