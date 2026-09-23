@@ -635,15 +635,35 @@ def read_sample(
 
     for image in images:
         if image["asset_id"]:
-            asset, path = local_asset(
-                conn,
-                image["asset_id"],
-            )
+            if asset_backend() == "s3":
+                store = get_s3_store()
+                asset = store.asset(
+                    conn,
+                    image["asset_id"],
+                )
+
+                if asset is not None:
+                    store.full(asset)
+
+                asset_available = asset is not None
+
+            else:
+                asset, local_path = local_asset(
+                    conn,
+                    image["asset_id"],
+                )
+
+                asset_available = (
+                    asset is not None
+                    and local_path is not None
+                )
+
         else:
-            asset, path = None, None
+            asset = None
+            asset_available = False
 
         available = (
-            path is not None
+            asset_available
             and image["region_status"] == "reviewed"
             and image["mapping_status"] == "metadata_associated"
         )
