@@ -49,7 +49,11 @@ ID_COLUMNS = {
     "sample_no",
     "depth_from_m",
     "depth_to_m",
+    "release_id",
+    "dataset_revision_id",
+    "axis_id",
 }
+FASTAPI_ID_COLUMNS = ("release_id", "dataset_revision_id", "axis_id")
 MAX_CATEGORIES = 12
 MIN_NUMERIC_FRACTION = 0.80
 VARIANCE_TARGET = 0.95
@@ -83,9 +87,20 @@ def load_measurements(csv_root: Path) -> pd.DataFrame:
         frames.append(frame)
     data = pd.concat(frames, ignore_index=True, sort=False)
     data["hole_id"] = data["hole_id"].astype(str)
+    for column in FASTAPI_ID_COLUMNS:
+        if column not in data.columns:
+            continue
+        if data[column].isna().any() or (data[column].astype(str).str.strip() == "").any():
+            raise SystemExit(
+                f"{column} is present but has missing values; every sample must carry "
+                "the same identity used by FastAPI"
+            )
+        data[column] = data[column].astype(str)
     for column in ("depth_from_m", "depth_to_m"):
         if column in data.columns:
             data[column] = pd.to_numeric(data[column], errors="coerce")
+    if "sample_no" in data.columns:
+        data["sample_no"] = pd.to_numeric(data["sample_no"], errors="coerce")
     return data.dropna(subset=["depth_from_m"])
 
 
@@ -385,11 +400,19 @@ def build_interval_features(
     frame["bin_start"] = np.floor(frame["depth_from_m"] / bin_size) * bin_size
     frame["bin_end"] = frame["bin_start"] + bin_size
 
-    keys = ["hole_id", "bin_start", "bin_end"]
+    identity_columns = [column for column in FASTAPI_ID_COLUMNS if column in frame.columns]
+    keys = identity_columns + ["hole_id", "bin_start", "bin_end"]
     grouped = frame.groupby(keys, sort=True)
     sizes = grouped.size()
 
     parts = [sizes.rename("n_samples")]
+    metadata_columns = {"n_samples"}
+    if "sample_no" in frame.columns:
+        sample_numbers = pd.to_numeric(frame["sample_no"], errors="coerce")
+        by_bin = sample_numbers.groupby([frame[k] for k in keys])
+        parts.append(by_bin.min().rename("first_sample_no"))
+        parts.append(by_bin.max().rename("last_sample_no"))
+        metadata_columns.update({"first_sample_no", "last_sample_no"})
     prescaled: set[str] = set()
 
     # Within-bin spread is informative texture, but it is pure noise when a
@@ -435,7 +458,7 @@ def build_interval_features(
             prescaled.add(name)
 
     table = pd.concat(parts, axis=1).reset_index()
-    feature_names = [c for c in table.columns if c not in {*keys, "n_samples"}]
+    feature_names = [c for c in table.columns if c not in {*keys, *metadata_columns}]
     matrix = table[feature_names].to_numpy(dtype=float)
     return table, matrix, feature_names, prescaled
 
@@ -848,6 +871,29 @@ def write_outputs(
 ) -> list[Path]:
     written = []
 
+    def interval_record(row) -> dict:
+        record = {
+            "depth_from_m": float(row.depth_from_m),
+            "depth_to_m": float(row.depth_to_m),
+            "score": float(row.anomaly_score),
+            "flag": row.flag,
+            "score_reliability": row.score_reliability,
+            "why": row.why,
+            "max_z": float(row.max_z),
+            "coverage": float(row.coverage),
+        }
+        for column in FASTAPI_ID_COLUMNS:
+            if hasattr(row, column):
+                record[column] = str(getattr(row, column))
+        for column in ("first_sample_no", "last_sample_no"):
+            if hasattr(row, column):
+                value = getattr(row, column)
+                record[column] = None if pd.isna(value) else int(value)
+        if hasattr(row, "lof_score"):
+            value = row.lof_score
+            record["lof_score"] = None if pd.isna(value) else float(value)
+        return record
+
     folder = data_root / "csv" / "anomalies"
     folder.mkdir(parents=True, exist_ok=True)
     for hole_id, group in intervals.groupby("hole_id"):
@@ -876,19 +922,7 @@ def write_outputs(
             for row in holes.itertuples()
         },
         "intervals": {
-            hole_id: [
-                {
-                    "depth_from_m": float(r.depth_from_m),
-                    "depth_to_m": float(r.depth_to_m),
-                    "score": float(r.anomaly_score),
-                    "flag": r.flag,
-                    "score_reliability": r.score_reliability,
-                    "why": r.why,
-                    "max_z": float(r.max_z),
-                    "coverage": float(r.coverage),
-                }
-                for r in group.itertuples()
-            ]
+            hole_id: [interval_record(r) for r in group.itertuples()]
             for hole_id, group in intervals.groupby("hole_id")
         },
     }
@@ -963,9 +997,15 @@ def main() -> int:
 
     score = combine(signals)
 
-    intervals = pd.DataFrame(
+    interval_data = {"hole_id": table["hole_id"]}
+    for column in FASTAPI_ID_COLUMNS:
+        if column in table.columns:
+            interval_data[column] = table[column]
+    for column in ("first_sample_no", "last_sample_no"):
+        if column in table.columns:
+            interval_data[column] = table[column].astype("Int64")
+    interval_data.update(
         {
-            "hole_id": table["hole_id"],
             "depth_from_m": table["bin_start"],
             "depth_to_m": table["bin_end"],
             "n_samples": table["n_samples"],
@@ -976,6 +1016,7 @@ def main() -> int:
             "anomaly_score": np.round(score, 2),
         }
     )
+    intervals = pd.DataFrame(interval_data)
     if forest is not None:
         intervals["isolation_score"] = np.round(forest, 4)
 
