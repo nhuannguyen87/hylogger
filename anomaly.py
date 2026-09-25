@@ -25,9 +25,6 @@ import argparse
 import json
 import sys
 from pathlib import Path
-from unittest import signals
-from flask import signals
-
 import numpy as np
 import pandas as pd
 
