@@ -25,12 +25,15 @@ import argparse
 import json
 import sys
 from pathlib import Path
+from unittest import signals
+from flask import signals
 
 import numpy as np
 import pandas as pd
 
 try:
     from sklearn.ensemble import IsolationForest
+    from sklearn.neighbors import LocalOutlierFactor
 
     HAVE_SKLEARN = True
 except ImportError:  # optional third signal
@@ -43,13 +46,21 @@ except Exception:
 
 
 HERE = Path(__file__).resolve().parent
-ID_COLUMNS = {"hole_id", "sample_no", "depth_from_m", "depth_to_m"}
+ID_COLUMNS = {
+    "hole_id",
+    "holeid",
+    "sample_no",
+    "depth_from_m",
+    "depth_to_m",
+}
 MAX_CATEGORIES = 12
 MIN_NUMERIC_FRACTION = 0.80
 VARIANCE_TARGET = 0.95
 INLIER_FRACTION = 0.80
 PRIOR_WEIGHT = 10.0
 
+EARTH_RADIUS_KM = 6371.0088
+LOCAL_NEIGHBOURS = 5
 
 # ---------------------------------------------------------------------------
 # loading
@@ -82,26 +93,279 @@ def load_measurements(csv_root: Path) -> pd.DataFrame:
 
 
 def split_column_types(data: pd.DataFrame) -> tuple[list[str], list[str]]:
-    """Sort measurement columns into numeric and categorical.
-
-    NVCL scalar logs mix the two freely - a TSA mineral column holds names
-    like 'Kaolinite' while a reflectance column holds floats. A column is
-    treated as numeric only if most non-blank values actually parse.
-    """
+    """Sort measurement columns into numeric and categorical."""
     numeric, categorical = [], []
+
     for column in data.columns:
-        if column in ID_COLUMNS:
+        lower = column.lower()
+
+        if lower in ID_COLUMNS:
             continue
+
+        if lower.startswith(("date", "holeid", "tray", "secsamp", "subpix")):
+            continue
+
         values = data[column]
         present = values.notna() & (values.astype(str).str.strip() != "")
+
         if not present.any():
             continue
+
         parsed = pd.to_numeric(values[present], errors="coerce")
+
         if parsed.notna().mean() >= MIN_NUMERIC_FRACTION:
             numeric.append(column)
         else:
             categorical.append(column)
+
     return numeric, categorical
+
+def report_channel_agreement(data: pd.DataFrame, min_overlap: int = 100) -> None:
+    """Compare related HyLogger mineral classification channels."""
+
+    feature_groups = (
+        "Min1",
+        "Min2",
+        "Min3",
+        "Grp1",
+        "Grp2",
+        "Grp3",
+    )
+
+    channel_types = (
+        "sTSAS",
+        "uTSAS",
+        "sjCLST",
+        "ujCLST",
+        "sTSAV",
+    )
+
+    missing_values = {
+        "",
+        "nan",
+        "none",
+        "null",
+        "na",
+        "n/a",
+        "invalid",
+    }
+
+    results = []
+
+    for feature_group in feature_groups:
+        columns = [
+            f"{feature_group} {channel}"
+            for channel in channel_types
+            if f"{feature_group} {channel}" in data.columns
+        ]
+
+        for i in range(len(columns)):
+            for j in range(i + 1, len(columns)):
+                column_a = columns[i]
+                column_b = columns[j]
+
+                values_a = data[column_a].astype("string").str.strip()
+                values_b = data[column_b].astype("string").str.strip()
+
+                valid = (
+                    values_a.notna()
+                    & values_b.notna()
+                    & ~values_a.str.lower().isin(missing_values)
+                    & ~values_b.str.lower().isin(missing_values)
+                )
+
+                overlap = int(valid.sum())
+
+                if overlap < min_overlap:
+                    continue
+
+                agreement = (
+                    values_a[valid].str.casefold()
+                    == values_b[valid].str.casefold()
+                ).mean()
+
+                results.append(
+                    {
+                        "feature": feature_group,
+                        "channel_a": column_a,
+                        "channel_b": column_b,
+                        "overlap": overlap,
+                        "agreement_pct": agreement * 100,
+                    }
+                )
+
+    if not results:
+        print("\nchannel agreement: no comparable channel pairs found")
+        return
+
+    report = pd.DataFrame(results)
+
+    report = report.sort_values(
+        ["feature", "agreement_pct"],
+        ascending=[True, False],
+    )
+
+    print("\nHyLogger channel agreement")
+    print(
+        report.to_string(
+            index=False,
+            formatters={
+                "agreement_pct": lambda value: f"{value:.1f}%"
+            },
+        )
+    )
+
+
+def report_channel_disagreements(
+    data: pd.DataFrame,
+    limit: int = 5,
+) -> None:
+    """Show the most common disagreements between CLST channel pairs."""
+
+    feature_groups = (
+        "Min1",
+        "Min2",
+        "Min3",
+        "Grp1",
+        "Grp2",
+        "Grp3",
+    )
+
+    missing_values = {
+        "",
+        "nan",
+        "none",
+        "null",
+        "na",
+        "n/a",
+        "invalid",
+    }
+
+    print("\nHyLogger CLST disagreement examples")
+
+    for feature_group in feature_groups:
+        column_a = f"{feature_group} sjCLST"
+        column_b = f"{feature_group} ujCLST"
+
+        if column_a not in data.columns or column_b not in data.columns:
+            continue
+
+        values_a = data[column_a].astype("string").str.strip()
+        values_b = data[column_b].astype("string").str.strip()
+
+        valid = (
+            values_a.notna()
+            & values_b.notna()
+            & ~values_a.str.lower().isin(missing_values)
+            & ~values_b.str.lower().isin(missing_values)
+        )
+
+        different = valid & (
+            values_a.str.casefold() != values_b.str.casefold()
+        )
+
+        count = int(different.sum())
+
+        print(f"\n{feature_group}: {count:,} disagreements")
+
+        if count == 0:
+            continue
+
+        pairs = (
+            pd.DataFrame(
+                {
+                    "sjCLST": values_a[different],
+                    "ujCLST": values_b[different],
+                }
+            )
+            .value_counts()
+            .head(limit)
+        )
+
+        print(pairs.to_string())
+
+
+
+def remove_redundant_classification_channels(
+    data: pd.DataFrame,
+    categorical: list[str],
+    agreement_threshold: float = 0.999,
+    min_overlap: int = 1000,
+) -> tuple[list[str], list[str]]:
+    """
+    Remove classification channels that are effectively duplicates.
+    """
+
+    feature_groups = (
+        "Min1",
+        "Min2",
+        "Min3",
+        "Grp1",
+        "Grp2",
+        "Grp3",
+    )
+
+    candidate_pairs = (
+        ("sTSAS", "uTSAS"),
+        ("sjCLST", "ujCLST"),
+    )
+
+    missing_values = {
+        "",
+        "nan",
+        "none",
+        "null",
+        "na",
+        "n/a",
+        "invalid",
+    }
+
+    dropped = set()
+
+    for feature_group in feature_groups:
+        for keep_channel, candidate_channel in candidate_pairs:
+            column_a = f"{feature_group} {keep_channel}"
+            column_b = f"{feature_group} {candidate_channel}"
+
+            if column_a not in categorical or column_b not in categorical:
+                continue
+
+            values_a = data[column_a].astype("string").str.strip()
+            values_b = data[column_b].astype("string").str.strip()
+
+            valid = (
+                values_a.notna()
+                & values_b.notna()
+                & ~values_a.str.lower().isin(missing_values)
+                & ~values_b.str.lower().isin(missing_values)
+            )
+
+            overlap = int(valid.sum())
+
+            if overlap < min_overlap:
+                continue
+
+            agreement = (
+                values_a[valid].str.casefold()
+                == values_b[valid].str.casefold()
+            ).mean()
+
+            if agreement >= agreement_threshold:
+                dropped.add(column_b)
+
+                print(
+                    f"dropping redundant channel {column_b} "
+                    f"(matches {column_a}: {agreement * 100:.1f}% "
+                    f"over {overlap:,} samples)"
+                )
+
+    filtered = [
+        column
+        for column in categorical
+        if column not in dropped
+    ]
+
+    return filtered, sorted(dropped)
 
 
 # ---------------------------------------------------------------------------
@@ -145,7 +409,7 @@ def build_interval_features(
 
     for column in categorical:
         text = frame[column].astype(str).str.strip()
-        blank = text.str.lower().isin(["", "nan", "none", "null", "na", "n/a"])
+        blank = text.str.lower().isin(["", "nan", "none", "null", "na", "n/a", "invalid"])
         text = text.where(~blank)
         top = text.value_counts().head(MAX_CATEGORIES).index.tolist()
         for category in top:
@@ -311,6 +575,21 @@ def isolation_scores(scaled: np.ndarray, seed: int = 0) -> np.ndarray | None:
     model.fit(scaled)
     return -model.score_samples(scaled)
 
+def lof_scores(scaled: np.ndarray) -> np.ndarray | None:
+    """Local Outlier Factor score, higher meaning more locally unusual."""
+    if not HAVE_SKLEARN or scaled.shape[0] < 20:
+        return None
+
+    n_neighbors = min(20, scaled.shape[0] - 1)
+
+    model = LocalOutlierFactor(
+        n_neighbors=n_neighbors,
+        contamination="auto",
+    )
+
+    model.fit_predict(scaled)
+
+    return -model.negative_outlier_factor_
 
 def to_percentile(values: np.ndarray) -> np.ndarray:
     """Rank-transform to 0-100 so different scorers can be averaged."""
@@ -344,7 +623,7 @@ def flag_of(score: float, coverage: float, max_z: float) -> str:
     return "watch"
 
 
-def confidence_of(coverage: float, n_samples: int) -> str:
+def score_reliability_of(coverage: float, n_samples: int) -> str:
     if coverage < 0.30 or n_samples < 2:
         return "low"
     if coverage < 0.60 or n_samples < 4:
@@ -352,18 +631,107 @@ def confidence_of(coverage: float, n_samples: int) -> str:
     return "high"
 
 
+def feature_group_name(name: str) -> str:
+    """
+    Collapse related HyLogger mineral-call features into a common group.
+
+    Examples:
+      'Min1 sTSAS = Talc'      -> 'Min1 = Talc'
+      'Min1 uTSAS = Talc'      -> 'Min1 = Talc'
+      'Min1 sjCLST = Talc'     -> 'Min1 = Talc'
+      'Grp1 uTSAS = SMECTITE'  -> 'Grp1 = SMECTITE'
+    """
+    parts = name.split(" = ", 1)
+
+    if len(parts) != 2:
+        return name
+
+    column, category = parts
+    tokens = column.split()
+
+    if len(tokens) >= 2 and tokens[0].startswith(("Min", "Grp")):
+        return f"{tokens[0]} = {category}"
+
+    return name
+
+
+
+
 def top_contributors(row: np.ndarray, names: list[str], limit: int = 3) -> str:
     """Which scaled features drove this row's distance, for explainability."""
     if row.size == 0:
         return ""
-    order = np.argsort(-np.abs(row))[:limit]
+
+    order = np.argsort(-np.abs(row))
     parts = []
+    seen_groups = set()
+
     for index in order:
         if abs(row[index]) < 1.0:
             continue
+
+        grouped_name = feature_group_name(names[index])
+
+        if grouped_name in seen_groups:
+            continue
+
+        seen_groups.add(grouped_name)
+
         direction = "high" if row[index] > 0 else "low"
-        parts.append(f"{names[index]} ({direction}, {row[index]:+.1f} sd)")
+        value = abs(row[index])
+
+        if value >= 24.99:
+            magnitude = ">=25.0 sd"
+        else:
+            magnitude = f"{value:.1f} sd"
+
+        parts.append(f"{grouped_name} ({direction}, {magnitude})")
+
+        if len(parts) >= limit:
+            break
+
     return "; ".join(parts)
+
+
+def load_hole_locations(csv_root: Path) -> pd.DataFrame | None:
+    """Load drill-hole coordinates produced by ETL."""
+    path = csv_root / "holes.csv"
+
+    if not path.is_file():
+        print("warning: holes.csv not found; geographic anomaly scoring disabled")
+        return None
+
+    locations = pd.read_csv(path)
+
+    required = {"hole_id", "latitude", "longitude"}
+    if not required.issubset(locations.columns):
+        print("warning: holes.csv has no latitude/longitude; geographic scoring disabled")
+        return None
+
+    locations = locations[list(required)].copy()
+    locations["hole_id"] = locations["hole_id"].astype(str)
+    locations["latitude"] = pd.to_numeric(locations["latitude"], errors="coerce")
+    locations["longitude"] = pd.to_numeric(locations["longitude"], errors="coerce")
+
+    return locations.dropna(subset=["latitude", "longitude"])
+
+
+def haversine_km(lat1, lon1, lat2, lon2):
+    """Great-circle distance between coordinates in kilometres."""
+    lat1, lon1, lat2, lon2 = map(
+        np.radians, [lat1, lon1, lat2, lon2]
+    )
+
+    dlat = lat2 - lat1
+    dlon = lon2 - lon1
+
+    a = (
+        np.sin(dlat / 2) ** 2
+        + np.cos(lat1) * np.cos(lat2) * np.sin(dlon / 2) ** 2
+    )
+
+    return 2 * EARTH_RADIUS_KM * np.arcsin(np.sqrt(a))
+
 
 
 # ---------------------------------------------------------------------------
@@ -374,6 +742,7 @@ def score_holes(
     table: pd.DataFrame,
     scaled: np.ndarray,
     names: list[str],
+    locations: pd.DataFrame | None = None,
 ) -> pd.DataFrame:
     """Reduce each hole to a profile, then compare profiles to each other."""
     profiles, hole_ids = [], []
@@ -403,6 +772,53 @@ def score_holes(
     np.fill_diagonal(gram, np.inf)
     nearest = gram.argmin(axis=1)
 
+    local_score = np.full(len(hole_ids), np.nan)
+    nearest_geo = [None] * len(hole_ids)
+    nearest_geo_km = np.full(len(hole_ids), np.nan)
+
+    if locations is not None:
+        location_map = locations.set_index("hole_id")
+
+        for i, hole_id in enumerate(hole_ids):
+            if hole_id not in location_map.index:
+                continue
+
+            current = location_map.loc[hole_id]
+
+            candidates = []
+
+            for j, other_id in enumerate(hole_ids):
+                if i == j or other_id not in location_map.index:
+                    continue
+
+                other = location_map.loc[other_id]
+
+                distance_km = haversine_km(
+                    current["latitude"],
+                    current["longitude"],
+                    other["latitude"],
+                    other["longitude"],
+                )
+
+                candidates.append((distance_km, j, other_id))
+
+            candidates.sort(key=lambda x: x[0])
+            neighbours = candidates[:LOCAL_NEIGHBOURS]
+
+            if not neighbours:
+                continue
+
+            nearest_geo[i] = neighbours[0][2]
+            nearest_geo_km[i] = neighbours[0][0]
+
+            feature_distances = [
+                np.linalg.norm(profile_matrix[i] - profile_matrix[j])
+                / np.sqrt(max(profile_matrix.shape[1], 1))
+                for _, j, _ in neighbours
+            ]
+
+            local_score[i] = float(np.mean(feature_distances))
+
     result = pd.DataFrame(
         {
             "hole_id": hole_ids,
@@ -411,6 +827,9 @@ def score_holes(
             "anomaly_score": np.round(score, 2),
             "rank": (-score).argsort().argsort() + 1,
             "most_like": [hole_ids[i] for i in nearest],
+            "nearest_geographic_hole": nearest_geo,
+            "nearest_geographic_km": np.round(nearest_geo_km, 2),
+            "local_anomaly_distance": np.round(local_score, 4),
             "distinctive_features": [
                 top_contributors(centred[i], profile_names) for i in range(len(hole_ids))
             ],
@@ -466,7 +885,10 @@ def write_outputs(
                     "depth_to_m": float(r.depth_to_m),
                     "score": float(r.anomaly_score),
                     "flag": r.flag,
-                    "confidence": r.confidence,
+                    "score_reliability": r.score_reliability,
+                    "why": r.why,
+                    "max_z": float(r.max_z),
+                    "coverage": float(r.coverage),
                 }
                 for r in group.itertuples()
             ]
@@ -496,6 +918,7 @@ def main() -> int:
     csv_root = Path(args.csv_root).resolve() if args.csv_root else data_root / "csv"
 
     data = load_measurements(csv_root)
+    locations = load_hole_locations(csv_root)
     hole_count = data["hole_id"].nunique()
     if hole_count < 2:
         raise SystemExit(
@@ -504,11 +927,26 @@ def main() -> int:
         )
 
     numeric, categorical = split_column_types(data)
+
     print(
         f"loaded {len(data):,} samples from {hole_count} holes "
         f"({len(numeric)} numeric, {len(categorical)} categorical columns)",
         flush=True,
     )
+
+    report_channel_agreement(data)
+    report_channel_disagreements(data)
+    categorical, dropped_channels = remove_redundant_classification_channels(
+    data,
+    categorical,
+)
+    print(
+    f"using {len(categorical)} categorical columns after redundancy filtering "
+    f"({len(dropped_channels)} removed)",
+    flush=True,
+)
+    
+    
 
     table, matrix, names, prescaled = build_interval_features(
         data, numeric, categorical, args.bin_size
@@ -524,6 +962,8 @@ def main() -> int:
     forest = isolation_scores(scaled, args.seed)
     if forest is not None:
         signals.append(forest)
+    lof = lof_scores(scaled)
+
     score = combine(signals)
 
     intervals = pd.DataFrame(
@@ -541,16 +981,26 @@ def main() -> int:
     )
     if forest is not None:
         intervals["isolation_score"] = np.round(forest, 4)
+
+    if lof is not None:
+        intervals["lof_score"] = np.round(lof, 4)
+
+
     max_z = np.abs(scaled).max(axis=1)
     intervals["max_z"] = np.round(max_z, 2)
     intervals["flag"] = [flag_of(s, c, z) for s, c, z in zip(score, cover, max_z)]
-    intervals["confidence"] = [
-        confidence_of(c, n) for c, n in zip(cover, table["n_samples"])
+    intervals["score_reliability"] = [
+        score_reliability_of(c, n) for c, n in zip(cover, table["n_samples"])
     ]
     intervals["why"] = [top_contributors(scaled[i], kept_names) for i in range(len(intervals))]
     intervals = intervals.sort_values(["hole_id", "depth_from_m"]).reset_index(drop=True)
 
-    holes = score_holes(table.reset_index(drop=True), scaled, kept_names)
+    holes = score_holes(
+    table.reset_index(drop=True),
+    scaled,
+    kept_names,
+    locations,
+)
 
     meta = {
         "holes": int(hole_count),
@@ -559,8 +1009,7 @@ def main() -> int:
         "features_used": int(scaled.shape[1]),
         "pca_components": int(components),
         "variance_target": VARIANCE_TARGET,
-        "signals": ["robust_distance", "mahalanobis", "reconstruction_error"]
-        + (["isolation_forest"] if forest is not None else []),
+        "signals": ["robust_distance", "mahalanobis", "reconstruction_error"] + (["isolation_forest"] if forest is not None else []),
         "note": (
             "anomaly_score is a 0-100 percentile within this batch, not an absolute "
             "measure; flag combines that rank with max_z, an absolute test, so a "
@@ -575,16 +1024,16 @@ def main() -> int:
 
     flagged = intervals[intervals["flag"].isin({"high", "elevated", "watch"})]
     print(f"\nmost anomalous intervals ({len(flagged)} flagged)")
-    columns = ["hole_id", "depth_from_m", "depth_to_m", "anomaly_score", "max_z", "flag", "confidence", "why"]
+    columns = ["hole_id", "depth_from_m", "depth_to_m", "anomaly_score", "max_z", "flag", "score_reliability", "why"]
     print(
         flagged.sort_values("anomaly_score", ascending=False)
         .head(args.top)[columns]
         .to_string(index=False)
     )
 
-    low = int((intervals["confidence"] == "low").sum())
+    low = int((intervals["score_reliability"] == "low").sum())
     if low:
-        print(f"\n{low} intervals scored at low confidence - treat those scores as provisional")
+        print(f"\n{low} intervals scored at low reliability - treat those scores as provisional")
 
     print("\nwrote:")
     for path in written[-3:]:
