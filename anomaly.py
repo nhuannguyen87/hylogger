@@ -886,6 +886,9 @@ def write_outputs(
                     "score": float(r.anomaly_score),
                     "flag": r.flag,
                     "score_reliability": r.score_reliability,
+                    "why": r.why,
+                    "max_z": float(r.max_z),
+                    "coverage": float(r.coverage),
                 }
                 for r in group.itertuples()
             ]
