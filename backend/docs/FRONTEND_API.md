@@ -378,4 +378,3 @@ backend/
 is intended to become the main backend.
 Frontend changes are owned by Task 4.
 The backend team will maintain the API contract and provide any endpoint changes required for integration.
-
