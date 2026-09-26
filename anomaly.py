@@ -59,6 +59,7 @@ MIN_NUMERIC_FRACTION = 0.80
 VARIANCE_TARGET = 0.95
 INLIER_FRACTION = 0.80
 PRIOR_WEIGHT = 10.0
+MISSING_CATEGORY_VALUES = {"", "nan", "none", "null", "na", "n/a", "invalid"}
 
 EARTH_RADIUS_KM = 6371.0088
 LOCAL_NEIGHBOURS = 5
@@ -132,6 +133,13 @@ def split_column_types(data: pd.DataFrame) -> tuple[list[str], list[str]]:
 
     return numeric, categorical
 
+
+def normalise_categories(values: pd.Series) -> pd.Series:
+    """Make categorical comparisons case-insensitive and remove blank markers."""
+    text = values.astype("string").str.strip().str.casefold()
+    return text.mask(text.isna() | text.isin(MISSING_CATEGORY_VALUES))
+
+
 def report_channel_agreement(data: pd.DataFrame, min_overlap: int = 100) -> None:
     """Compare related HyLogger mineral classification channels."""
 
@@ -152,16 +160,6 @@ def report_channel_agreement(data: pd.DataFrame, min_overlap: int = 100) -> None
         "sTSAV",
     )
 
-    missing_values = {
-        "",
-        "nan",
-        "none",
-        "null",
-        "na",
-        "n/a",
-        "invalid",
-    }
-
     results = []
 
     for feature_group in feature_groups:
@@ -176,14 +174,12 @@ def report_channel_agreement(data: pd.DataFrame, min_overlap: int = 100) -> None
                 column_a = columns[i]
                 column_b = columns[j]
 
-                values_a = data[column_a].astype("string").str.strip()
-                values_b = data[column_b].astype("string").str.strip()
+                values_a = normalise_categories(data[column_a])
+                values_b = normalise_categories(data[column_b])
 
                 valid = (
                     values_a.notna()
                     & values_b.notna()
-                    & ~values_a.str.lower().isin(missing_values)
-                    & ~values_b.str.lower().isin(missing_values)
                 )
 
                 overlap = int(valid.sum())
@@ -191,10 +187,7 @@ def report_channel_agreement(data: pd.DataFrame, min_overlap: int = 100) -> None
                 if overlap < min_overlap:
                     continue
 
-                agreement = (
-                    values_a[valid].str.casefold()
-                    == values_b[valid].str.casefold()
-                ).mean()
+                agreement = (values_a[valid] == values_b[valid]).mean()
 
                 results.append(
                     {
@@ -243,16 +236,6 @@ def report_channel_disagreements(
         "Grp3",
     )
 
-    missing_values = {
-        "",
-        "nan",
-        "none",
-        "null",
-        "na",
-        "n/a",
-        "invalid",
-    }
-
     print("\nHyLogger CLST disagreement examples")
 
     for feature_group in feature_groups:
@@ -262,19 +245,15 @@ def report_channel_disagreements(
         if column_a not in data.columns or column_b not in data.columns:
             continue
 
-        values_a = data[column_a].astype("string").str.strip()
-        values_b = data[column_b].astype("string").str.strip()
+        values_a = normalise_categories(data[column_a])
+        values_b = normalise_categories(data[column_b])
 
         valid = (
             values_a.notna()
             & values_b.notna()
-            & ~values_a.str.lower().isin(missing_values)
-            & ~values_b.str.lower().isin(missing_values)
         )
 
-        different = valid & (
-            values_a.str.casefold() != values_b.str.casefold()
-        )
+        different = valid & (values_a != values_b)
 
         count = int(different.sum())
 
@@ -322,16 +301,6 @@ def remove_redundant_classification_channels(
         ("sjCLST", "ujCLST"),
     )
 
-    missing_values = {
-        "",
-        "nan",
-        "none",
-        "null",
-        "na",
-        "n/a",
-        "invalid",
-    }
-
     dropped = set()
 
     for feature_group in feature_groups:
@@ -342,14 +311,12 @@ def remove_redundant_classification_channels(
             if column_a not in categorical or column_b not in categorical:
                 continue
 
-            values_a = data[column_a].astype("string").str.strip()
-            values_b = data[column_b].astype("string").str.strip()
+            values_a = normalise_categories(data[column_a])
+            values_b = normalise_categories(data[column_b])
 
             valid = (
                 values_a.notna()
                 & values_b.notna()
-                & ~values_a.str.lower().isin(missing_values)
-                & ~values_b.str.lower().isin(missing_values)
             )
 
             overlap = int(valid.sum())
@@ -357,10 +324,7 @@ def remove_redundant_classification_channels(
             if overlap < min_overlap:
                 continue
 
-            agreement = (
-                values_a[valid].str.casefold()
-                == values_b[valid].str.casefold()
-            ).mean()
+            agreement = (values_a[valid] == values_b[valid]).mean()
 
             if agreement >= agreement_threshold:
                 dropped.add(column_b)
@@ -428,9 +392,7 @@ def build_interval_features(
             parts.append(by_bin.std().rename(f"{column} [sd]"))
 
     for column in categorical:
-        text = frame[column].astype(str).str.strip()
-        blank = text.str.lower().isin(["", "nan", "none", "null", "na", "n/a", "invalid"])
-        text = text.where(~blank)
+        text = normalise_categories(frame[column])
         top = text.value_counts().head(MAX_CATEGORIES).index.tolist()
         for category in top:
             indicator = (text == category).astype(float)
