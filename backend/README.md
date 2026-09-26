@@ -6,7 +6,7 @@ The backend provides read-only access to the fixed ETL4 HyLogger release using P
 
 ## Current Status
 
-The backend is connected to the real ETL4 handoff dataset.
+The backend is connected to the real ETL4 handoff dataset and has been validated against both the local handoff and the AWS Aurora/S3 deployment.
 
 Validated release:
 
@@ -63,16 +63,35 @@ sample_no
 
 Multiple samples may share the same measured depth.
 
-## Local Configuration
+## Configuration
 
-Create a `.env` file in the project root:
+### Local development
+
+Create a `.env` file in the backend project directory:
 
 ```env
 ETL4_READ_DSN=host=localhost port=5432 dbname=etl4_core user=etl4_reader password=YOUR_PASSWORD sslmode=disable
+ETL4_DB_AUTH=password
+ETL4_ASSET_BACKEND=local
 ETL4_ROOT=C:\path\to\ETL4_HANDOFF\etl4
 ```
 
 `.env` is excluded from Git.
+
+### AWS Aurora and S3
+
+AWS mode uses temporary AWS credentials and Aurora IAM database authentication. No PostgreSQL password is stored in the DSN.
+
+```env
+ETL4_READ_DSN=host=YOUR_AURORA_HOST port=5432 dbname=etl4_core user=etl4_reader
+ETL4_DB_AUTH=iam
+ETL4_AWS_REGION=ap-southeast-2
+
+ETL4_ASSET_BACKEND=s3
+ETL4_S3_BUCKET=YOUR_BUCKET
+ETL4_S3_PREFIX=etl4/releases/fd02659c-dc3d-52ea-a8eb-c032b91e7624
+ETL4_S3_ROOT_KEY=etl4_s3_primary
+```
 
 ## Install
 
@@ -111,6 +130,7 @@ GET /v1/datasets/{revision_id}/logs/{log_id}/values
 GET /v1/datasets/{revision_id}/profile-logs/{log_id}/values
 
 GET /v1/datasets/{revision_id}/intervals
+GET /v1/datasets/{revision_id}/anomalies
 GET /v1/datasets/{revision_id}/issues
 
 GET /v1/image-assets/{asset_id}/content
@@ -152,10 +172,10 @@ python -m pytest -v
 Current status:
 
 ```text
-17 tests passing
+24 tests passing
 ```
 
-The test suite covers real database access, drillholes, dataset/log discovery, samples, mineral values, spectra, profiles, images, intervals, quality issues, and PostGIS queries.
+The test suite covers real database access, drillholes, dataset/log discovery, samples, mineral values, spectra, profiles, images, intervals, anomaly intervals, quality issues, and PostGIS queries.
 
 ## Architecture
 
@@ -179,13 +199,15 @@ Frontend
 
 ## Production Deployment
 
-Current development uses local PostgreSQL/PostGIS and local ETL4 assets.
+The backend supports both local development and the deployed AWS ETL4 environment.
 
-The production architecture can later use:
+The AWS deployment uses:
 
 ```text
-AWS RDS PostgreSQL/PostGIS
+Amazon Aurora PostgreSQL/PostGIS
 Private Amazon S3 storage
+IAM database authentication
+Temporary AWS credentials
 ```
 
 The public FastAPI contract should remain independent of the underlying storage backend.
