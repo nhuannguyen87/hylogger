@@ -1,4 +1,10 @@
+import csv
+from functools import lru_cache
+from pathlib import Path
+
 from app.database import get_connection
+
+ANOMALY_CSV = Path(__file__).resolve().parent.parent / "data" / "anomalies.csv"
 
 
 HOLE_QUERY = """
@@ -950,4 +956,97 @@ def get_backend_health():
             else None
         ),
         "asset_root_available": ETL4_ROOT.exists(),
+    }
+
+@lru_cache(maxsize=1)
+def _load_anomaly_rows():
+    if not ANOMALY_CSV.is_file():
+        return []
+
+    with ANOMALY_CSV.open("r", encoding="utf-8-sig", newline="") as handle:
+        return list(csv.DictReader(handle))
+
+def get_anomalies_by_revision(
+    revision_id: str,
+    axis_id: str,
+    from_m=None,
+    to_m=None,
+    flag=None,
+    offset: int = 0,
+    limit: int = 200,
+):
+    with get_connection() as conn:
+        context = conn.execute(
+            """
+            SELECT ar.release_id
+            FROM core.active_release ar
+            JOIN core.release_dataset rd
+                ON rd.release_id = ar.release_id
+            JOIN core.sample_axis sa
+                ON sa.dataset_revision_id = rd.dataset_revision_id
+            WHERE ar.singleton
+              AND rd.dataset_revision_id = %s
+              AND sa.id = %s
+            """,
+            (revision_id, axis_id),
+        ).fetchone()
+
+    if context is None:
+        return None
+
+    release_id = str(context["release_id"])
+    items = []
+
+    for row in _load_anomaly_rows():
+        if row.get("release_id") != release_id:
+            continue
+        if row.get("dataset_revision_id") != revision_id:
+            continue
+        if row.get("axis_id") != axis_id:
+            continue
+        if flag is not None and row.get("flag") != flag:
+            continue
+
+        depth_from = float(row["depth_from_m"])
+        depth_to = float(row["depth_to_m"])
+
+        if from_m is not None and depth_to < from_m:
+            continue
+        if to_m is not None and depth_from > to_m:
+            continue
+
+        item = dict(row)
+
+        for key in ("first_sample_no", "last_sample_no", "n_samples"):
+            item[key] = int(item[key])
+
+        for key in (
+            "depth_from_m",
+            "depth_to_m",
+            "coverage",
+            "robust_distance",
+            "mahalanobis",
+            "reconstruction_error",
+            "anomaly_score",
+            "isolation_score",
+            "lof_score",
+            "max_z",
+        ):
+            item[key] = (
+                float(item[key])
+                if item.get(key) not in (None, "")
+                else None
+            )
+
+        items.append(item)
+
+    page = items[offset : offset + limit + 1]
+
+    return {
+        "items": page[:limit],
+        "next_offset": (
+            offset + limit
+            if len(page) > limit
+            else None
+        ),
     }

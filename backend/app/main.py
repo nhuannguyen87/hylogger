@@ -15,6 +15,7 @@ from app.repository import (
     get_logs_by_revision,
     get_samples_by_revision,
     get_intervals_by_revision,
+    get_anomalies_by_revision,
     get_issues_by_revision,
     get_nearby_holes,
     get_boreholes_v1,
@@ -373,6 +374,56 @@ def get_dataset_intervals(
     }
 
 
+
+@app.get("/v1/datasets/{revision_id}/anomalies")
+def get_dataset_anomalies(
+    revision_id: UUID,
+    axis_id: UUID,
+    from_m: float | None = None,
+    to_m: float | None = None,
+    flag: str | None = None,
+    offset: int = Query(default=0, ge=0),
+    limit: int = Query(default=200, ge=1, le=1000),
+):
+    if (
+        from_m is not None
+        and to_m is not None
+        and from_m > to_m
+    ):
+        raise HTTPException(
+            status_code=422,
+            detail="from_m cannot be greater than to_m",
+        )
+
+    if flag not in (None, "normal", "high"):
+        raise HTTPException(
+            status_code=422,
+            detail="flag must be normal or high",
+        )
+
+    result = get_anomalies_by_revision(
+        revision_id=str(revision_id),
+        axis_id=str(axis_id),
+        from_m=from_m,
+        to_m=to_m,
+        flag=flag,
+        offset=offset,
+        limit=limit,
+    )
+
+    if result is None:
+        raise HTTPException(
+            status_code=404,
+            detail="Dataset revision or axis not found in active release",
+        )
+
+    return {
+        "dataset_revision_id": str(revision_id),
+        "axis_id": str(axis_id),
+        "interval_bounds": "inclusive sample indices",
+        "anomaly_score_semantics": "0-100 percentile within the model batch; not a probability",
+        **result,
+    }
 
 @app.get("/v1/datasets/{revision_id}/issues")
 def get_dataset_issues(revision_id: UUID):

@@ -509,3 +509,40 @@ def test_09atd015_does_not_expose_tir_spectral_logs():
         item["spectral_region"] != "TIR"
         for item in spectral_logs
     )
+
+def test_anomaly_endpoint_returns_high_intervals():
+    response = client.get(
+        "/v1/datasets/"
+        "ca3660de-f678-5256-89f5-40d17832e4eb/"
+        "anomalies",
+        params={
+            "axis_id": "b9ba28cd-0216-5314-83df-f6247b0f56b6",
+            "flag": "high",
+            "limit": 100,
+        },
+    )
+
+    assert response.status_code == 200
+
+    data = response.json()
+
+    assert data["dataset_revision_id"] == (
+        "ca3660de-f678-5256-89f5-40d17832e4eb"
+    )
+    assert data["axis_id"] == (
+        "b9ba28cd-0216-5314-83df-f6247b0f56b6"
+    )
+    assert len(data["items"]) == 10
+    assert all(item["flag"] == "high" for item in data["items"])
+    assert data["next_offset"] is None
+
+    first = data["items"][0]
+
+    assert first["hole_id"] == "07THD002"
+    assert first["release_id"] == (
+        "fd02659c-dc3d-52ea-a8eb-c032b91e7624"
+    )
+    assert first["first_sample_no"] <= first["last_sample_no"]
+    assert first["depth_from_m"] <= first["depth_to_m"]
+    assert isinstance(first["anomaly_score"], float)
+    assert first["score_reliability"] == "high"
