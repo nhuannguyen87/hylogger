@@ -299,14 +299,42 @@ Example:
 GET /v1/datasets/ca3660de-f678-5256-89f5-40d17832e4eb/intervals?axis_id=b9ba28cd-0216-5314-83df-f6247b0f56b6&kind=section&limit=50
 ```
 ---
-## 13. Data Quality / QA Issues
+## 13. Anomaly Intervals
+
+```http
+GET /v1/datasets/{revision_id}/anomalies
+```
+
+Required:
+
+```text
+axis_id
+```
+
+Optional:
+
+```text
+from_m
+to_m
+flag=normal
+flag=high
+offset
+limit
+```
+
+The endpoint returns anomaly intervals linked to the ETL4 release, dataset revision, axis, and sample-number range.
+
+`anomaly_score` is a 0-100 percentile within the model batch and should not be displayed as a probability.
+
+---
+## 14. Data Quality / QA Issues
 ```http
 GET /v1/datasets/{revision_id}/issues
 ```
 Returns ETL4 quality issues and source references.
 The frontend should display these as source/data-quality information where useful.
 ---
-## 14. Confidence
+## 15. Confidence
 Task 2 has agreed that confidence is derived from the original Process Level.
 Current mapping:
 ```text
@@ -324,7 +352,7 @@ Important:
 The current confidence definition applies to the whole borehole/dataset, not individual depth samples.
 The old Django prototype used a numeric per-depth confidence value. That should not be treated as the final confidence model.
 ---
-## 15. Current Pilot Boreholes
+## 16. Current Pilot Boreholes
 ```text
 05KCD001
 07THD002
@@ -335,7 +363,7 @@ The old Django prototype used a numeric per-depth confidence value. That should 
 The API is database-driven and is not hard-coded to these five IDs.
 Additional drillholes can be exposed when Task 1 adds them to the ETL4 database/release.
 ---
-## 16. Error Handling
+## 17. Error Handling
 Typical API responses:
 ```text
 200 = success
