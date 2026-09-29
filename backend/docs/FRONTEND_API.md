@@ -335,22 +335,22 @@ Returns ETL4 quality issues and source references.
 The frontend should display these as source/data-quality information where useful.
 ---
 ## 15. Confidence
-Task 2 has agreed that confidence is derived from the original Process Level.
-Current mapping:
+Task 2 has agreed that confidence will be derived from the original Process Level.
+
+Planned mapping:
 ```text
 Process Level 0 -> Low
 Process Level 1 -> Medium
 Process Level 2 -> High
 ```
-The original `process_level` should remain available for traceability.
-A separate value such as:
-```text
-confidence_level
-```
-should be used by the frontend.
-Important:
-The current confidence definition applies to the whole borehole/dataset, not individual depth samples.
-The old Django prototype used a numeric per-depth confidence value. That should not be treated as the final confidence model.
+
+The original `process_level` should remain available for traceability, with a separate `confidence_level` exposed to the frontend.
+
+The current ETL4 release does not yet expose `process_level` or `confidence_level` in the database or normalized dataset metadata, so the FastAPI backend does not currently fabricate these fields.
+
+Once Task 1 or Task 2 provides the authoritative source value, the backend can expose the agreed mapping.
+
+The confidence definition applies to the whole borehole/dataset, not individual depth samples. The old Django prototype used a numeric per-depth confidence value; that should not be treated as the final confidence model.
 ---
 ## 16. Current Pilot Boreholes
 ```text
