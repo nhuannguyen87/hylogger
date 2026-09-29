@@ -123,6 +123,12 @@ export default function StripLog({
           {hover.m.mineral_1_pct ? ` ${(hover.m.mineral_1_pct * 100).toFixed(0)}%` : ""}
           <br />
           confidence {hover.m.confidence.toFixed(2)} · {hover.m.quality_flag}
+          {hover.m.why && (
+            <>
+              <br />
+              <span style={{ color: "var(--text-dim)" }}>{hover.m.why}</span>
+            </>
+          )}
           {hover.m.is_anomaly && (
             <>
               <br />
