@@ -93,7 +93,13 @@ export default function HoleDetail({ holeId, onSelect }) {
 
       <table className="facts">
         <tbody>
-          <tr><td>Length</td><td>{fmt(hole.borehole_length_m)} m</td></tr>
+          <tr title={'GSWA catalog "Total (m)": metres of core scanned, not the depth of the hole'}>
+            <td>Scanned</td><td>{fmt(hole.borehole_length_m)} m</td>
+          </tr>
+          <tr title="Depth range the mineral log covers - often starts below the collar">
+            <td>Logged</td>
+            <td>{hole.logged_to_m == null ? "–" : `${fmt(hole.logged_from_m)}–${fmt(hole.logged_to_m)} m`}</td>
+          </tr>
           <tr><td>Collar elevation</td><td>{fmt(hole.elevation_m)} m</td></tr>
           <tr><td>Latitude</td><td>{hole.latitude?.toFixed(5)}</td></tr>
           <tr><td>Longitude</td><td>{hole.longitude?.toFixed(5)}</td></tr>
@@ -147,8 +153,8 @@ export default function HoleDetail({ holeId, onSelect }) {
             </button>
           ))}
           <p style={{ marginTop: 12 }}>
-            <Link href={`/compare?a=${hole.hole_id}&b=${nearby[0].hole_id}`}>
-              Compare with {nearby[0].hole_id} →
+            <Link href={`/viewer3d?a=${encodeURIComponent(hole.hole_id)}&b=${encodeURIComponent(nearby[0].hole_id)}`}>
+              Compare with {nearby[0].hole_id} in 3D →
             </Link>
           </p>
         </div>
@@ -184,8 +190,17 @@ function Legend({ measurements, lowConfidence }) {
   );
 }
 
+// One label per backend/holes/*_bridge.py source value - keep in sync with
+// views.hole_spectral_sample's three-tier fallback order.
+const SPECTRAL_SOURCE_LABELS = {
+  database5553: "restored locally",
+  data5553_tsg: "local TSG file",
+  nvcl_live: "live from NVCL",
+};
+
 /** Real per-depth mineral calls + a VSWIR/TIR sparkline, from etl4_bridge.py
- * (database5553/, instant) or nvcl_bridge.py (live NVCL, a few seconds). */
+ * (database5553/, instant), tsg_bridge.py (data5553/, instant) or
+ * nvcl_bridge.py (live NVCL, a few seconds). */
 function FullSpectrum({ sample }) {
   const uniqueMinerals = [...new Set(sample.minerals.map((m) => m.mineral))];
 
@@ -194,7 +209,7 @@ function FullSpectrum({ sample }) {
       <p className="hint" style={{ marginBottom: 8 }}>
         Sample {sample.sample_no} of {sample.sample_count} · {sample.md_m?.toFixed(2)} m
         {" · "}
-        {sample.source === "database5553" ? "restored locally" : "live from NVCL"}
+        {SPECTRAL_SOURCE_LABELS[sample.source] || sample.source}
       </p>
 
       {uniqueMinerals.length > 0 && (

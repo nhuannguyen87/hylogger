@@ -35,8 +35,7 @@ Open **http://localhost:3000**.
 | Page | What it does |
 |------|--------------|
 | **Explore** | Map of every hole. Click one, get its details and its mineral log. |
-| **Compare** | Two holes side by side on the same depth scale, with the distance between them from PostGIS. |
-| **3D** | Hole traces underground, coloured by mineral or by anomaly score. |
+| **3D** | The map until you click a hole; then it opens beside the map as a real drill core - its NVCL tray photos wrapped round a cylinder at their true depths, with its mineral log alongside. Scroll to go down the hole; click a second hole to compare the two at the same depth. |
 
 The mineral log is the heart of it. Three things are drawn differently on purpose:
 
