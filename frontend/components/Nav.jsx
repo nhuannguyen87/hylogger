@@ -1,6 +1,6 @@
 "use client";
 
-// Top bar: brand, the three views, and live counts from the API.
+// Top bar: brand, the two views, and live counts from the API.
 
 import Link from "next/link";
 import { usePathname } from "next/navigation";
@@ -9,8 +9,7 @@ import { getStats } from "@/lib/api";
 
 const VIEWS = [
   { href: "/", label: "Explore" },
-  { href: "/compare", label: "Compare" },
-  { href: "/viewer3d", label: "3D" },
+  { href: "/viewer3d", label: "3D" }, // also where two holes are compared
 ];
 
 export default function Nav() {
