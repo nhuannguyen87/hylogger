@@ -75,16 +75,6 @@ a { color: var(--accent); text-decoration: none; }
 
 .columns { flex: 1; display: flex; min-height: 0; }
 
-.sidebar {
-  width: 124px;
-  flex: 0 0 124px;
-  background: var(--panel);
-  border-right: 1px solid var(--line);
-  display: flex;
-  flex-direction: column;
-  min-height: 0;
-}
-
 .detail {
   width: 253px;
   flex: 0 0 253px;
@@ -123,14 +113,15 @@ input:focus, select:focus, button:focus-visible, a:focus-visible {
   outline-offset: 1px;
 }
 
-.search-row { padding: 12px; border-bottom: 1px solid var(--line); }
-
 .checkbox {
   display: flex; align-items: center; gap: 8px;
   margin-top: 10px; color: var(--text-dim); font-size: 12px; cursor: pointer;
 }
 
-.hole-list { overflow-y: auto; flex: 1; }
+.hole-list {
+  max-height: 40vh; overflow-y: auto;
+  margin: 8px -12px -10px; border-top: 1px solid var(--line);
+}
 
 .hole-row {
   display: flex;
@@ -321,15 +312,31 @@ button.action.primary { background: var(--accent); color: #08201e; border-color:
 }
 .core3d-nav svg { flex: 1; width: 44px; cursor: ns-resize; border-radius: 3px; touch-action: none; }
 
-.controls-3d {
+/* top-left of the map: Explore's hole list over the 3D core panel, each
+   minimising to its header with "−"; stops short of the bottom-left legend */
+.map-panels {
   position: absolute; top: 12px; left: 12px; z-index: 2;
+  display: flex; flex-direction: column; gap: 8px;
+  width: 230px; max-height: calc(100% - 96px); overflow-y: auto; scrollbar-width: thin;
+}
+.map-panel {
   background: rgba(34, 48, 60, 0.9);
   border: 1px solid var(--line);
   border-radius: var(--radius);
-  padding: 12px; width: 230px;
+  padding: 10px 12px;
 }
+.panel-head { display: flex; align-items: center; gap: 8px; }
+.panel-head .checkbox { margin-top: 0; }
+.panel-toggle {
+  margin-left: auto; flex: 0 0 auto;
+  width: 22px; height: 22px; padding: 0;
+  background: var(--bg); color: var(--text-dim);
+  border: 1px solid var(--line); border-radius: var(--radius);
+  font: 600 15px/1 var(--mono); cursor: pointer;
+}
+.panel-toggle:hover { color: var(--text); border-color: var(--accent); }
 
-/* bottom-right: the left side already holds .controls-3d and the Explore legend;
+/* bottom-right: the left side already holds .map-panels and the Explore legend;
    34px clears the map attribution */
 .core-strip-panel {
   position: absolute; bottom: 34px; right: 12px; z-index: 2;
@@ -347,7 +354,13 @@ button.action.primary { background: var(--accent); color: #08201e; border-color:
   border: 1px solid var(--line); border-radius: var(--radius);
 }
 .core-strip-pair img { display: block; width: 60px; height: auto; flex-shrink: 0; }
-.controls-3d input[type="range"] { width: 100%; }
+/* ETL4 core photos: one ~400x25 px crop per tray row, depth left to right -
+   stacked like the rows of a tray instead of side-by-side tall sheets */
+.core-strip-sheets:has(.rows) { flex-direction: column; gap: 2px; max-height: 38vh; overflow-y: auto; }
+.core-strip-sheets:has(.rows) .core-strip-sheet { flex-direction: row; gap: 8px; }
+.core-strip-pair.rows { height: auto; overflow: visible; border: 0; }
+.core-strip-pair.rows img { width: 300px; }
+.map-panel input[type="range"] { width: 100%; }
 
 .seg { display: flex; gap: 6px; margin-top: 8px; }
 .seg button {
@@ -366,7 +379,7 @@ button.action.primary { background: var(--accent); color: #08201e; border-color:
 
 @media (max-width: 900px) {
   .columns { flex-direction: column; }
-  .sidebar, .detail { width: 100%; flex: 0 0 auto; max-height: 45vh; border: 0; border-top: 1px solid var(--line); }
+  .detail { width: 100%; flex: 0 0 auto; max-height: 45vh; border: 0; border-top: 1px solid var(--line); }
   .map-area { min-height: 320px; }
   .split { flex-direction: column; }
   .core3d-area { flex-basis: 60%; border-left: 0; border-top: 1px solid var(--line); }

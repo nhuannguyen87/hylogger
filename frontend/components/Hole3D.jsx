@@ -131,7 +131,7 @@ export default function Hole3D({ holeIds, distanceKm, onClose }) {
 
       {scene.ready && scene.cores.every((core) => !core.rows.length && !core.measurements.length && !core.strip?.building) && (
         <p className="core3d-empty">
-          NVCL has no tray photos or mineral log for {holeIds.join(" or ")}, so there is nothing to draw here.
+          ETL4 has no core photos or mineral log for {holeIds.join(" or ")}, so there is nothing to draw here.
           Pick another hole on the map.
         </p>
       )}
@@ -264,7 +264,7 @@ function stripDiameter(strip) {
 function photoStatus(core) {
   const { strip } = core;
   if (strip === undefined) return "loading…";
-  if (strip.building) return "building core photo from NVCL (~1 min)…";
+  if (strip.building) return "loading core photo…";
   if (strip.unavailable) return "no core photo - mineral colours only";
   return `core photo ${strip.depth_min_m.toFixed(0)}–${strip.depth_max_m.toFixed(0)} m`;
 }
@@ -323,12 +323,30 @@ function useRowTextures(wanted) {
 }
 
 function cropRow(image, row) {
+  if (row.rotate) return uprightRow(image, row);
   const height = Math.max(1, Math.round(row.y_to_px - row.y_from_px));
   const scale = Math.min(1, MAX_TEXTURE_DIM / height);
   const canvas = document.createElement("canvas");
   canvas.width = image.naturalWidth;
   canvas.height = Math.max(1, Math.round(height * scale));
   canvas.getContext("2d").drawImage(image, 0, row.y_from_px, image.naturalWidth, height, 0, 0, canvas.width, canvas.height);
+  return canvas;
+}
+
+/** An ETL4 row crop runs depth left to right; stand it up so depth runs down,
+ * like a core_strip.py sheet (`flip` when the source runs right to left). */
+function uprightRow(image, row) {
+  const canvas = document.createElement("canvas");
+  canvas.width = image.naturalHeight;
+  canvas.height = image.naturalWidth;
+  const ctx = canvas.getContext("2d");
+  ctx.translate(canvas.width, 0);
+  ctx.rotate(Math.PI / 2);
+  if (row.flip) {
+    ctx.translate(image.naturalWidth, 0);
+    ctx.scale(-1, 1);
+  }
+  ctx.drawImage(image, 0, 0);
   return canvas;
 }
 

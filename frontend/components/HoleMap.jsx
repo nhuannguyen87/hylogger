@@ -22,6 +22,7 @@ import {
 } from "@/config";
 import { desurveyPoint, desurveyStraightLine } from "@/lib/desurvey";
 import CoreStripPanel from "./CoreStripPanel";
+import MapPanel from "./MapPanel";
 
 const SOURCE = "holes";
 const CORE_COLOUR = [79, 209, 197]; // --accent
@@ -45,6 +46,8 @@ export default function HoleMap({
   // Holes kept bright while the rest dim (the 3D page's open cores); without
   // it, the clicked hole (flyToId) is the one in focus.
   focusIds = null,
+  // A MapPanel stacked above the 3D core one (Explore's hole list).
+  panel = null,
 }) {
   const containerRef = useRef(null);
   const mapRef = useRef(null);
@@ -187,19 +190,17 @@ export default function HoleMap({
     highlightedRef.current = [selectedId, selectedIdB].filter(Boolean);
   }, [selectedId, selectedIdB, holes]);
 
-  // 3b. fly to a hole - deliberately separate from highlighting above, and
-  // keyed on flyToId (defaults to selectedId) rather than always hover:
-  // Explore passes the clicked detailId here, so sweeping the mouse down the
-  // list previews the highlight without also yanking the camera around.
-  const effectiveFlyToId = flyToId ?? selectedId;
+  // 3b. fly to a hole - only the clicked one (flyToId), never selectedId:
+  // on Explore that's the hovered hole, and gliding to it pulls another hole
+  // under the cursor, which glides again - the map chases the mouse.
   useEffect(() => {
     const map = mapRef.current;
     if (!map || !readyRef.current || !flyToSelection) return;
-    const target = holes.find((hole) => hole.hole_id === effectiveFlyToId);
+    const target = holes.find((hole) => hole.hole_id === flyToId);
     if (target) {
       map.easeTo({ center: [target.longitude, target.latitude], duration: 600 });
     }
-  }, [effectiveFlyToId, holes, flyToSelection]);
+  }, [flyToId, holes, flyToSelection]);
 
   // 5. tilt the camera when 3D core turns on - at pitch 0 the exaggerated
   // altitude is invisible (you're looking straight down), which is exactly
@@ -217,7 +218,7 @@ export default function HoleMap({
   const legend = useMemo(() => mineralLegend(mineralLogs), [mineralLogs]);
 
   // 7. rebuild the deck.gl core layers whenever the cores, controls or the
-  // committed hole change. Dimming follows the clicked hole (effectiveFlyToId),
+  // committed hole change. Dimming follows the clicked hole (flyToId),
   // not hover: the map is dense enough that the cursor is nearly always over
   // some core, and re-dimming everything on each mouse move made the whole
   // scene flicker.
@@ -226,78 +227,83 @@ export default function HoleMap({
     if (!overlay) return;
     overlay.setProps({
       layers: show3d
-        ? buildCoreLayers(cores, { coreWidth, focus: focusIds ?? (effectiveFlyToId ? [effectiveFlyToId] : []), onSelect: select, onHover, onTooltip: setTooltip })
+        ? buildCoreLayers(cores, { coreWidth, focus: focusIds ?? (flyToId ? [flyToId] : []), onSelect: select, onHover, onTooltip: setTooltip })
         : [],
     });
-  }, [cores, show3d, coreWidth, effectiveFlyToId, focusIds, select, onHover]);
+  }, [cores, show3d, coreWidth, flyToId, focusIds, select, onHover]);
 
   return (
     <>
       <div ref={containerRef} style={{ position: "absolute", inset: 0 }} />
 
-      <div className="controls-3d">
-        <label className="checkbox">
-          <input
-            type="checkbox"
-            checked={show3d}
-            onChange={(event) => setShow3d(event.target.checked)}
-          />
-          3D core (real dip/azimuth)
-        </label>
-
-        {show3d && (
-          <>
-            <p className="section-title" style={{ marginTop: 14 }}>
-              Vertical exaggeration ×{exaggeration}
-            </p>
-            <input
-              type="range"
-              min="1"
-              max="50"
-              value={exaggeration}
-              onChange={(event) => setExaggeration(Number(event.target.value))}
-            />
-
-            <p className="section-title" style={{ marginTop: 10 }}>
-              Core width {coreWidth} m
-            </p>
-            <input
-              type="range"
-              min="2"
-              max="80"
-              value={coreWidth}
-              onChange={(event) => setCoreWidth(Number(event.target.value))}
-            />
-
-            <p className="hint" style={{ marginTop: 8 }}>
-              Right-drag (or Ctrl+drag) to tilt &amp; rotate. Holes are spread
-              over 100s of km, so the lean mostly reads once you zoom into one
-              hole or a tight cluster.
-            </p>
-
-            {legend.length > 0 && (
-              <>
-                <p className="section-title" style={{ marginTop: 14 }}>Mineral group</p>
-                <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", columnGap: 8, fontSize: 11 }}>
-                  {legend.map((group) => (
-                    <div className="legend-item" key={group}>
-                      <span className="legend-swatch" style={{ background: mineralColour(group) }} />
-                      {group || "no call"}
-                    </div>
-                  ))}
-                  <div className="legend-item">
-                    <span className="legend-swatch" style={{ background: LOW_CONFIDENCE_COLOUR }} />
-                    uncertain
-                  </div>
-                  <div className="legend-item">
-                    <span className="legend-swatch" style={{ background: `rgba(${NOT_LOGGED_COLOUR.slice(0, 3)}, 0.5)` }} />
-                    not logged
-                  </div>
+      <div className="map-panels">
+        {panel}
+        {mineralLogs && (
+          <MapPanel label="mineral legend" head={<span className="section-title" style={{ margin: 0 }}>Mineral group</span>}>
+            <p className="hint" style={{ marginTop: 8 }}>Each hole&apos;s most common mineral group.</p>
+            <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", columnGap: 8, fontSize: 11 }}>
+              {legend.map((group) => (
+                <div className="legend-item" key={group}>
+                  <span className="legend-swatch" style={{ background: mineralColour(group) }} />
+                  {group || "no call"}
                 </div>
-              </>
-            )}
-          </>
+              ))}
+              <div className="legend-item">
+                <span className="legend-swatch" style={{ background: LOW_CONFIDENCE_COLOUR }} />
+                uncertain
+              </div>
+              <div className="legend-item">
+                <span className="legend-swatch" style={{ background: `rgba(${NOT_LOGGED_COLOUR.slice(0, 3)}, 0.5)` }} />
+                not logged
+              </div>
+            </div>
+          </MapPanel>
         )}
+        <MapPanel
+          label="3D core panel"
+          head={
+            <label className="checkbox">
+              <input
+                type="checkbox"
+                checked={show3d}
+                onChange={(event) => setShow3d(event.target.checked)}
+              />
+              3D core (real dip/azimuth)
+            </label>
+          }
+        >
+          {show3d && (
+            <>
+              <p className="section-title" style={{ marginTop: 14 }}>
+                Vertical exaggeration ×{exaggeration}
+              </p>
+              <input
+                type="range"
+                min="1"
+                max="50"
+                value={exaggeration}
+                onChange={(event) => setExaggeration(Number(event.target.value))}
+              />
+
+              <p className="section-title" style={{ marginTop: 10 }}>
+                Core width {coreWidth} m
+              </p>
+              <input
+                type="range"
+                min="2"
+                max="80"
+                value={coreWidth}
+                onChange={(event) => setCoreWidth(Number(event.target.value))}
+              />
+
+              <p className="hint" style={{ marginTop: 8 }}>
+                Right-drag (or Ctrl+drag) to tilt &amp; rotate. Holes are spread
+                over 100s of km, so the lean mostly reads once you zoom into one
+                hole or a tight cluster.
+              </p>
+            </>
+          )}
+        </MapPanel>
       </div>
 
       {show3d && tooltip && (
@@ -310,7 +316,7 @@ export default function HoleMap({
       )}
 
       {/* the committed hole (Explore's click), not every hover: the panel fetches */}
-      {show3d && coreStripPanel && <CoreStripPanel holeId={effectiveFlyToId} />}
+      {show3d && coreStripPanel && <CoreStripPanel holeId={flyToId} />}
     </>
   );
 }

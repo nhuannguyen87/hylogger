@@ -3,15 +3,14 @@
 // Almost everything you'd want to tweak lives in this one file.
 // ---------------------------------------------------------------------------
 
-// Where the Django API is. Override with NEXT_PUBLIC_API_BASE in .env.local.
+// Where the FastAPI backend (hylogger/backend) is. Override with
+// NEXT_PUBLIC_API_BASE in .env.local. Its routes live under both /api and /v1,
+// so this is the bare origin.
 export const API_BASE =
-  process.env.NEXT_PUBLIC_API_BASE || "http://localhost:8000/api";
+  process.env.NEXT_PUBLIC_API_BASE || "http://localhost:8000";
 
-// Django's MEDIA_URL is host-relative (e.g. "/media/tray_images/..."), so it
-// needs the API's own origin prepended - there's no Next.js rewrite proxying
-// /media, and a bare "/media/..." would otherwise resolve against the
-// Next.js dev server on :3000, not Django on :8000.
-export const MEDIA_BASE = API_BASE.replace(/\/api\/?$/, "");
+// Image URLs from lib/api.js (core photos) are relative to the API's origin.
+export const MEDIA_BASE = API_BASE;
 
 // Basemap: Esri World Imagery (free, no API key). Near full brightness, only
 // lightly desaturated - enough that the saturated mineral colours on top

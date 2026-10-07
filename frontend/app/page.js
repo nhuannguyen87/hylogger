@@ -1,6 +1,7 @@
 "use client";
 
-// The main view: search + list on the left, map in the middle, hole detail right.
+// The main view: the map with the hole list as a minimisable box on it, hole
+// detail on the right.
 
 import { useEffect, useState } from "react";
 import dynamic from "next/dynamic";
@@ -8,6 +9,7 @@ import { getHoles, getMineralLogs } from "@/lib/api";
 import { CONFIDENCE_THRESHOLD } from "@/config";
 import { distinctName } from "@/lib/format";
 import HoleDetail from "@/components/HoleDetail";
+import MapPanel from "@/components/MapPanel";
 
 // MapLibre touches `window`, so it can't run during server rendering.
 const HoleMap = dynamic(() => import("@/components/HoleMap"), {
@@ -56,58 +58,59 @@ export default function ExplorePage() {
     return () => clearTimeout(timer);
   }, [search, anomaliesOnly]);
 
+  const holeList = (
+    <MapPanel label="hole list" head={<span className="section-title" style={{ margin: 0 }}>Holes · {holes.length}</span>}>
+      <input
+        type="search"
+        placeholder="Search hole id or name"
+        value={search}
+        onChange={(event) => setSearch(event.target.value)}
+        style={{ marginTop: 8 }}
+      />
+      <label
+        className="checkbox"
+        title="Holes where the anomaly model marked at least one metre as statistically unusual compared with every other hole - worth a closer look, not proof of ore or of bad data."
+      >
+        <input
+          type="checkbox"
+          checked={anomaliesOnly}
+          onChange={(event) => setAnomaliesOnly(event.target.checked)}
+        />
+        Only holes with unusual readings
+      </label>
+
+      <div className="hole-list">
+        {error && <div className="error" style={{ margin: 12 }}>{error}</div>}
+
+        {!error && holes.length === 0 && (
+          <p className="empty">
+            No holes match.
+            <br />
+            If the list is empty, check the FastAPI backend is running:
+            <br />
+            <code className="mono">cd backend && uvicorn app.main:app</code>
+          </p>
+        )}
+
+        {holes.map((hole) => (
+          <button
+            key={hole.hole_id}
+            className={`hole-row ${hole.hole_id === hoveredId ? "selected" : ""}`}
+            onMouseEnter={() => setHoveredId(hole.hole_id)}
+            onClick={() => openDetail(hole.hole_id)}
+          >
+            <span className="id">{hole.hole_id}</span>
+            {distinctName(hole) && <span className="name">{distinctName(hole)}</span>}
+            {hole.confidential && <span className="badge confidential">confidential</span>}
+            <span className="len">{Math.round(hole.drawn_length_m || 0)} m</span>
+          </button>
+        ))}
+      </div>
+    </MapPanel>
+  );
+
   return (
     <div className="columns">
-      <div className="sidebar">
-        <div className="search-row">
-          <input
-            type="search"
-            placeholder="Search hole id or name"
-            value={search}
-            onChange={(event) => setSearch(event.target.value)}
-          />
-          <label
-            className="checkbox"
-            title="Holes where the anomaly model marked at least one metre as statistically unusual compared with every other hole - worth a closer look, not proof of ore or of bad data."
-          >
-            <input
-              type="checkbox"
-              checked={anomaliesOnly}
-              onChange={(event) => setAnomaliesOnly(event.target.checked)}
-            />
-            Only holes with unusual readings
-          </label>
-        </div>
-
-        <div className="hole-list">
-          {error && <div className="error" style={{ margin: 12 }}>{error}</div>}
-
-          {!error && holes.length === 0 && (
-            <p className="empty">
-              No holes match.
-              <br />
-              If the list is empty on first run, load the data:
-              <br />
-              <code className="mono">python manage.py load_data</code>
-            </p>
-          )}
-
-          {holes.map((hole) => (
-            <button
-              key={hole.hole_id}
-              className={`hole-row ${hole.hole_id === hoveredId ? "selected" : ""}`}
-              onMouseEnter={() => setHoveredId(hole.hole_id)}
-              onClick={() => openDetail(hole.hole_id)}
-            >
-              <span className="id">{hole.hole_id}</span>
-              {distinctName(hole) && <span className="name">{distinctName(hole)}</span>}
-              {hole.confidential && <span className="badge confidential">confidential</span>}
-              <span className="len">{Math.round(hole.drawn_length_m || 0)} m</span>
-            </button>
-          ))}
-        </div>
-      </div>
-
       <div className="map-area">
         <HoleMap
           holes={holes}
@@ -117,6 +120,7 @@ export default function ExplorePage() {
           onHover={setHoveredId}
           onSelect={openDetail}
           flyToId={detailId}
+          panel={holeList}
         />
         <div className="legend">
           <div style={{ color: "var(--text-dim)" }}>{holes.length} holes shown</div>
