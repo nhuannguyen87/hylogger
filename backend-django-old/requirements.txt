@@ -7,23 +7,3 @@ pandas==2.2.2
 numpy==1.26.4
 scikit-learn==1.5.1
 joblib==1.4.2
-
-# holes/etl4_bridge.py - reads the restored ETL4 spectral database (optional:
-# the site works without these, just without the 5-hole full-spectrum feature)
-pyarrow==21.0.0
-pillow==12.3.0
-
-# holes/nvcl_bridge.py - live per-hole spectrum lookup from the NVCL service
-# (optional: same graceful fallback as above if this isn't installed)
-nvcl_kit==1.3.5
-requests==2.34.2
-
-# core_strip.py (imported by holes/views.py) - tray-row detection
-scipy==1.17.1
-
-# holes/tsg_bridge.py - reads raw TSG packages straight from data5553/
-# (optional: same graceful fallback if this isn't installed)
-pytsg==0.5.0
-simplejpeg==1.9.0
-dhcomp==0.4.7
-networkx==3.7

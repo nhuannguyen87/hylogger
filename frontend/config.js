@@ -13,9 +13,12 @@ export const API_BASE =
 // Next.js dev server on :3000, not Django on :8000.
 export const MEDIA_BASE = API_BASE.replace(/\/api\/?$/, "");
 
-// Basemap: Esri World Imagery (free, no API key). Near full brightness, only
-// lightly desaturated - enough that the saturated mineral colours on top
-// still stand out from the ground, without the whole map going murky.
+// Basemap: satellite by default, with a plain streets layer as the alternative -
+// same two free, no-API-key raster sources as the wa-drillhole-map/drillcore-viewer
+// reference projects (Esri World Imagery + CARTO light), so switching between them
+// is just toggling layer visibility (see HoleMap.jsx) rather than reloading the
+// whole map style. MapTiler's topo-v2 style is another option if you have a key:
+//   https://api.maptiler.com/maps/topo-v2/style.json?key=YOUR_KEY
 export const MAP_STYLE = {
   version: 8,
   sources: {
@@ -26,12 +29,16 @@ export const MAP_STYLE = {
       maxzoom: 19,
       attribution: "Imagery &copy; Esri, Maxar, Earthstar Geographics",
     },
+    light: {
+      type: "raster",
+      tiles: ["https://a.basemaps.cartocdn.com/light_all/{z}/{x}/{y}.png"],
+      tileSize: 256,
+      attribution: "&copy; OpenStreetMap contributors &copy; CARTO",
+    },
   },
   layers: [
-    {
-      id: "satellite", type: "raster", source: "satellite",
-      paint: { "raster-saturation": -0.2, "raster-brightness-max": 0.95, "raster-brightness-min": 0.06 },
-    },
+    { id: "satellite", type: "raster", source: "satellite", paint: { "raster-saturation": -0.35 } },
+    { id: "light", type: "raster", source: "light", layout: { visibility: "none" } },
   ],
 };
 
@@ -51,41 +58,24 @@ export const CONFIDENCE_THRESHOLD = 0.5;
 // One colour per mineral GROUP - these are the exact group names
 // files/extract.py's MIN2GRP produces (real TSA/HyLogger mineral-group
 // vocabulary, not raw mineral species). Anything not listed - including a
-// group name TSG returns directly, like PAL-SEP - falls back to
+// group name TSG returns directly, like plain QUARTZ - falls back to
 // UNKNOWN_COLOUR, so a new group never silently renders invisible.
-// mineral_strip.py keeps a copy for the core-photo strip - change both.
-// Saturated and far apart in hue so each strip reads at a glance on the dark
-// satellite basemap; the most common groups (top of the list, by logged
-// metres) get the most distinct hues. None is grey, so a colour can never be
-// mistaken for "uncertain" or "not logged".
 export const MINERAL_COLOURS = {
-  CHLORITE: "#22c55e",
-  "WHITE-MICA": "#fde047",
-  "DARK-MICA": "#ef4444",
-  AMPHIBOLE: "#38bdf8",
-  CARBONATE: "#6366f1",
-  KAOLIN: "#f472b6",
-  SERPENTINE: "#14b8a6",
-  "OTHER-MGOH": "#a3e635",
-  SMECTITE: "#c2410c",
-  SULPHATE: "#c084fc",
-  EPIDOTE: "#4d7c0f",
-  TOURMALINE: "#1e40af",
-  QUARTZ: "#f5f5f4",
-  HEMATITE: "#9f1239",
+  KAOLIN: "#c9a227",
+  "WHITE-MICA": "#7fb069",
+  "DARK-MICA": "#5c7a4a",
+  CHLORITE: "#2f9e8f",
+  CARBONATE: "#6a8fd8",
+  SULPHATE: "#d8a6e0",
+  EPIDOTE: "#8fae4a",
+  AMPHIBOLE: "#4a7a8f",
+  SERPENTINE: "#3f8f6a",
+  SMECTITE: "#b08050",
+  TOURMALINE: "#2f2f3f",
+  "OTHER-MGOH": "#9a9a5a",
+  QUARTZ: "#e8e3d8",
+  HEMATITE: "#c0453b",
   OTHER: "#8c9aa5",
-  // Groups the thermal-infrared (TIR) classification calls - the silicates
-  // SWIR can't see. OTHER-ALOH turns up in TSA SWIR logs too. SILICA is
-  // TIR's quartz group and OXIDE hematite's, so they share those colours.
-  SILICA: "#f5f5f4",
-  OXIDE: "#9f1239",
-  PLAGIOCLASE: "#7c3aed",
-  "K-FELDSPAR": "#fda4af",
-  PYROXENE: "#0891b2",
-  OLIVINE: "#bef264",
-  "OTHER-ALOH": "#d946ef",
-  PHOSPHATE: "#e11d48",
-  GARNET: "#965970",
 };
 
 export const UNKNOWN_COLOUR = "#4a5560"; // no mineral logged

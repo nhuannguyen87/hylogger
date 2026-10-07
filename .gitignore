@@ -18,22 +18,13 @@ frontend/npm-debug.log*
 !.env.example
 !frontend/.env.local.example
 
-# Generated data (regenerate with the ETL pipeline)
+# Generated data (regenerate with make_sample_data.py / the ETL pipeline)
 data/*.csv
-data/*.json
-data/.cache/
-data/csv/
-data/media/
 data/raw/
-data/state/
 files/data/
-# ...except the real GSWA/NVCL data the site loads, so ./setup.sh works without the pipeline
-!data/holes.csv
-!data/measurements.csv
 
-# Django (setup.sh / reload-data.sh retrain the model)
+# Django
 backend/**/migrations/**/*.pyc
-backend-django-old/ml_models/
 *.sqlite3
 staticfiles/
 

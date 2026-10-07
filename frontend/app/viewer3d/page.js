@@ -1,86 +1,129 @@
 "use client";
 
-// 3D: the satellite map on its own until you click a hole - then that hole
-// opens on the right as a real drill core (its NVCL tray photos wrapped round
-// a cylinder at their true depths, see Hole3D). Click a second hole to stand
-// the two cores side by side at the same depth; click a chosen hole again,
-// or its ×, to put it back.
+// Pick a few holes and look at them underground.
 
-import { Suspense, useEffect, useState } from "react";
+import { useEffect, useState } from "react";
 import dynamic from "next/dynamic";
-import { useSearchParams } from "next/navigation";
-import { getDistance, getHoles, getMineralLogs } from "@/lib/api";
-import { CONFIDENCE_THRESHOLD } from "@/config";
+import { getHoles, getNearby, getTrace } from "@/lib/api";
+import { DEFAULT_VERTICAL_EXAGGERATION } from "@/config";
+import { distinctName } from "@/lib/format";
+import CoreStripPanel from "@/components/CoreStripPanel";
 
-const HoleMap = dynamic(() => import("@/components/HoleMap"), {
-  ssr: false,
-  loading: () => <p className="hint" style={{ padding: 16 }}>Loading map…</p>,
-});
 const Hole3D = dynamic(() => import("@/components/Hole3D"), { ssr: false });
 
-const MAX_HOLES = 2; // the map marks two (A and B); a third click replaces the older
+const MAX_HOLES = 12; // keeps it readable and the browser happy
 
-export default function Viewer3DPageWrapper() {
-  // useSearchParams needs a Suspense boundary in the app router
-  return (
-    <Suspense fallback={<div className="page"><p className="hint">Loading…</p></div>}>
-      <Viewer3DPage />
-    </Suspense>
-  );
-}
-
-function Viewer3DPage() {
-  const params = useSearchParams();
+export default function Viewer3DPage() {
   const [holes, setHoles] = useState([]);
-  const [mineralLogs, setMineralLogs] = useState(null);
-  const [chosen, setChosen] = useState(() => [params.get("a"), params.get("b")].filter(Boolean));
-  const [distance, setDistance] = useState(null);
+  const [chosen, setChosen] = useState([]);
+  const [traces, setTraces] = useState([]);
+  const [exaggeration, setExaggeration] = useState(DEFAULT_VERTICAL_EXAGGERATION);
+  const [colourBy, setColourBy] = useState("mineral");
   const [error, setError] = useState(null);
 
   useEffect(() => {
-    getHoles().then(setHoles).catch((err) => setError(err.message));
-    getMineralLogs(CONFIDENCE_THRESHOLD).then(setMineralLogs).catch(() => setMineralLogs(null));
+    getHoles()
+      .then((data) => {
+        setHoles(data);
+        if (data.length) setChosen([data[0].hole_id]);
+      })
+      .catch((err) => setError(err.message));
   }, []);
 
-  const [a, b] = chosen;
   useEffect(() => {
-    setDistance(null);
-    if (a && b) getDistance(a, b).then(setDistance).catch(() => setDistance(null));
-  }, [a, b]);
+    if (!chosen.length) {
+      setTraces([]);
+      return;
+    }
+    Promise.all(chosen.map((holeId) => getTrace(holeId)))
+      .then(setTraces)
+      .catch((err) => setError(err.message));
+  }, [chosen]);
 
   function toggle(holeId) {
-    setChosen((current) => (current.includes(holeId)
-      ? current.filter((id) => id !== holeId)
-      : [...current, holeId].slice(-MAX_HOLES)));
+    setChosen((current) =>
+      current.includes(holeId)
+        ? current.filter((id) => id !== holeId)
+        : [...current, holeId].slice(-MAX_HOLES)
+    );
+  }
+
+  /** Add the closest handful of holes to whatever is already selected. */
+  async function addNeighbours() {
+    if (!chosen.length) return;
+    const nearby = await getNearby(chosen[0], 100);
+    setChosen((current) =>
+      [...new Set([...current, ...nearby.slice(0, 5).map((h) => h.hole_id)])].slice(0, MAX_HOLES)
+    );
   }
 
   return (
-    <div className="split">
-      <div className="map-area">
-        {error && <div className="error" style={{ position: "absolute", top: 12, left: 260, zIndex: 3 }}>{error}</div>}
-        <HoleMap
-          holes={holes}
-          mineralLogs={mineralLogs}
-          initial3d
-          selectedId={a}
-          selectedIdB={b}
-          onSelect={toggle}
-          flyToId={chosen[chosen.length - 1]}
-          coreStripPanel={false}
-          focusIds={chosen}
-        />
-        {!chosen.length && (
-          <div className="legend">
-            Click a hole to open its core in 3D · click a second one to compare them side by side
-          </div>
-        )}
+    <div className="columns">
+      <div className="sidebar">
+        <div className="search-row">
+          <p className="section-title">Holes in view</p>
+          <p className="hint">
+            Up to {MAX_HOLES}. Drag to rotate, scroll to zoom.
+          </p>
+          <button
+            className="action"
+            style={{ marginTop: 10, width: "100%" }}
+            onClick={addNeighbours}
+            disabled={!chosen.length}
+          >
+            Add 5 nearest holes
+          </button>
+        </div>
+
+        <div className="hole-list">
+          {error && <div className="error" style={{ margin: 12 }}>{error}</div>}
+          {holes.map((hole) => (
+            <button
+              key={hole.hole_id}
+              className={`hole-row ${chosen.includes(hole.hole_id) ? "selected" : ""}`}
+              onClick={() => toggle(hole.hole_id)}
+            >
+              <span className="id">{hole.hole_id}</span>
+              {distinctName(hole) && <span className="name">{distinctName(hole)}</span>}
+              <span className="len">{Math.round(hole.borehole_length_m || 0)} m</span>
+            </button>
+          ))}
+        </div>
       </div>
 
-      {chosen.length > 0 && (
-        <div className="core3d-area">
-          <Hole3D holeIds={chosen} distanceKm={distance?.distance_km} onClose={toggle} />
+      <div className="map-area">
+        <Hole3D
+          traces={traces}
+          holes={holes}
+          verticalExaggeration={exaggeration}
+          colourBy={colourBy}
+        />
+
+        <div className="controls-3d">
+          <p className="section-title">Colour by</p>
+          <select value={colourBy} onChange={(event) => setColourBy(event.target.value)}>
+            <option value="mineral">Mineral</option>
+            <option value="anomaly">Anomaly score</option>
+          </select>
+
+          <p className="section-title" style={{ marginTop: 14 }}>
+            Depth stretch ×{exaggeration}
+          </p>
+          <input
+            type="range"
+            min="1"
+            max="80"
+            value={exaggeration}
+            onChange={(event) => setExaggeration(Number(event.target.value))}
+          />
+          <p className="hint" style={{ marginTop: 6 }}>
+            Real holes are kilometres apart and only metres wide, so depth is
+            stretched to make them visible. Set this to 1 for true scale.
+          </p>
         </div>
-      )}
+
+        <CoreStripPanel holeId={chosen[0]} />
+      </div>
     </div>
   );
 }

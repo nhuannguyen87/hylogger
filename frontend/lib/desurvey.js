@@ -13,60 +13,31 @@
 const METRES_PER_DEGREE_LAT = 110540;
 
 /**
- * @param {{latitude:number, longitude:number, elevation_m:?number, drawn_length_m:?number, inclination_deg:?number, azimuth_deg:?number}} hole
+ * @param {{latitude:number, longitude:number, elevation_m:?number, borehole_length_m:?number, inclination_deg:?number, azimuth_deg:?number}} hole
  * @param {number} exaggeration - depth stretch factor, purely visual
  * @returns {{collar:number[], toe:number[]}|null} null if the hole has nothing to draw (no depth or trajectory)
  */
 export function desurveyStraightLine(hole, exaggeration = 1) {
-  // Not borehole_length_m: that's metres of core scanned, and logging often
-  // starts below the collar - drawn_length_m reaches the deepest logged metre.
-  const depth = hole.drawn_length_m;
+  const depth = hole.borehole_length_m;
   if (!depth || hole.inclination_deg == null || hole.azimuth_deg == null) return null;
 
-  return {
-    collar: desurveyPoint(hole, 0, exaggeration),
-    toe: desurveyPoint(hole, depth, exaggeration),
-  };
-}
-
-/**
- * Any depth down the hole on that same collar-to-toe line, as
- * [lng, lat, altitude-metres] - e.g. where one mineral run starts and ends, so
- * the run lands exactly on the line desurveyStraightLine draws.
- */
-export function desurveyPoint(hole, depthM, exaggeration = 1) {
   const incRad = (hole.inclination_deg * Math.PI) / 180;
   const azRad = (hole.azimuth_deg * Math.PI) / 180;
 
-  const horizontal = depthM * Math.cos(incRad); // metres, flat distance from collar
-  const tvd = -depthM * Math.sin(incRad); // metres, positive = downward
+  const horizontal = depth * Math.cos(incRad); // metres, flat distance from collar
+  const tvd = -depth * Math.sin(incRad); // metres, positive = downward
   const east = horizontal * Math.sin(azRad);
   const north = horizontal * Math.cos(azRad);
 
   const metresPerDegreeLon = METRES_PER_DEGREE_LAT * Math.cos((hole.latitude * Math.PI) / 180);
   const collarZ = hole.elevation_m ?? 0;
 
-  return [
-    hole.longitude + east / metresPerDegreeLon,
-    hole.latitude + north / METRES_PER_DEGREE_LAT,
-    collarZ - tvd * exaggeration,
-  ];
-}
-
-/**
- * Same straight-line desurvey as above, but for a single arbitrary depth
- * rather than only the toe - e.g. a core-photo cylinder segment positioned
- * at its own depth range, independent of the hole's logged trace (a
- * core_strip.py photo run can extend past what's been logged).
- * @returns {{east_m:number, north_m:number, tvd_m:number}} unexaggerated - positive tvd_m is downward
- */
-export function desurveyOffset(depthM, inclinationDeg, azimuthDeg) {
-  const incRad = (Math.abs(inclinationDeg) * Math.PI) / 180;
-  const azRad = ((azimuthDeg || 0) * Math.PI) / 180;
-  const horizontal = depthM * Math.cos(incRad);
   return {
-    east_m: horizontal * Math.sin(azRad),
-    north_m: horizontal * Math.cos(azRad),
-    tvd_m: depthM * Math.sin(incRad),
+    collar: [hole.longitude, hole.latitude, collarZ],
+    toe: [
+      hole.longitude + east / metresPerDegreeLon,
+      hole.latitude + north / METRES_PER_DEGREE_LAT,
+      collarZ - tvd * exaggeration,
+    ],
   };
 }

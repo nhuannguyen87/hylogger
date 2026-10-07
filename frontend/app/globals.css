@@ -5,12 +5,12 @@
    -------------------------------------------------------------------------- */
 
 :root {
-  --bg: #1a2530;
-  --panel: #22303c;
-  --panel-raised: #2b3a47;
-  --line: #3a4a58;
-  --text: #f0f4f7;
-  --text-dim: #a3b3bf;
+  --bg: #0e1418;
+  --panel: #151d23;
+  --panel-raised: #1c262e;
+  --line: #263039;
+  --text: #e6ecf0;
+  --text-dim: #8c9aa5;
   --accent: #4fd1c5;        /* selected / interactive */
   --accent-b: #b98cff;      /* the second hole when comparing */
   --warn: #ffb347;          /* anomalies */
@@ -211,7 +211,7 @@ button.action.primary { background: var(--accent); color: #08201e; border-color:
 
 .legend {
   position: absolute; bottom: 12px; left: 12px; z-index: 2;
-  background: rgba(34, 48, 60, 0.9);
+  background: rgba(21, 29, 35, 0.92);
   border: 1px solid var(--line);
   border-radius: var(--radius);
   padding: 10px 12px;
@@ -278,65 +278,38 @@ button.action.primary { background: var(--accent); color: #08201e; border-color:
 .tray-card-scan:last-child { padding-bottom: 8px; }
 .tray-card-label { color: var(--text-dim); flex: 0 0 auto; }
 
-/* 3D view: the map alone until a hole is chosen, then map | core viewer */
-.split { flex: 1; display: flex; min-height: 0; }
-.core3d-area { flex: 0 0 50%; position: relative; min-width: 0; border-left: 1px solid var(--line); }
-.core3d {
-  position: absolute; inset: 0; overflow: hidden; outline: none;
-  /* a soft lit backdrop, like core laid out under a lamp */
-  background: radial-gradient(ellipse at 50% 40%, #3a4d5e 0%, #22303c 55%, #17212a 100%);
-}
-.core3d:focus-visible { box-shadow: inset 0 0 0 2px var(--accent); }
-.core3d-head {
-  position: absolute; top: 10px; left: 12px; right: 70px; z-index: 2;
-  display: flex; flex-wrap: wrap; align-items: center; gap: 8px; pointer-events: none;
-}
-.core3d-chip {
-  display: inline-flex; align-items: center; gap: 7px; pointer-events: auto;
-  padding: 4px 6px 4px 9px; font-size: 12px;
-  background: rgba(34, 48, 60, 0.9); border: 1px solid var(--line); border-left-width: 3px;
+.compare-grid { display: flex; gap: 40px; align-items: flex-start; flex-wrap: wrap; }
+
+.compare-map {
+  position: relative;
+  height: 420px;
+  margin-bottom: 20px;
+  border: 1px solid var(--line);
   border-radius: var(--radius);
+  overflow: hidden;
 }
-.core3d-chip .dot { width: 9px; height: 9px; border-radius: 50%; }
-.core3d-chip button {
-  background: none; border: 0; color: var(--text-dim); font-size: 16px; line-height: 1;
-  cursor: pointer; padding: 0 3px;
+
+.distance-readout {
+  display: flex; align-items: baseline; gap: 12px;
+  padding: 14px 16px; margin-bottom: 24px;
+  background: var(--panel); border: 1px solid var(--line); border-radius: var(--radius);
 }
-.core3d-chip button:hover { color: var(--text); }
-.core3d-foot {
-  position: absolute; left: 12px; right: 70px; bottom: 10px; z-index: 2;
-  display: flex; flex-wrap: wrap; align-items: center; gap: 10px 14px;
-  padding: 8px 10px; background: rgba(34, 48, 60, 0.9);
-  border: 1px solid var(--line); border-radius: var(--radius);
-}
-.core3d-foot .hint { flex: 1 1 260px; font-size: 11px; line-height: 1.45; }
-.core3d-depth { font-size: 22px; color: var(--accent); min-width: 88px; }
-.core3d-empty {
-  position: absolute; top: 42%; left: 40px; right: 80px; z-index: 2;
-  text-align: center; color: var(--text-dim); line-height: 1.6;
-}
-.core3d-nav {
-  position: absolute; top: 10px; bottom: 10px; right: 10px; z-index: 2;
-  display: flex; flex-direction: column; align-items: center; gap: 4px; font-size: 10px;
-}
-.core3d-nav svg { flex: 1; width: 44px; cursor: ns-resize; border-radius: 3px; touch-action: none; }
+.distance-readout .value { font-family: var(--mono); font-size: 26px; color: var(--accent); }
 
 .controls-3d {
   position: absolute; top: 12px; left: 12px; z-index: 2;
-  background: rgba(34, 48, 60, 0.9);
+  background: rgba(21, 29, 35, 0.92);
   border: 1px solid var(--line);
   border-radius: var(--radius);
   padding: 12px; width: 230px;
 }
 
-/* bottom-right: the left side already holds .controls-3d and the Explore legend;
-   34px clears the map attribution */
 .core-strip-panel {
-  position: absolute; bottom: 34px; right: 12px; z-index: 2;
-  background: rgba(34, 48, 60, 0.9);
+  position: absolute; bottom: 12px; left: 12px; z-index: 2;
+  background: rgba(21, 29, 35, 0.92);
   border: 1px solid var(--line);
   border-radius: var(--radius);
-  padding: 12px; max-width: calc(100% - 270px);
+  padding: 12px; max-width: calc(100% - 24px);
 }
 .core-strip-sheets { display: flex; gap: 10px; overflow-x: auto; margin-top: 8px; }
 .core-strip-sheet { display: flex; flex-direction: column; align-items: center; flex: 0 0 auto; }
@@ -368,8 +341,6 @@ button.action.primary { background: var(--accent); color: #08201e; border-color:
   .columns { flex-direction: column; }
   .sidebar, .detail { width: 100%; flex: 0 0 auto; max-height: 45vh; border: 0; border-top: 1px solid var(--line); }
   .map-area { min-height: 320px; }
-  .split { flex-direction: column; }
-  .core3d-area { flex-basis: 60%; border-left: 0; border-top: 1px solid var(--line); }
 }
 
 @media (prefers-reduced-motion: reduce) {

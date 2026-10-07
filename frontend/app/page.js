@@ -4,8 +4,7 @@
 
 import { useEffect, useState } from "react";
 import dynamic from "next/dynamic";
-import { getHoles, getMineralLogs } from "@/lib/api";
-import { CONFIDENCE_THRESHOLD } from "@/config";
+import { getHoles } from "@/lib/api";
 import { distinctName } from "@/lib/format";
 import HoleDetail from "@/components/HoleDetail";
 
@@ -26,16 +25,6 @@ export default function ExplorePage() {
   const [hoveredId, setHoveredId] = useState(null);
   const [detailId, setDetailId] = useState(null);
   const [error, setError] = useState(null);
-  // Every hole's mineral log, fetched once, so the map's 3D cores are
-  // coloured on first load - not only the hole you click. Not refetched with
-  // the search: the map looks each shown hole up in it by id.
-  const [mineralLogs, setMineralLogs] = useState(null);
-
-  useEffect(() => {
-    getMineralLogs(CONFIDENCE_THRESHOLD)
-      .then(setMineralLogs)
-      .catch(() => setMineralLogs(null)); // the cores just stay one plain colour
-  }, []);
 
   function openDetail(holeId) {
     setHoveredId(holeId);
@@ -66,16 +55,13 @@ export default function ExplorePage() {
             value={search}
             onChange={(event) => setSearch(event.target.value)}
           />
-          <label
-            className="checkbox"
-            title="Holes where the anomaly model marked at least one metre as statistically unusual compared with every other hole - worth a closer look, not proof of ore or of bad data."
-          >
+          <label className="checkbox">
             <input
               type="checkbox"
               checked={anomaliesOnly}
               onChange={(event) => setAnomaliesOnly(event.target.checked)}
             />
-            Only holes with unusual readings
+            Only holes with flagged intervals
           </label>
         </div>
 
@@ -102,22 +88,14 @@ export default function ExplorePage() {
               <span className="id">{hole.hole_id}</span>
               {distinctName(hole) && <span className="name">{distinctName(hole)}</span>}
               {hole.confidential && <span className="badge confidential">confidential</span>}
-              <span className="len">{Math.round(hole.drawn_length_m || 0)} m</span>
+              <span className="len">{Math.round(hole.borehole_length_m || 0)} m</span>
             </button>
           ))}
         </div>
       </div>
 
       <div className="map-area">
-        <HoleMap
-          holes={holes}
-          mineralLogs={mineralLogs}
-          initial3d
-          selectedId={hoveredId}
-          onHover={setHoveredId}
-          onSelect={openDetail}
-          flyToId={detailId}
-        />
+        <HoleMap holes={holes} selectedId={hoveredId} onHover={setHoveredId} onSelect={openDetail} flyToId={detailId} />
         <div className="legend">
           <div style={{ color: "var(--text-dim)" }}>{holes.length} holes shown</div>
           <div className="legend-item">

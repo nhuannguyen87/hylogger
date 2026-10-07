@@ -5,9 +5,9 @@
 #
 # What it does:
 #   1. starts Postgres+PostGIS in Docker
-#   2. makes a Python virtual environment and installs the Django prototype (backend-django-old/)
+#   2. makes a Python virtual environment and installs the backend
 #   3. creates the database tables
-#   4. loads the real ETL output (data/holes.csv + data/measurements.csv)
+#   4. generates sample data and loads it
 #   5. trains the anomaly model
 #   6. installs the frontend packages
 
@@ -47,21 +47,24 @@ fi
 # shellcheck disable=SC1091
 source .venv/bin/activate
 python -m pip install --quiet --upgrade pip
-pip install --quiet -r backend-django-old/requirements.txt
+pip install --quiet -r backend/requirements.txt
 
 # --- 3. tables --------------------------------------------------------------
 say "Creating database tables"
-(cd backend-django-old && python manage.py migrate)
+(cd backend && python manage.py migrate)
 
 # --- 4. data ----------------------------------------------------------------
-[ -f data/holes.csv ] && [ -f data/measurements.csv ] || fail "data/holes.csv or data/measurements.csv missing - run the ETL pipeline first (README: Plugging in your real data)."
+if [ ! -f data/holes.csv ]; then
+  say "Generating sample data (swap in your real CSVs later)"
+  python data/make_sample_data.py
+fi
 
 say "Loading data into Postgres"
-(cd backend-django-old && python manage.py load_data --replace)
+(cd backend && python manage.py load_data --replace)
 
 # --- 5. model ---------------------------------------------------------------
 say "Training the anomaly model"
-(cd backend-django-old && python manage.py detect_anomalies)
+(cd backend && python manage.py detect_anomalies)
 
 # --- 6. frontend ------------------------------------------------------------
 say "Installing frontend packages (this one takes a couple of minutes)"
@@ -73,7 +76,7 @@ cat <<DONE
 
   Now open two terminal tabs in $ROOT
 
-    tab 1:   ./run-django.sh       ->  http://localhost:8000/api/holes/
+    tab 1:   ./run-backend.sh      ->  http://localhost:8000/api/holes/
     tab 2:   ./run-frontend.sh     ->  http://localhost:3000
 
   Read README.md next. CUSTOMISE.md covers the changes you're most likely to make.

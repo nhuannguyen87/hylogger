@@ -28,10 +28,6 @@ def to_float(value, default=None):
         return default
 
 
-def to_bool(value):
-    return str(value).strip().lower() in ("true", "1", "yes")
-
-
 class Command(BaseCommand):
     help = "Load holes.csv and measurements.csv into the database."
 
@@ -49,7 +45,7 @@ class Command(BaseCommand):
         if not holes_csv.exists():
             raise SystemExit(
                 f"Can't find {holes_csv}.\n"
-                "Run the ETL pipeline first (README: Plugging in your real data), "
+                "Run `python data/make_sample_data.py` from the project root first, "
                 "or point --dir at your own CSVs."
             )
 
@@ -84,19 +80,16 @@ class Command(BaseCommand):
                     borehole_length_m=to_float(row.get("borehole_length_m")),
                     inclination_deg=to_float(row.get("inclination_deg"), -90.0),
                     azimuth_deg=to_float(row.get("azimuth_deg"), 0.0),
-                    confidential=to_bool(row.get("confidential")),
                 ))
         Hole.objects.bulk_create(
             holes, batch_size=BATCH_SIZE,
             update_conflicts=True,
             update_fields=["hole_name", "latitude", "longitude", "easting", "northing",
-                           "elevation_m", "borehole_length_m", "inclination_deg", "azimuth_deg",
-                           "confidential"],
+                           "elevation_m", "borehole_length_m", "inclination_deg", "azimuth_deg"],
             unique_fields=["hole_id"],
         )
         self.stdout.write(f"Loaded {len(holes)} holes.")
 
-    @transaction.atomic  # the delete below is undone if the reload fails part-way
     def load_measurements(self, path):
         known_holes = set(Hole.objects.values_list("hole_id", flat=True))
         Measurement.objects.all().delete()
@@ -130,7 +123,6 @@ class Command(BaseCommand):
                     mineral_2_pct=to_float(row.get("mineral_2_pct")),
                     confidence=to_float(row.get("confidence"), 0.0),
                     quality_flag=(row.get("quality_flag") or "ok").strip(),
-                    why=(row.get("why") or "").strip(),
                     features=features,
                 ))
 
