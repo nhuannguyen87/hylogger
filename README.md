@@ -5,7 +5,9 @@ are, what the minerals look like down each hole, which readings we don't trust,
 and which intervals are statistically unusual.
 
 Built for CITS5553. Stack matches the project brief: **Next.js → Django REST →
-PostgreSQL/PostGIS**, with a scikit-learn anomaly step in between.
+PostgreSQL/PostGIS**, with a scikit-learn anomaly step in between. The site runs
+on the Django API in `backend-django-old/`; the FastAPI backend in `backend/` is
+replacing it (see `backend/README.md`).
 
 ---
 
@@ -22,11 +24,13 @@ cd CITS5553/team
 Then two terminal tabs:
 
 ```bash
-./run-backend.sh    # Django API on http://localhost:8000
+./run-django.sh     # Django API on http://localhost:8000
 ./run-frontend.sh   # website on http://localhost:3000
 ```
 
-Open **http://localhost:3000**.
+Open **http://localhost:3000**. A hole's core photos are fetched from NVCL the
+first time you open it (~1 min); `python core_strip.py --hole <id> ...` fetches
+some up front. `./run-backend.sh` starts the FastAPI backend instead (same port).
 
 ---
 
@@ -35,8 +39,7 @@ Open **http://localhost:3000**.
 | Page | What it does |
 |------|--------------|
 | **Explore** | Map of every hole. Click one, get its details and its mineral log. |
-| **Compare** | Two holes side by side on the same depth scale, with the distance between them from PostGIS. |
-| **3D** | Hole traces underground, coloured by mineral or by anomaly score. |
+| **3D** | The map until you click a hole; then it opens beside the map as a real drill core - its NVCL tray photos wrapped round a cylinder at their true depths, with its mineral log alongside. Scroll to go down the hole; click a second hole to compare the two at the same depth. |
 
 The mineral log is the heart of it. Three things are drawn differently on purpose:
 
@@ -51,20 +54,22 @@ The mineral log is the heart of it. Three things are drawn differently on purpos
 ```
 CITS5553/team/
 ├── setup.sh                  one-time setup
-├── run-backend.sh            start Django
+├── run-backend.sh            start FastAPI (backend/)
+├── run-django.sh             start the Django API the site uses
 ├── run-frontend.sh           start Next.js
 ├── reload-data.sh            after new ETL output: reload + retrain
 ├── docker-compose.yml        Postgres + PostGIS
+├── core_strip.py             NVCL tray photos -> core-photo strips (+ mineral_strip.py)
 │
 ├── data/
 │   ├── make_sample_data.py   
-│   ├── holes.csv             
-│   └── measurements.csv      
+│   ├── holes.csv             real GSWA/NVCL holes (301)
+│   └── measurements.csv      their per-metre mineral calls (275 logged)
 │
-├── backend/                  Django + DRF
+├── backend-django-old/       Django + DRF - the API the site uses
 │   ├── hylogger/settings.py  database, CORS, paths
 │   └── holes/
-│       ├── models.py         Hole, Measurement
+│       ├── models.py         Hole, Measurement, CoreTray
 │       ├── views.py          every API endpoint, one function each
 │       ├── serializers.py    the exact JSON shape the site receives
 │       ├── geo.py            hole trajectory maths for the 3D view
@@ -72,6 +77,8 @@ CITS5553/team/
 │       └── management/commands/
 │           ├── load_data.py         CSV -> database
 │           └── detect_anomalies.py  train + score
+│
+├── backend/                  FastAPI, replacing Django (see backend/README.md)
 │
 └── frontend/                 Next.js
     ├── config.js             colours, map style, thresholds
@@ -100,6 +107,10 @@ GET /api/holes/H001/trace/         ?step_m=5
 GET /api/holes/H001/nearby/        ?km=25
 GET /api/distance/                 ?a=H001&b=H002
 GET /api/stats/
+GET /api/mineral-logs/             dominant mineral per hole, for map colours
+GET /api/holes/H001/core-strip/    core-photo strip (202 while it's being built)
+GET /api/holes/H001/trays/
+GET /api/holes/H001/spectral-sample/  ?depth_m=
 ```
 
 Show this list to whoever is building the backend on your team — it's the
@@ -110,7 +121,8 @@ happens behind it.
 
 ## Plugging in your real data
 
-The sample data exists so the site runs before your pipeline does. To swap it out:
+`data/holes.csv` and `data/measurements.csv` are real GSWA/NVCL data, so
+`./setup.sh` works straight away. To load more holes:
 
 1. Make `download.py` / `etl.py` write two files into `data/`:
 
@@ -167,6 +179,7 @@ robust scaling
 └── Isolation Forest
         ↓
 combined percentile anomaly score
+```
 
 ## Where to take it next
 
