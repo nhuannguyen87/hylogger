@@ -6,8 +6,7 @@ and which intervals are statistically unusual.
 
 Built for CITS5553. Stack matches the project brief: **Next.js → FastAPI→
 PostgreSQL/PostGIS**, with a scikit-learn anomaly step in between. The site runs
-on the Django API in `backend-django-old/`; the FastAPI backend in `backend/` is
-replacing it (see `backend/README.md`).
+on the FastAPI backend in `backend/`.
 
 ---
 
@@ -19,13 +18,6 @@ Python 3.10+, and Node.js 18+ on your Mac.
 ```bash
 cd CITS5553/team
 ./setup.sh          # one time, takes a few minutes
-```
-
-Then two terminal tabs:
-
-```bash
-./run-django.sh     # Django API on http://localhost:8000
-./run-frontend.sh   # website on http://localhost:3000
 ```
 
 Open **http://localhost:3000**. A hole's core photos are fetched from NVCL the
@@ -113,42 +105,9 @@ GET /api/holes/H001/trays/
 GET /api/holes/H001/spectral-sample/  ?depth_m=
 ```
 
-Show this list to whoever is building the backend on your team — it's the
-contract. As long as the JSON keeps this shape, the frontend doesn't care what
-happens behind it.
 
 ---
 
-## Plugging in your real data
-
-`data/holes.csv` and `data/measurements.csv` are real GSWA/NVCL data, so
-`./setup.sh` works straight away. To load more holes:
-
-1. Make `download.py` / `etl.py` write two files into `data/`:
-
-   **holes.csv**
-   ```
-   hole_id, hole_name, latitude, longitude, easting, northing,
-   elevation_m, borehole_length_m, inclination_deg, azimuth_deg
-   ```
-
-   **measurements.csv**
-   ```
-   hole_id, sample_no, depth_from_m, depth_to_m,
-   mineral_1, mineral_1_pct, mineral_2, mineral_2_pct,
-   confidence, quality_flag, band_<anything>...
-   ```
-
-   Any column starting with `band_` is picked up automatically as a model
-   feature. Ten bands or four hundred — nothing else needs to change.
-
-2. `./reload-data.sh`
-
-`quality_flag` should be one of `ok`, `low_signal`, `missing`. Rows marked
-`missing` are excluded from model training, because a hole in the data isn't a
-geological oddity.
-
----
 
 ## About the anomaly model
 
