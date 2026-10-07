@@ -84,7 +84,7 @@ export default function HoleDetail({ holeId, onSelect }) {
           <span
             className="badge"
             style={{ marginLeft: 8, background: "rgba(185, 140, 255, 0.15)", color: "var(--accent-b)" }}
-            title="Full spectrum restored locally from database5553/ - instant, pre-verified. Every other hole still shows its own spectrum below, fetched live from NVCL."
+            title="Real per-sample VSWIR/TIR spectrum from the ETL4 release, served by FastAPI."
           >
             verified spectrum
           </span>
@@ -127,9 +127,7 @@ export default function HoleDetail({ holeId, onSelect }) {
 
       <p className="section-title" style={{ marginTop: 22 }}>Full spectral data</p>
       {spectral === undefined && (
-        <p className="hint">
-          {hole.has_full_spectrum ? "Loading real VSWIR/TIR spectrum…" : "Checking NVCL for a real spectrum here (a few seconds)…"}
-        </p>
+        <p className="hint">Loading real VSWIR/TIR spectrum…</p>
       )}
       {spectral === null && (
         <p className="hint">No spectral log available for this hole.</p>
@@ -196,6 +194,7 @@ const SPECTRAL_SOURCE_LABELS = {
   database5553: "restored locally",
   data5553_tsg: "local TSG file",
   nvcl_live: "live from NVCL",
+  etl4: "ETL4 via FastAPI",
 };
 
 /** Real per-depth mineral calls + a VSWIR/TIR sparkline, from etl4_bridge.py
