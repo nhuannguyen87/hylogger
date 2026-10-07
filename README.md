@@ -4,7 +4,7 @@ A web tool for looking at NVCL drill-hole mineral logs across WA: where the hole
 are, what the minerals look like down each hole, which readings we don't trust,
 and which intervals are statistically unusual.
 
-Built for CITS5553. Stack matches the project brief: **Next.js → Django REST →
+Built for CITS5553. Stack matches the project brief: **Next.js → FastAPI→
 PostgreSQL/PostGIS**, with a scikit-learn anomaly step in between. The site runs
 on the Django API in `backend-django-old/`; the FastAPI backend in `backend/` is
 replacing it (see `backend/README.md`).
