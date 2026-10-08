@@ -111,34 +111,31 @@ GET /api/holes/H001/spectral-sample/  ?depth_m=
 
 ## About the anomaly model
 
-The anomaly pipeline identifies statistically unusual depth intervals and drill holes
-across the current HyLogger dataset.
+The root-level `anomaly.py` implements Nitya Arya’s cross-hole anomaly model. It identifies unusual depth intervals and compares whole-hole measurement profiles. The model is unsupervised because the ETL4 pilot has no independently verified anomaly labels. Its flags are candidates for expert review, not predictions of ore or confirmed geological anomalies.
 
-Because there are no labelled examples of geological anomalies, the model is
-unsupervised. It compares each interval with the rest of the available data rather
-than attempting to predict ore or economic mineralisation.
+### Interval-level method
 
-### Interval-level detection
+The model groups samples into one-metre intervals, builds numeric and categorical features, normalises category spelling and case, filters invalid or redundant mineral channels, and applies median/IQR-based robust scaling. It combines percentile ranks from robust distance, PCA Mahalanobis distance, PCA reconstruction error and, when available, Isolation Forest. PCA retains enough components to represent 95% of the fitted variation. LOF is recorded as a diagnostic score but is not included in the combined interval score.
 
-Measurements are first aggregated into fixed depth intervals so holes with different
-sampling densities can be compared consistently.
-
-The current pipeline uses several complementary anomaly signals:
+Outputs include depth and sample-number ranges, available release, dataset-revision and axis identifiers, a score, flag, coverage/reliability, and a `why` field listing leading contributing features. Scores are relative to the model batch, not calibrated probabilities.
 
 ```text
-HyLogger measurements
+ETL4 samples from multiple holes
         ↓
-fixed-depth interval aggregation
+one-metre interval features
         ↓
-robust scaling
+robust scaling and feature filtering
         ↓
-├── robust distance
-├── PCA Mahalanobis distance
-├── PCA reconstruction error
-└── Isolation Forest
+robust distance + PCA scores + optional Isolation Forest
         ↓
-combined percentile anomaly score
+combined percentile score, flag and feature explanations
 ```
+
+### ETL4 pilot result
+
+The model was tested on 261,892 samples from five pilot holes: 05KCD001, 07THD002, 07THD003, 09ATD015 and 09ATD019. It produced 1,200 one-metre intervals and flagged 18 (1.5%): 10 in 07THD002, 6 in 07THD003 and 2 in 05KCD001. No intervals were flagged in the other two holes in this run. One flagged interval had low reliability; a prominent candidate was 07THD003 at 251–252 m.
+
+These results show that the model runs on the ETL4 pilot data; they do not prove that its flags are correct. Without expert-reviewed labels, accuracy, precision and recall are unknown. Mahalanobis distance and reconstruction error are both PCA-derived, so PCA may receive extra influence in the combined score. Next steps are expert review and tests comparing the scoring signals and their weights.
 
 ## Where to take it next
 
