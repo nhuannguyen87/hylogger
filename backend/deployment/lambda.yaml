@@ -1,0 +1,121 @@
+AWSTemplateFormatVersion: '2010-09-09'
+Description: Read-only HyLogger FastAPI for an existing Aurora Express database and private S3 assets
+Parameters:
+  CodeBucket:
+    Type: String
+  CodeKey:
+    Type: String
+  DataBucket:
+    Type: String
+  DataPrefix:
+    Type: String
+    Description: Exact verified asset prefix without a leading or trailing slash
+    AllowedPattern: '[A-Za-z0-9_-]+(/[A-Za-z0-9_.-]+)*'
+  DataRootKey:
+    Type: String
+  DatabaseHost:
+    Type: String
+    AllowedPattern: '[a-zA-Z0-9.-]+'
+  DatabaseName:
+    Type: String
+    Default: etl4_core
+    AllowedPattern: '[a-zA-Z0-9_]+'
+  DatabaseResourceId:
+    Type: String
+    Description: Aurora cluster resource ID (cluster-...), not the cluster name
+    AllowedPattern: 'cluster-[A-Za-z0-9]+'
+  DatabaseReader:
+    Type: String
+    Default: etl4_reader
+    AllowedPattern: '[a-zA-Z0-9_]+'
+  AllowedOrigin:
+    Type: String
+    AllowedPattern: 'https://[a-zA-Z0-9.-]+'
+  PublicAccess:
+    Type: String
+    Default: 'false'
+    AllowedValues: ['false', 'true']
+    Description: Explicitly approve public read access to active-release data before setting true
+Conditions:
+  Public: !Equals [!Ref PublicAccess, 'true']
+Resources:
+  ApiLogGroup:
+    Type: AWS::Logs::LogGroup
+    Properties:
+      RetentionInDays: 7
+  ApiRole:
+    Type: AWS::IAM::Role
+    Properties:
+      AssumeRolePolicyDocument:
+        Version: '2012-10-17'
+        Statement:
+          - Effect: Allow
+            Principal:
+              Service: lambda.amazonaws.com
+            Action: sts:AssumeRole
+      Policies:
+        - PolicyName: ReadSelectedData
+          PolicyDocument:
+            Version: '2012-10-17'
+            Statement:
+              - Effect: Allow
+                Action: rds-db:connect
+                Resource: !Sub 'arn:${AWS::Partition}:rds-db:${AWS::Region}:${AWS::AccountId}:dbuser:${DatabaseResourceId}/${DatabaseReader}'
+              - Effect: Allow
+                Action: s3:GetObject
+                Resource: !Sub 'arn:${AWS::Partition}:s3:::${DataBucket}/${DataPrefix}/*'
+              - Effect: Allow
+                Action: [logs:CreateLogStream, logs:PutLogEvents]
+                Resource: !GetAtt ApiLogGroup.Arn
+  ApiFunction:
+    Type: AWS::Lambda::Function
+    Properties:
+      Runtime: python3.12
+      Architectures: [x86_64]
+      Handler: app.lambda_handler.handler
+      Role: !GetAtt ApiRole.Arn
+      MemorySize: 1024
+      Timeout: 120
+      Code:
+        S3Bucket: !Ref CodeBucket
+        S3Key: !Ref CodeKey
+      LoggingConfig:
+        LogGroup: !Ref ApiLogGroup
+      Environment:
+        Variables:
+          ETL4_READ_DSN: !Sub 'host=${DatabaseHost} port=5432 dbname=${DatabaseName} user=${DatabaseReader}'
+          ETL4_DB_AUTH: iam
+          ETL4_ASSET_BACKEND: s3
+          ETL4_AWS_REGION: !Ref AWS::Region
+          ETL4_S3_BUCKET: !Ref DataBucket
+          ETL4_S3_PREFIX: !Ref DataPrefix
+          ETL4_S3_ROOT_KEY: !Ref DataRootKey
+          ETL4_ALLOWED_ORIGINS: !Ref AllowedOrigin
+  ApiUrl:
+    Type: AWS::Lambda::Url
+    Properties:
+      TargetFunctionArn: !Ref ApiFunction
+      AuthType: !If [Public, NONE, AWS_IAM]
+      InvokeMode: BUFFERED
+      # CORS is handled by FastAPI to avoid duplicate response headers.
+  PublicUrlPermission:
+    Type: AWS::Lambda::Permission
+    Condition: Public
+    Properties:
+      FunctionName: !Ref ApiFunction
+      Action: lambda:InvokeFunctionUrl
+      Principal: '*'
+      FunctionUrlAuthType: NONE
+  PublicInvokePermission:
+    Type: AWS::Lambda::Permission
+    Condition: Public
+    Properties:
+      FunctionName: !Ref ApiFunction
+      Action: lambda:InvokeFunction
+      Principal: '*'
+      InvokedViaFunctionUrl: true
+Outputs:
+  ApiOrigin:
+    Value: !GetAtt ApiUrl.FunctionUrl
+  FunctionName:
+    Value: !Ref ApiFunction
