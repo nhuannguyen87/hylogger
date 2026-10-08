@@ -1,0 +1,19 @@
+{
+  "host": "127.0.0.1",
+  "port": 5432,
+  "database": "etl4_local_batch_001",
+  "roles": {
+    "owner": {
+      "user": "postgres",
+      "password": "REPLACE_WITH_EXISTING_ADMIN_PASSWORD"
+    },
+    "ingest": {
+      "user": "etl4_ingest",
+      "password": "REPLACE_WITH_INGEST_PASSWORD"
+    },
+    "reader": {
+      "user": "etl4_reader",
+      "password": "REPLACE_WITH_READER_PASSWORD"
+    }
+  }
+}
