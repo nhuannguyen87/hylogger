@@ -358,16 +358,13 @@ export const getTrays = async (holeId) => {
 export const getCoreStrip = (holeId) =>
   once(`strip:${holeId}`, async () => {
     const [parts, sections] = await Promise.all([context(holeId), intervals(holeId, "section")]);
-    // any one log keeps the exact-sample call cheap - the images come back regardless
-    const anyLog = parts.map((p) => groupLog(p.logs, "SWIR") || p.logs.find(usable));
     if (!sections.length) return { unavailable: "ETL4 has no core-section photos for this hole." };
 
     const found = await pool(sections, 8, async (section) => {
       const part = parts[section.part];
-      const log = anyLog[section.part];
-      if (!log) return null;
+      // include_results=false: just the sample's image mapping, no log reads
       const sample = await get(
-        `/v1/datasets/${part.revision}/samples/${section.sample_no_from}?${qs({ axis_id: part.axis, log_ids: log.log_id })}`
+        `/v1/datasets/${part.revision}/samples/${section.sample_no_from}?${qs({ axis_id: part.axis, include_results: false })}`
       ).catch(() => null);
       const image = sample?.images?.find((im) => im.status === "available" && im.image_asset_id);
       return image && { section, image };
@@ -426,8 +423,12 @@ export const getSpectralSample = async (holeId, depthM) => {
   }
 
   const ctx = parts[pick.part];
+  // spectra first, then mineral calls; the API takes at most 16 log_ids
+  const wanted = (l) => usable(l) && (l.log_kind === "spectral" || (l.log_kind === "scalar" && l.metric_key === "mineral_name"));
   const logIds = ctx.logs
-    .filter((l) => usable(l) && (l.log_kind === "spectral" || (l.log_kind === "scalar" && l.metric_key === "mineral_name")))
+    .filter(wanted)
+    .sort((a, b) => (a.log_kind === "spectral" ? 0 : 1) - (b.log_kind === "spectral" ? 0 : 1))
+    .slice(0, 16)
     .map((l) => l.log_id);
   const raw = await get(`/v1/datasets/${ctx.revision}/samples/${pick.sample_no}?${qs({ axis_id: ctx.axis, log_ids: logIds })}`);
 
