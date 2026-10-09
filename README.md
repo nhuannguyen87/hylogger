@@ -12,17 +12,19 @@ on the FastAPI backend in `backend/`.
 
 ## Run it
 
-You need [Docker Desktop](https://www.docker.com/products/docker-desktop/),
-Python 3.10+, and Node.js 18+ on your Mac.
+You need Python 3.10+ and Node.js 18+, plus read access to the ETL4 database
+(`etl4_core`) and its assets - see `backend/README.md` for the `backend/.env`
+settings (local handoff or AWS Aurora/S3).
 
 ```bash
-cd CITS5553/team
-./setup.sh          # one time, takes a few minutes
+git clone https://github.com/nhuannguyen87/hylogger.git
+cd hylogger
+./run-backend.sh    # FastAPI on http://localhost:8000 (docs at /docs)
+./run-frontend.sh   # website on http://localhost:3000
 ```
 
-Open **http://localhost:3000**. A hole's core photos are fetched from NVCL the
-first time you open it (~1 min); `python core_strip.py --hole <id> ...` fetches
-some up front. `./run-backend.sh` starts the FastAPI backend instead (same port).
+Open **http://localhost:3000**. If the API runs somewhere else, put
+`NEXT_PUBLIC_API_BASE=http://<host>:8000` in `frontend/.env.local`.
 
 ---
 
@@ -31,7 +33,7 @@ some up front. `./run-backend.sh` starts the FastAPI backend instead (same port)
 | Page | What it does |
 |------|--------------|
 | **Explore** | Map of every hole. Click one, get its details and its mineral log. |
-| **3D** | The map until you click a hole; then it opens beside the map as a real drill core - its NVCL tray photos wrapped round a cylinder at their true depths, with its mineral log alongside. Scroll to go down the hole; click a second hole to compare the two at the same depth. |
+| **3D** | The map until you click a hole; then it opens beside the map as a real drill core - its ETL4 core-row photos wrapped round a cylinder at their true depths, with its mineral log alongside. Scroll to go down the hole; click a second hole to compare the two at the same depth. |
 
 The mineral log is the heart of it. Three things are drawn differently on purpose:
 
@@ -44,38 +46,24 @@ The mineral log is the heart of it. Three things are drawn differently on purpos
 ## Folder map
 
 ```
-CITS5553/team/
-├── setup.sh                  one-time setup
+hylogger/
 ├── run-backend.sh            start FastAPI (backend/)
-├── run-django.sh             start the Django API the site uses
 ├── run-frontend.sh           start Next.js
-├── reload-data.sh            after new ETL output: reload + retrain
-├── docker-compose.yml        Postgres + PostGIS
-├── core_strip.py             NVCL tray photos -> core-photo strips (+ mineral_strip.py)
 │
-├── data/
-│   ├── make_sample_data.py   
-│   ├── holes.csv             real GSWA/NVCL holes (301)
-│   └── measurements.csv      their per-metre mineral calls (275 logged)
+├── backend/                  FastAPI over ETL4 - see backend/README.md
+│   ├── app/main.py           every endpoint
+│   ├── app/repository.py     the SQL behind them
+│   ├── app/media_reader.py   Parquet / spectra / image assets
+│   ├── data/anomalies.csv    anomaly-model output served by /anomalies
+│   └── docs/FRONTEND_API.md  the API contract the site is built on
 │
-├── backend-django-old/       Django + DRF - the API the site uses
-│   ├── hylogger/settings.py  database, CORS, paths
-│   └── holes/
-│       ├── models.py         Hole, Measurement, CoreTray
-│       ├── views.py          every API endpoint, one function each
-│       ├── serializers.py    the exact JSON shape the site receives
-│       ├── geo.py            hole trajectory maths for the 3D view
-│       ├── ml/anomaly.py     scale -> PCA -> Isolation Forest
-│       └── management/commands/
-│           ├── load_data.py         CSV -> database
-│           └── detect_anomalies.py  train + score
-│
-├── backend/                  FastAPI, replacing Django (see backend/README.md)
+├── backend-django-old/       the earlier Django prototype, no longer used by the site
 │
 └── frontend/                 Next.js
-    ├── config.js             colours, map style, thresholds
-    ├── lib/api.js            every API call
-    ├── app/                  the three pages
+    ├── config.js             API address, colours, map style, thresholds
+    ├── lib/api.js            every API call; turns raw ETL4 samples into
+    │                         per-metre intervals and splices a hole's datasets by depth
+    ├── app/                  the pages
     └── components/
         ├── HoleMap.jsx       MapLibre
         ├── StripLog.jsx      the mineral barcode
@@ -87,24 +75,20 @@ CITS5553/team/
 
 ## The API
 
-Browse it in your browser at http://localhost:8000/api/holes/ — DRF renders a
-clickable version.
+FastAPI's own docs are at http://localhost:8000/docs; the frontend contract is
+`backend/docs/FRONTEND_API.md`. The routes the site uses:
 
 ```
-GET /api/holes/                    ?search= &anomalies_only=1 &limit=
-GET /api/holes/H001/
-GET /api/holes/H001/measurements/  ?with_features=1
-GET /api/holes/H001/anomalies/
-GET /api/holes/H001/trace/         ?step_m=5
-GET /api/holes/H001/nearby/        ?km=25
-GET /api/distance/                 ?a=H001&b=H002
-GET /api/stats/
-GET /api/mineral-logs/             dominant mineral per hole, for map colours
-GET /api/holes/H001/core-strip/    core-photo strip (202 while it's being built)
-GET /api/holes/H001/trays/
-GET /api/holes/H001/spectral-sample/  ?depth_m=
+GET /v1/boreholes                              map + hole list
+GET /v1/boreholes/nearby                       ?latitude= &longitude= &radius_km=
+GET /v1/boreholes/{hole_id}/datasets           dataset revisions + sample axes, in splice order
+GET /v1/datasets/{revision_id}/logs            log catalogue
+GET /v1/datasets/{revision_id}/logs/{log_id}/values   ?axis_id= (mineral log)
+GET /v1/datasets/{revision_id}/samples/{sample_no}    ?axis_id= &log_ids= (spectra, photos)
+GET /v1/datasets/{revision_id}/intervals       ?axis_id= &kind=tray|section
+GET /v1/datasets/{revision_id}/anomalies       ?axis_id= &flag=high
+GET /v1/image-assets/{asset_id}/content        core-row photo
 ```
-
 
 ---
 
@@ -139,7 +123,7 @@ These results show that the model runs on the ETL4 pilot data; they do not prove
 
 ## Where to take it next
 
-- Downhole survey stations instead of a single inclination/azimuth (`geo.py`)
+- Downhole survey stations once ETL4 exposes hole orientation
 - Cluster holes by mineral pattern (KMeans on the PCA components) so the map can
   colour holes by group
 - Predict lab chemistry from spectra — that's the third capstone brief
