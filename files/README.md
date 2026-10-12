@@ -2,11 +2,17 @@
 
 Code for data preparation, local database import, backup and restore verification, and cloud batch delivery, organized under `etl4/`.
 
-## Supporting Files
+**Project scope:** core intervals only. Exclude cuttings and split reviewed
+same-name boreholes by source, using `-unnamed` when the source name is empty.
+See [dataset selection and naming](docs/dataset_selection.md). Failed inputs use
+external [case 12](special_processing/12_core_only/README.md) for core selection or
+[case 13](special_processing/13_split_boreholes/README.md) for splitting, then return
+to normal preparation. The original `etl4/` code is unchanged.
 
-- [etl4/database/migrations/](etl4/database/migrations/): SQL migrations 001–006.
-- [etl4/database/media_evidence/official/](etl4/database/media_evidence/official/): Official spectral format references and their original license, including `NVCLDataSvcDao.java`, `SpectralDataVo.java`, and `getspectraldatausage.html`.
-- [examples/](examples/): Database connection configuration and batch manifest examples for single and multiple datasets.
+Use `special_processing/run_failed.py --failures <failed_holes.json> --work-dir <new-directory>`
+to diagnose and prepare failed inputs automatically. Split holes use their own
+dataset coordinates under the owner's shared-coordinate-system decision;
+unknown optional attributes remain null. No manual collar file is required.
 
 ## Processing Order
 
@@ -44,5 +50,13 @@ Use the [single dataset example](examples/batch.single.example.json) or [multipl
 After step 8 sets up the database, pass `--batch <work-dir>/batch.json` to step 37.
 
 Step 37 automatically generates `deployment_asset_manifest.json` under `database/reports/` in the working directory; it does not need to be supplied beforehand. Database backups do not contain image, spectral, or Parquet files. Preserve the corresponding assets when handing over processed data.
+
+## Reference files
+
+- [Special processing](special_processing/README.md): diagnose and handle failed holes without changing the original `etl4/`.
+- [Historical cases](docs/special_processing_cases.md) and [source instances](docs/special_case_instances.md).
+- [Migrations](etl4/database/migrations/): SQL migrations 001–006.
+- [Official spectral references](etl4/database/media_evidence/official/): format documentation and original license.
+- [Examples](examples/): connection settings and batch manifests.
 
 Use `--help` to view all arguments for each script.

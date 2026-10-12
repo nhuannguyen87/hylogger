@@ -1,0 +1,2416 @@
+{
+  "scope": "Routing suggestions from selected source evidence; full preparation still required",
+  "holes": [
+    {
+      "hole": "AMDD003",
+      "dataset_ids": [
+        "e715799e-8f66-4243-ac22-c1d03256459"
+      ],
+      "suggested_cases": [
+        "01"
+      ],
+      "evidence": {
+        "01": "Directory syntax or source_identity.json is rejected by the baseline entry."
+      },
+      "unresolved": [],
+      "route": "single_dataset"
+    },
+    {
+      "hole": "AMODD0026",
+      "dataset_ids": [
+        "12e1c827-725f-4e03-874b-8973c02ac0b"
+      ],
+      "suggested_cases": [
+        "01"
+      ],
+      "evidence": {
+        "01": "Directory syntax or source_identity.json is rejected by the baseline entry."
+      },
+      "unresolved": [],
+      "route": "single_dataset"
+    },
+    {
+      "hole": "AMODD0028",
+      "dataset_ids": [
+        "bce7bd1c-dfd8-4099-aa9d-c777c9af387"
+      ],
+      "suggested_cases": [
+        "01",
+        "06"
+      ],
+      "evidence": {
+        "01": "Directory syntax or source_identity.json is rejected by the baseline entry.",
+        "06": {
+          "float32_equivalent_image_bounds": 20
+        }
+      },
+      "unresolved": [],
+      "route": "single_dataset"
+    },
+    {
+      "hole": "AN15",
+      "dataset_ids": [
+        "c6d62405-255a-4d26-83d0-3141d1ced94"
+      ],
+      "suggested_cases": [
+        "01"
+      ],
+      "evidence": {
+        "01": "Directory syntax or source_identity.json is rejected by the baseline entry."
+      },
+      "unresolved": [],
+      "route": "single_dataset"
+    },
+    {
+      "hole": "AN7",
+      "dataset_ids": [
+        "ade9a491-c9a6-4b92-b956-33fc3ed30de"
+      ],
+      "suggested_cases": [
+        "01"
+      ],
+      "evidence": {
+        "01": "Directory syntax or source_identity.json is rejected by the baseline entry."
+      },
+      "unresolved": [],
+      "route": "single_dataset"
+    },
+    {
+      "hole": "ANDD0290",
+      "dataset_ids": [
+        "67070ae4-f8f2-49f1-b323-6de362b6bdf"
+      ],
+      "suggested_cases": [
+        "01",
+        "02",
+        "06"
+      ],
+      "evidence": {
+        "01": "Directory syntax or source_identity.json is rejected by the baseline entry.",
+        "02": {
+          "samples_compared": 147147,
+          "tray_local_mismatches": 0
+        },
+        "06": {
+          "float32_equivalent_image_bounds": 56
+        }
+      },
+      "unresolved": [],
+      "route": "single_dataset"
+    },
+    {
+      "hole": "APRC004D",
+      "dataset_ids": [
+        "1e358004-9d79-40c4-98fa-e23430a7fc4"
+      ],
+      "suggested_cases": [
+        "01"
+      ],
+      "evidence": {
+        "01": "Directory syntax or source_identity.json is rejected by the baseline entry."
+      },
+      "unresolved": [],
+      "route": "single_dataset"
+    },
+    {
+      "hole": "AR15",
+      "dataset_ids": [
+        "f841e11b-5cd8-4f3c-be1a-535684ebe40"
+      ],
+      "suggested_cases": [
+        "01"
+      ],
+      "evidence": {
+        "01": "Directory syntax or source_identity.json is rejected by the baseline entry."
+      },
+      "unresolved": [],
+      "route": "single_dataset"
+    },
+    {
+      "hole": "ARD001",
+      "dataset_ids": [
+        "41172493-a3ec-4dfe-b09c-fbeaeb0e4ca"
+      ],
+      "suggested_cases": [
+        "01"
+      ],
+      "evidence": {
+        "01": "Directory syntax or source_identity.json is rejected by the baseline entry."
+      },
+      "unresolved": [],
+      "route": "single_dataset"
+    },
+    {
+      "hole": "ARD002",
+      "dataset_ids": [
+        "7add5251-cc63-43dd-b0e8-54a98d74ec3"
+      ],
+      "suggested_cases": [
+        "01"
+      ],
+      "evidence": {
+        "01": "Directory syntax or source_identity.json is rejected by the baseline entry."
+      },
+      "unresolved": [],
+      "route": "single_dataset"
+    },
+    {
+      "hole": "ARMCDD001",
+      "dataset_ids": [
+        "6427e561-3876-4f4a-8c0b-97b9f066345"
+      ],
+      "suggested_cases": [
+        "01",
+        "08"
+      ],
+      "evidence": {
+        "01": "Directory syntax or source_identity.json is rejected by the baseline entry.",
+        "08": [
+          {
+            "log_id": "8aa08235-f728-419f-b578-ca9e146fe5e",
+            "baseline_error": "Invalid three-column CSV: scalars/8aa08235-f728-419f-b578-ca9e146fe5e_Lithology.csv"
+          }
+        ]
+      },
+      "unresolved": [],
+      "route": "single_dataset"
+    },
+    {
+      "hole": "ARMCRCD002A",
+      "dataset_ids": [
+        "83905d91-791f-4165-8934-0f0b1c804de"
+      ],
+      "suggested_cases": [
+        "01",
+        "06",
+        "08"
+      ],
+      "evidence": {
+        "01": "Directory syntax or source_identity.json is rejected by the baseline entry.",
+        "08": [
+          {
+            "log_id": "4d1f0ec0-76a2-4a81-88b1-fa6b12bbd45",
+            "baseline_error": "Invalid three-column CSV: scalars/4d1f0ec0-76a2-4a81-88b1-fa6b12bbd45_Lithology.csv"
+          },
+          {
+            "log_id": "af32891f-c043-41d8-8c08-5648fba52e8",
+            "baseline_error": "Invalid three-column CSV: scalars/af32891f-c043-41d8-8c08-5648fba52e8_Simplified_Lithology.csv"
+          }
+        ],
+        "06": {
+          "float32_equivalent_image_bounds": 2
+        }
+      },
+      "unresolved": [],
+      "route": "single_dataset"
+    },
+    {
+      "hole": "ATD101",
+      "dataset_ids": [
+        "6f1b72e2-b87a-42d8-bafd-5ccf5e5e7c9"
+      ],
+      "suggested_cases": [
+        "01",
+        "06"
+      ],
+      "evidence": {
+        "01": "Directory syntax or source_identity.json is rejected by the baseline entry.",
+        "06": {
+          "float32_equivalent_image_bounds": 9
+        }
+      },
+      "unresolved": [],
+      "route": "single_dataset"
+    },
+    {
+      "hole": "AWD003",
+      "dataset_ids": [
+        "1c244855-1bd1-4b74-b36e-a2ee2f3fd91"
+      ],
+      "suggested_cases": [
+        "01",
+        "06"
+      ],
+      "evidence": {
+        "01": "Directory syntax or source_identity.json is rejected by the baseline entry.",
+        "06": {
+          "float32_equivalent_image_bounds": 33
+        }
+      },
+      "unresolved": [],
+      "route": "single_dataset"
+    },
+    {
+      "hole": "AZRCDD011",
+      "dataset_ids": [
+        "8cfbcd3f-fd86-48d1-9744-7c642b84892"
+      ],
+      "suggested_cases": [
+        "01",
+        "06"
+      ],
+      "evidence": {
+        "01": "Directory syntax or source_identity.json is rejected by the baseline entry.",
+        "06": {
+          "float32_equivalent_image_bounds": 50
+        }
+      },
+      "unresolved": [],
+      "route": "single_dataset"
+    },
+    {
+      "hole": "AZRCDD012",
+      "dataset_ids": [
+        "a7b6d07c-7319-46a2-842f-5aebfa982ee"
+      ],
+      "suggested_cases": [
+        "01",
+        "06"
+      ],
+      "evidence": {
+        "01": "Directory syntax or source_identity.json is rejected by the baseline entry.",
+        "06": {
+          "float32_equivalent_image_bounds": 48
+        }
+      },
+      "unresolved": [],
+      "route": "single_dataset"
+    },
+    {
+      "hole": "AZRCDD013",
+      "dataset_ids": [
+        "b87c7f43-94ba-4b3d-a4a9-a4aeb6e8799"
+      ],
+      "suggested_cases": [
+        "01"
+      ],
+      "evidence": {
+        "01": "Directory syntax or source_identity.json is rejected by the baseline entry."
+      },
+      "unresolved": [],
+      "route": "single_dataset"
+    },
+    {
+      "hole": "AZRCDD015",
+      "dataset_ids": [
+        "69f07f35-925c-41e1-a249-e65f167df76"
+      ],
+      "suggested_cases": [
+        "01",
+        "06"
+      ],
+      "evidence": {
+        "01": "Directory syntax or source_identity.json is rejected by the baseline entry.",
+        "06": {
+          "float32_equivalent_image_bounds": 2
+        }
+      },
+      "unresolved": [],
+      "route": "single_dataset"
+    },
+    {
+      "hole": "Abbarwardoo 1",
+      "dataset_ids": [
+        "1396f49b-5e7e-479e-8edc-3b51f500d1f",
+        "4d800e60-1eb3-4e4d-b05b-d206e8d0017",
+        "87a95a5a-f338-4f9a-8c44-a68170e4f90"
+      ],
+      "suggested_cases": [
+        "01"
+      ],
+      "evidence": {
+        "01": "Directory syntax or source_identity.json is rejected by the baseline entry."
+      },
+      "unresolved": [],
+      "route": "multi_dataset_not_classified"
+    },
+    {
+      "hole": "Allanooka 1",
+      "dataset_ids": [
+        "66ac63e9-7742-4d25-9daa-2db1c607126",
+        "83def1c9-ee9c-4b09-bdcf-a86551523cc",
+        "a5743990-a326-4a4c-8b84-57a74290470"
+      ],
+      "suggested_cases": [
+        "01"
+      ],
+      "evidence": {
+        "01": "Directory syntax or source_identity.json is rejected by the baseline entry."
+      },
+      "unresolved": [],
+      "route": "multi_dataset_not_classified"
+    },
+    {
+      "hole": "Allanooka 2",
+      "dataset_ids": [
+        "c1141ac0-2594-4252-b238-8f8f4cd30c2"
+      ],
+      "suggested_cases": [
+        "01"
+      ],
+      "evidence": {
+        "01": "Directory syntax or source_identity.json is rejected by the baseline entry."
+      },
+      "unresolved": [],
+      "route": "single_dataset"
+    },
+    {
+      "hole": "Amber 1",
+      "dataset_ids": [
+        "c230d539-e0a2-4d05-acfc-a8dad3750e9"
+      ],
+      "suggested_cases": [
+        "01",
+        "06"
+      ],
+      "evidence": {
+        "01": "Directory syntax or source_identity.json is rejected by the baseline entry.",
+        "06": {
+          "float32_equivalent_image_bounds": 1
+        }
+      },
+      "unresolved": [],
+      "route": "single_dataset"
+    },
+    {
+      "hole": "Apium 1",
+      "dataset_ids": [
+        "6c09e705-b0ff-4419-b0c4-a03f1d43335",
+        "99ef4d62-cc8d-44cf-8226-6672548e0b3"
+      ],
+      "suggested_cases": [
+        "01"
+      ],
+      "evidence": {
+        "01": "Directory syntax or source_identity.json is rejected by the baseline entry."
+      },
+      "unresolved": [],
+      "route": "multi_dataset_not_classified"
+    },
+    {
+      "hole": "Arrowsmith 1",
+      "dataset_ids": [
+        "ddac37e6-c82f-47d7-b66b-177e4aa0a0f"
+      ],
+      "suggested_cases": [
+        "01",
+        "06"
+      ],
+      "evidence": {
+        "01": "Directory syntax or source_identity.json is rejected by the baseline entry.",
+        "06": {
+          "float32_equivalent_image_bounds": 1
+        }
+      },
+      "unresolved": [],
+      "route": "single_dataset"
+    },
+    {
+      "hole": "Arrowsmith 2",
+      "dataset_ids": [
+        "239625a1-f1d6-42d2-bb1f-96ac721557f",
+        "e1d56f79-15b1-47e1-9281-914400d7d81"
+      ],
+      "suggested_cases": [
+        "01"
+      ],
+      "evidence": {
+        "01": "Directory syntax or source_identity.json is rejected by the baseline entry."
+      },
+      "unresolved": [],
+      "route": "multi_dataset_not_classified"
+    },
+    {
+      "hole": "Atrax 1",
+      "dataset_ids": [
+        "3bcef534-a12e-4c6e-9089-5db8e5ff721"
+      ],
+      "suggested_cases": [
+        "01"
+      ],
+      "evidence": {
+        "01": "Directory syntax or source_identity.json is rejected by the baseline entry."
+      },
+      "unresolved": [],
+      "route": "single_dataset"
+    },
+    {
+      "hole": "Austin 1",
+      "dataset_ids": [
+        "6f39db27-704b-4e0e-b774-7c44aad7e50"
+      ],
+      "suggested_cases": [
+        "01",
+        "06"
+      ],
+      "evidence": {
+        "01": "Directory syntax or source_identity.json is rejected by the baseline entry.",
+        "06": {
+          "float32_equivalent_image_bounds": 10
+        }
+      },
+      "unresolved": [],
+      "route": "single_dataset"
+    },
+    {
+      "hole": "BADD-001",
+      "dataset_ids": [
+        "2b48cc34-8816-4db2-ad17-363ced2eb6f"
+      ],
+      "suggested_cases": [
+        "01"
+      ],
+      "evidence": {
+        "01": "Directory syntax or source_identity.json is rejected by the baseline entry."
+      },
+      "unresolved": [],
+      "route": "single_dataset"
+    },
+    {
+      "hole": "BADD-002",
+      "dataset_ids": [
+        "d1a970bc-937a-47ea-bc0a-c93a7cf2ff1"
+      ],
+      "suggested_cases": [
+        "01"
+      ],
+      "evidence": {
+        "01": "Directory syntax or source_identity.json is rejected by the baseline entry."
+      },
+      "unresolved": [],
+      "route": "single_dataset"
+    },
+    {
+      "hole": "BADD-003",
+      "dataset_ids": [
+        "80f32727-d9bf-4183-8b48-11b2fff65e2"
+      ],
+      "suggested_cases": [
+        "01"
+      ],
+      "evidence": {
+        "01": "Directory syntax or source_identity.json is rejected by the baseline entry."
+      },
+      "unresolved": [],
+      "route": "single_dataset"
+    },
+    {
+      "hole": "BARA 1",
+      "dataset_ids": [
+        "9437a47f-9c62-4a91-966b-91710dab309"
+      ],
+      "suggested_cases": [
+        "01"
+      ],
+      "evidence": {
+        "01": "Directory syntax or source_identity.json is rejected by the baseline entry."
+      },
+      "unresolved": [],
+      "route": "single_dataset"
+    },
+    {
+      "hole": "BB1",
+      "dataset_ids": [
+        "f1d9798f-723c-41e4-967a-9bf92cab330"
+      ],
+      "suggested_cases": [
+        "01"
+      ],
+      "evidence": {
+        "01": "Directory syntax or source_identity.json is rejected by the baseline entry."
+      },
+      "unresolved": [],
+      "route": "single_dataset"
+    },
+    {
+      "hole": "BB2",
+      "dataset_ids": [
+        "1849b678-1f1d-4326-9af8-8d7e7b7700e"
+      ],
+      "suggested_cases": [
+        "01"
+      ],
+      "evidence": {
+        "01": "Directory syntax or source_identity.json is rejected by the baseline entry."
+      },
+      "unresolved": [],
+      "route": "single_dataset"
+    },
+    {
+      "hole": "BB3",
+      "dataset_ids": [
+        "da5bfbc1-9224-41aa-8e63-63ba7722b57"
+      ],
+      "suggested_cases": [
+        "01"
+      ],
+      "evidence": {
+        "01": "Directory syntax or source_identity.json is rejected by the baseline entry."
+      },
+      "unresolved": [],
+      "route": "single_dataset"
+    },
+    {
+      "hole": "BB4",
+      "dataset_ids": [
+        "0f0956d7-06b6-4f28-ab6d-ce765bcd07c"
+      ],
+      "suggested_cases": [
+        "01"
+      ],
+      "evidence": {
+        "01": "Directory syntax or source_identity.json is rejected by the baseline entry."
+      },
+      "unresolved": [],
+      "route": "single_dataset"
+    },
+    {
+      "hole": "BB5",
+      "dataset_ids": [
+        "1c783e66-21c5-410e-bbec-9b95b0d321f"
+      ],
+      "suggested_cases": [
+        "01"
+      ],
+      "evidence": {
+        "01": "Directory syntax or source_identity.json is rejected by the baseline entry."
+      },
+      "unresolved": [],
+      "route": "single_dataset"
+    },
+    {
+      "hole": "BBDD0001",
+      "dataset_ids": [
+        "5cdce620-01fe-431c-879a-8895db7ee88",
+        "ef0b0e13-cc0c-44b0-b481-93ba606b965"
+      ],
+      "suggested_cases": [
+        "01"
+      ],
+      "evidence": {
+        "01": "Directory syntax or source_identity.json is rejected by the baseline entry."
+      },
+      "unresolved": [],
+      "route": "multi_dataset_not_classified"
+    },
+    {
+      "hole": "BBDD0002",
+      "dataset_ids": [
+        "3b62926a-bf76-4c53-ad7c-38b7b498f94",
+        "7b0174c9-d72d-4d8d-8e36-727bf9f1ddd"
+      ],
+      "suggested_cases": [
+        "01"
+      ],
+      "evidence": {
+        "01": "Directory syntax or source_identity.json is rejected by the baseline entry."
+      },
+      "unresolved": [],
+      "route": "multi_dataset_not_classified"
+    },
+    {
+      "hole": "BBDD0003",
+      "dataset_ids": [
+        "9dbbf130-84e9-4c12-8925-35faa4e462c"
+      ],
+      "suggested_cases": [
+        "01",
+        "02"
+      ],
+      "evidence": {
+        "01": "Directory syntax or source_identity.json is rejected by the baseline entry.",
+        "02": {
+          "samples_compared": 20690,
+          "tray_local_mismatches": 0
+        }
+      },
+      "unresolved": [],
+      "route": "single_dataset"
+    },
+    {
+      "hole": "BBDD0004",
+      "dataset_ids": [
+        "4d1f763f-6851-49c4-8a4d-a67d2de3585"
+      ],
+      "suggested_cases": [
+        "01",
+        "02"
+      ],
+      "evidence": {
+        "01": "Directory syntax or source_identity.json is rejected by the baseline entry.",
+        "02": {
+          "samples_compared": 15784,
+          "tray_local_mismatches": 0
+        }
+      },
+      "unresolved": [],
+      "route": "single_dataset"
+    },
+    {
+      "hole": "BBDD0005",
+      "dataset_ids": [
+        "2cf817c7-f9e5-4308-8353-62d9ad5d044"
+      ],
+      "suggested_cases": [
+        "01",
+        "02"
+      ],
+      "evidence": {
+        "01": "Directory syntax or source_identity.json is rejected by the baseline entry.",
+        "02": {
+          "samples_compared": 15646,
+          "tray_local_mismatches": 0
+        }
+      },
+      "unresolved": [],
+      "route": "single_dataset"
+    },
+    {
+      "hole": "BBDD0006",
+      "dataset_ids": [
+        "bf768d7a-eca2-4283-894d-d3da78c32ed"
+      ],
+      "suggested_cases": [
+        "01",
+        "02"
+      ],
+      "evidence": {
+        "01": "Directory syntax or source_identity.json is rejected by the baseline entry.",
+        "02": {
+          "samples_compared": 21280,
+          "tray_local_mismatches": 0
+        }
+      },
+      "unresolved": [],
+      "route": "single_dataset"
+    },
+    {
+      "hole": "BBDD0007",
+      "dataset_ids": [
+        "15587dce-f756-4f94-bd27-90dd9edd7b9"
+      ],
+      "suggested_cases": [
+        "01",
+        "02"
+      ],
+      "evidence": {
+        "01": "Directory syntax or source_identity.json is rejected by the baseline entry.",
+        "02": {
+          "samples_compared": 58486,
+          "tray_local_mismatches": 0
+        }
+      },
+      "unresolved": [],
+      "route": "single_dataset"
+    },
+    {
+      "hole": "BBDD0008",
+      "dataset_ids": [
+        "c17e7d35-20bd-4e57-9fc4-60f17ccec70"
+      ],
+      "suggested_cases": [
+        "01",
+        "02"
+      ],
+      "evidence": {
+        "01": "Directory syntax or source_identity.json is rejected by the baseline entry.",
+        "02": {
+          "samples_compared": 22344,
+          "tray_local_mismatches": 0
+        }
+      },
+      "unresolved": [],
+      "route": "single_dataset"
+    },
+    {
+      "hole": "BBDD0009",
+      "dataset_ids": [
+        "12df4168-c8d1-4341-876a-9c1f9496b60"
+      ],
+      "suggested_cases": [
+        "01",
+        "02"
+      ],
+      "evidence": {
+        "01": "Directory syntax or source_identity.json is rejected by the baseline entry.",
+        "02": {
+          "samples_compared": 23410,
+          "tray_local_mismatches": 0
+        }
+      },
+      "unresolved": [],
+      "route": "single_dataset"
+    },
+    {
+      "hole": "BBDD0010",
+      "dataset_ids": [
+        "caa4b27d-8508-42ec-bebb-b4fa703f64c"
+      ],
+      "suggested_cases": [
+        "01",
+        "02"
+      ],
+      "evidence": {
+        "01": "Directory syntax or source_identity.json is rejected by the baseline entry.",
+        "02": {
+          "samples_compared": 45658,
+          "tray_local_mismatches": 0
+        }
+      },
+      "unresolved": [],
+      "route": "single_dataset"
+    },
+    {
+      "hole": "BBDD0011",
+      "dataset_ids": [
+        "9629edcf-b3b1-40a3-8db6-369ad8d906e"
+      ],
+      "suggested_cases": [
+        "01",
+        "02"
+      ],
+      "evidence": {
+        "01": "Directory syntax or source_identity.json is rejected by the baseline entry.",
+        "02": {
+          "samples_compared": 22208,
+          "tray_local_mismatches": 0
+        }
+      },
+      "unresolved": [],
+      "route": "single_dataset"
+    },
+    {
+      "hole": "BBDD0091",
+      "dataset_ids": [
+        "a31823fc-c0c3-4383-a8f2-57b2e485ac9"
+      ],
+      "suggested_cases": [
+        "01",
+        "06"
+      ],
+      "evidence": {
+        "01": "Directory syntax or source_identity.json is rejected by the baseline entry.",
+        "06": {
+          "float32_equivalent_image_bounds": 91
+        }
+      },
+      "unresolved": [],
+      "route": "single_dataset"
+    },
+    {
+      "hole": "BBRD0056",
+      "dataset_ids": [
+        "694c6629-c094-41e6-b707-f4fedc70800"
+      ],
+      "suggested_cases": [
+        "01",
+        "02"
+      ],
+      "evidence": {
+        "01": "Directory syntax or source_identity.json is rejected by the baseline entry.",
+        "02": {
+          "samples_compared": 9350,
+          "tray_local_mismatches": 0
+        }
+      },
+      "unresolved": [],
+      "route": "single_dataset"
+    },
+    {
+      "hole": "BBRD072",
+      "dataset_ids": [
+        "acb0f2fe-7223-42b4-914f-a4606581ac5"
+      ],
+      "suggested_cases": [
+        "01",
+        "02",
+        "06"
+      ],
+      "evidence": {
+        "01": "Directory syntax or source_identity.json is rejected by the baseline entry.",
+        "02": {
+          "samples_compared": 44880,
+          "tray_local_mismatches": 0
+        },
+        "06": {
+          "float32_equivalent_image_bounds": 19
+        }
+      },
+      "unresolved": [],
+      "route": "single_dataset"
+    },
+    {
+      "hole": "BBRD076",
+      "dataset_ids": [
+        "5e6e3966-e98b-490b-b6c9-3b517b881bd"
+      ],
+      "suggested_cases": [
+        "01",
+        "02",
+        "06"
+      ],
+      "evidence": {
+        "01": "Directory syntax or source_identity.json is rejected by the baseline entry.",
+        "02": {
+          "samples_compared": 61880,
+          "tray_local_mismatches": 0
+        },
+        "06": {
+          "float32_equivalent_image_bounds": 13
+        }
+      },
+      "unresolved": [],
+      "route": "single_dataset"
+    },
+    {
+      "hole": "BC20DD017",
+      "dataset_ids": [
+        "cb977627-2c00-4235-92ce-cd746498c91"
+      ],
+      "suggested_cases": [
+        "01"
+      ],
+      "evidence": {
+        "01": "Directory syntax or source_identity.json is rejected by the baseline entry."
+      },
+      "unresolved": [],
+      "route": "single_dataset"
+    },
+    {
+      "hole": "BCDD0001",
+      "dataset_ids": [
+        "cb7f571b-2251-4d16-8db9-bf21968d6fc"
+      ],
+      "suggested_cases": [
+        "01"
+      ],
+      "evidence": {
+        "01": "Directory syntax or source_identity.json is rejected by the baseline entry."
+      },
+      "unresolved": [],
+      "route": "single_dataset"
+    },
+    {
+      "hole": "BCDD0002",
+      "dataset_ids": [
+        "c09333fb-6b36-4dac-9b14-ae1e226dd6e"
+      ],
+      "suggested_cases": [
+        "01"
+      ],
+      "evidence": {
+        "01": "Directory syntax or source_identity.json is rejected by the baseline entry."
+      },
+      "unresolved": [],
+      "route": "single_dataset"
+    },
+    {
+      "hole": "BCDD0003",
+      "dataset_ids": [
+        "23c6c946-ab67-4e51-b163-88d988ae479"
+      ],
+      "suggested_cases": [
+        "01"
+      ],
+      "evidence": {
+        "01": "Directory syntax or source_identity.json is rejected by the baseline entry."
+      },
+      "unresolved": [],
+      "route": "single_dataset"
+    },
+    {
+      "hole": "BCDD0004",
+      "dataset_ids": [
+        "9b90a057-2503-486e-9819-5df6a788f77"
+      ],
+      "suggested_cases": [
+        "01"
+      ],
+      "evidence": {
+        "01": "Directory syntax or source_identity.json is rejected by the baseline entry."
+      },
+      "unresolved": [],
+      "route": "single_dataset"
+    },
+    {
+      "hole": "BCDD0005",
+      "dataset_ids": [
+        "3067970b-affe-493c-99d3-1cc9290e010"
+      ],
+      "suggested_cases": [
+        "01"
+      ],
+      "evidence": {
+        "01": "Directory syntax or source_identity.json is rejected by the baseline entry."
+      },
+      "unresolved": [],
+      "route": "single_dataset"
+    },
+    {
+      "hole": "BCMH0070",
+      "dataset_ids": [
+        "73802259-1ca1-4e62-b8af-c849183e715"
+      ],
+      "suggested_cases": [
+        "01"
+      ],
+      "evidence": {
+        "01": "Directory syntax or source_identity.json is rejected by the baseline entry."
+      },
+      "unresolved": [],
+      "route": "single_dataset"
+    },
+    {
+      "hole": "BCMH0071",
+      "dataset_ids": [
+        "7bea6663-3b5b-4204-9bc1-868ca13f58c"
+      ],
+      "suggested_cases": [
+        "01"
+      ],
+      "evidence": {
+        "01": "Directory syntax or source_identity.json is rejected by the baseline entry."
+      },
+      "unresolved": [],
+      "route": "single_dataset"
+    },
+    {
+      "hole": "BCMH0072",
+      "dataset_ids": [
+        "dd3180c1-1f9f-43cb-85b3-823042d015b"
+      ],
+      "suggested_cases": [
+        "01"
+      ],
+      "evidence": {
+        "01": "Directory syntax or source_identity.json is rejected by the baseline entry."
+      },
+      "unresolved": [],
+      "route": "single_dataset"
+    },
+    {
+      "hole": "BCMH0073",
+      "dataset_ids": [
+        "4f54045e-0b71-4c63-a8df-f026c7648b4"
+      ],
+      "suggested_cases": [
+        "01"
+      ],
+      "evidence": {
+        "01": "Directory syntax or source_identity.json is rejected by the baseline entry."
+      },
+      "unresolved": [],
+      "route": "single_dataset"
+    },
+    {
+      "hole": "BDD001",
+      "dataset_ids": [
+        "29ee7fc7-f315-4169-a432-90b953e2fa4"
+      ],
+      "suggested_cases": [
+        "01",
+        "06"
+      ],
+      "evidence": {
+        "01": "Directory syntax or source_identity.json is rejected by the baseline entry.",
+        "06": {
+          "float32_equivalent_image_bounds": 2
+        }
+      },
+      "unresolved": [],
+      "route": "single_dataset"
+    },
+    {
+      "hole": "BDD002",
+      "dataset_ids": [
+        "5745aa5a-5629-40ef-a03f-8c0ee5e8acb"
+      ],
+      "suggested_cases": [
+        "01"
+      ],
+      "evidence": {
+        "01": "Directory syntax or source_identity.json is rejected by the baseline entry."
+      },
+      "unresolved": [],
+      "route": "single_dataset"
+    },
+    {
+      "hole": "BDD003",
+      "dataset_ids": [
+        "46a999bb-9247-425c-84b8-9bb7a9f53d4"
+      ],
+      "suggested_cases": [
+        "01"
+      ],
+      "evidence": {
+        "01": "Directory syntax or source_identity.json is rejected by the baseline entry."
+      },
+      "unresolved": [],
+      "route": "single_dataset"
+    },
+    {
+      "hole": "BDD082",
+      "dataset_ids": [
+        "730e6560-27cf-4e6b-b350-83a1bcf73ad"
+      ],
+      "suggested_cases": [
+        "01",
+        "02"
+      ],
+      "evidence": {
+        "01": "Directory syntax or source_identity.json is rejected by the baseline entry.",
+        "02": {
+          "samples_compared": 29868,
+          "tray_local_mismatches": 0
+        }
+      },
+      "unresolved": [],
+      "route": "single_dataset"
+    },
+    {
+      "hole": "BDD083",
+      "dataset_ids": [
+        "c2e6b480-09b3-4946-ac7c-2f8ab106c02"
+      ],
+      "suggested_cases": [
+        "01",
+        "02"
+      ],
+      "evidence": {
+        "01": "Directory syntax or source_identity.json is rejected by the baseline entry.",
+        "02": {
+          "samples_compared": 25152,
+          "tray_local_mismatches": 0
+        }
+      },
+      "unresolved": [],
+      "route": "single_dataset"
+    },
+    {
+      "hole": "BDD1",
+      "dataset_ids": [
+        "bd9b33cc-535c-4644-aac8-6abcc9201a0"
+      ],
+      "suggested_cases": [
+        "01"
+      ],
+      "evidence": {
+        "01": "Directory syntax or source_identity.json is rejected by the baseline entry."
+      },
+      "unresolved": [],
+      "route": "single_dataset"
+    },
+    {
+      "hole": "BDD2",
+      "dataset_ids": [
+        "f1565a83-aa6b-4676-87cb-afbc5e08dfe"
+      ],
+      "suggested_cases": [
+        "01"
+      ],
+      "evidence": {
+        "01": "Directory syntax or source_identity.json is rejected by the baseline entry."
+      },
+      "unresolved": [],
+      "route": "single_dataset"
+    },
+    {
+      "hole": "BDD3",
+      "dataset_ids": [
+        "6f9f67a8-db50-42a4-8a52-984759bdf71"
+      ],
+      "suggested_cases": [
+        "01"
+      ],
+      "evidence": {
+        "01": "Directory syntax or source_identity.json is rejected by the baseline entry."
+      },
+      "unresolved": [],
+      "route": "single_dataset"
+    },
+    {
+      "hole": "BDD4",
+      "dataset_ids": [
+        "f6d78c7a-2de5-434e-8d9e-cdab425eab1"
+      ],
+      "suggested_cases": [
+        "01"
+      ],
+      "evidence": {
+        "01": "Directory syntax or source_identity.json is rejected by the baseline entry."
+      },
+      "unresolved": [],
+      "route": "single_dataset"
+    },
+    {
+      "hole": "BDD5",
+      "dataset_ids": [
+        "ab8b6fdb-f759-4cf4-bf68-7f32097d19d"
+      ],
+      "suggested_cases": [
+        "01"
+      ],
+      "evidence": {
+        "01": "Directory syntax or source_identity.json is rejected by the baseline entry."
+      },
+      "unresolved": [],
+      "route": "single_dataset"
+    },
+    {
+      "hole": "BDD6",
+      "dataset_ids": [
+        "f7788e25-1faf-4a02-84f0-28eb31373d8"
+      ],
+      "suggested_cases": [
+        "01"
+      ],
+      "evidence": {
+        "01": "Directory syntax or source_identity.json is rejected by the baseline entry."
+      },
+      "unresolved": [],
+      "route": "single_dataset"
+    },
+    {
+      "hole": "BDD6A",
+      "dataset_ids": [
+        "dc82f580-6bf1-4587-8325-b3f0c9a1e8f"
+      ],
+      "suggested_cases": [
+        "01"
+      ],
+      "evidence": {
+        "01": "Directory syntax or source_identity.json is rejected by the baseline entry."
+      },
+      "unresolved": [],
+      "route": "single_dataset"
+    },
+    {
+      "hole": "BDD7",
+      "dataset_ids": [
+        "67cb73fc-d25d-40d9-b2bc-3bf3b591d89"
+      ],
+      "suggested_cases": [
+        "01"
+      ],
+      "evidence": {
+        "01": "Directory syntax or source_identity.json is rejected by the baseline entry."
+      },
+      "unresolved": [],
+      "route": "single_dataset"
+    },
+    {
+      "hole": "BDD8",
+      "dataset_ids": [
+        "0e7a776e-9138-480d-b66e-c45b68d11ef"
+      ],
+      "suggested_cases": [
+        "01"
+      ],
+      "evidence": {
+        "01": "Directory syntax or source_identity.json is rejected by the baseline entry."
+      },
+      "unresolved": [],
+      "route": "single_dataset"
+    },
+    {
+      "hole": "BDDD0017",
+      "dataset_ids": [
+        "3b2514b0-51f0-437c-a7ac-b2969e0c5f2"
+      ],
+      "suggested_cases": [
+        "01",
+        "06"
+      ],
+      "evidence": {
+        "01": "Directory syntax or source_identity.json is rejected by the baseline entry.",
+        "06": {
+          "float32_equivalent_image_bounds": 62
+        }
+      },
+      "unresolved": [],
+      "route": "single_dataset"
+    },
+    {
+      "hole": "BDDD0019",
+      "dataset_ids": [
+        "1f759e5d-05d5-4364-bb73-68971c53b8d"
+      ],
+      "suggested_cases": [
+        "01",
+        "06"
+      ],
+      "evidence": {
+        "01": "Directory syntax or source_identity.json is rejected by the baseline entry.",
+        "06": {
+          "float32_equivalent_image_bounds": 127
+        }
+      },
+      "unresolved": [],
+      "route": "single_dataset"
+    },
+    {
+      "hole": "BDRCD009",
+      "dataset_ids": [
+        "af022d16-2ee3-43d5-bc80-0ee77ba0785"
+      ],
+      "suggested_cases": [
+        "01"
+      ],
+      "evidence": {
+        "01": "Directory syntax or source_identity.json is rejected by the baseline entry."
+      },
+      "unresolved": [],
+      "route": "single_dataset"
+    },
+    {
+      "hole": "BDRCD018",
+      "dataset_ids": [
+        "1bda9a8c-39cb-4878-b949-28a6763d6ef"
+      ],
+      "suggested_cases": [
+        "01"
+      ],
+      "evidence": {
+        "01": "Directory syntax or source_identity.json is rejected by the baseline entry."
+      },
+      "unresolved": [],
+      "route": "single_dataset"
+    },
+    {
+      "hole": "BDRCD019",
+      "dataset_ids": [
+        "7f2d3e3d-af3d-47ad-a852-ea2f5585325"
+      ],
+      "suggested_cases": [
+        "01"
+      ],
+      "evidence": {
+        "01": "Directory syntax or source_identity.json is rejected by the baseline entry."
+      },
+      "unresolved": [],
+      "route": "single_dataset"
+    },
+    {
+      "hole": "BH01",
+      "dataset_ids": [
+        "02608d56-3abb-470f-b8d1-a8c61128bef",
+        "e7f2477a-984d-4fe6-84a9-978f03fbe51"
+      ],
+      "suggested_cases": [
+        "01"
+      ],
+      "evidence": {
+        "01": "Directory syntax or source_identity.json is rejected by the baseline entry."
+      },
+      "unresolved": [],
+      "route": "multi_dataset_not_classified"
+    },
+    {
+      "hole": "BH02",
+      "dataset_ids": [
+        "249adaba-a658-415b-a1b1-45725bf8ff7",
+        "cb2539c5-92f9-4ebc-b437-bb5fa31a371"
+      ],
+      "suggested_cases": [
+        "01"
+      ],
+      "evidence": {
+        "01": "Directory syntax or source_identity.json is rejected by the baseline entry."
+      },
+      "unresolved": [],
+      "route": "multi_dataset_not_classified"
+    },
+    {
+      "hole": "BH03",
+      "dataset_ids": [
+        "4795892e-931d-4806-8fdd-58f2bc77a0a"
+      ],
+      "suggested_cases": [
+        "01"
+      ],
+      "evidence": {
+        "01": "Directory syntax or source_identity.json is rejected by the baseline entry."
+      },
+      "unresolved": [],
+      "route": "single_dataset"
+    },
+    {
+      "hole": "BH04",
+      "dataset_ids": [
+        "0bdeee01-3e6f-43e2-afb5-5693de12439"
+      ],
+      "suggested_cases": [
+        "01"
+      ],
+      "evidence": {
+        "01": "Directory syntax or source_identity.json is rejected by the baseline entry."
+      },
+      "unresolved": [],
+      "route": "single_dataset"
+    },
+    {
+      "hole": "BH05",
+      "dataset_ids": [
+        "5b82791e-13d8-42d2-92a5-724b0fb43b5"
+      ],
+      "suggested_cases": [
+        "01"
+      ],
+      "evidence": {
+        "01": "Directory syntax or source_identity.json is rejected by the baseline entry."
+      },
+      "unresolved": [],
+      "route": "single_dataset"
+    },
+    {
+      "hole": "BH06",
+      "dataset_ids": [
+        "43eea42c-290a-40b7-8f8b-731ce214ded"
+      ],
+      "suggested_cases": [
+        "01"
+      ],
+      "evidence": {
+        "01": "Directory syntax or source_identity.json is rejected by the baseline entry."
+      },
+      "unresolved": [],
+      "route": "single_dataset"
+    },
+    {
+      "hole": "BH07",
+      "dataset_ids": [
+        "f0140fec-dedd-4228-b2c3-dfa302c684f"
+      ],
+      "suggested_cases": [
+        "01"
+      ],
+      "evidence": {
+        "01": "Directory syntax or source_identity.json is rejected by the baseline entry."
+      },
+      "unresolved": [],
+      "route": "single_dataset"
+    },
+    {
+      "hole": "BH08",
+      "dataset_ids": [
+        "2cb5dd89-9f2f-47bf-bbaa-cf0fa9d2c11"
+      ],
+      "suggested_cases": [
+        "01"
+      ],
+      "evidence": {
+        "01": "Directory syntax or source_identity.json is rejected by the baseline entry."
+      },
+      "unresolved": [],
+      "route": "single_dataset"
+    },
+    {
+      "hole": "BH10",
+      "dataset_ids": [
+        "f2bb503b-93ad-4735-8955-c8f54c0ed89"
+      ],
+      "suggested_cases": [
+        "01"
+      ],
+      "evidence": {
+        "01": "Directory syntax or source_identity.json is rejected by the baseline entry."
+      },
+      "unresolved": [],
+      "route": "single_dataset"
+    },
+    {
+      "hole": "BH11",
+      "dataset_ids": [
+        "735bf6b2-4ef1-4b7e-a2ed-4dee92fb4a3"
+      ],
+      "suggested_cases": [
+        "01"
+      ],
+      "evidence": {
+        "01": "Directory syntax or source_identity.json is rejected by the baseline entry."
+      },
+      "unresolved": [],
+      "route": "single_dataset"
+    },
+    {
+      "hole": "BH12",
+      "dataset_ids": [
+        "cbff429f-b2c4-4c04-84d7-d69e6b9ec33"
+      ],
+      "suggested_cases": [
+        "01"
+      ],
+      "evidence": {
+        "01": "Directory syntax or source_identity.json is rejected by the baseline entry."
+      },
+      "unresolved": [],
+      "route": "single_dataset"
+    },
+    {
+      "hole": "BH13",
+      "dataset_ids": [
+        "aec367a4-17b7-4f55-ab63-f2792ef52bc"
+      ],
+      "suggested_cases": [
+        "01"
+      ],
+      "evidence": {
+        "01": "Directory syntax or source_identity.json is rejected by the baseline entry."
+      },
+      "unresolved": [],
+      "route": "single_dataset"
+    },
+    {
+      "hole": "BH14",
+      "dataset_ids": [
+        "bff157b7-dd53-48e5-a29b-fed8c491d72"
+      ],
+      "suggested_cases": [
+        "01"
+      ],
+      "evidence": {
+        "01": "Directory syntax or source_identity.json is rejected by the baseline entry."
+      },
+      "unresolved": [],
+      "route": "single_dataset"
+    },
+    {
+      "hole": "BH15",
+      "dataset_ids": [
+        "6189d379-3397-4cde-896a-5b6ea59e6b7"
+      ],
+      "suggested_cases": [
+        "01"
+      ],
+      "evidence": {
+        "01": "Directory syntax or source_identity.json is rejected by the baseline entry."
+      },
+      "unresolved": [],
+      "route": "single_dataset"
+    },
+    {
+      "hole": "BH16",
+      "dataset_ids": [
+        "42b19c36-88f2-45c9-890a-bfdef882714"
+      ],
+      "suggested_cases": [
+        "01"
+      ],
+      "evidence": {
+        "01": "Directory syntax or source_identity.json is rejected by the baseline entry."
+      },
+      "unresolved": [],
+      "route": "single_dataset"
+    },
+    {
+      "hole": "BH18",
+      "dataset_ids": [
+        "154c6810-7d7c-47e5-b920-b8669fac422"
+      ],
+      "suggested_cases": [
+        "01"
+      ],
+      "evidence": {
+        "01": "Directory syntax or source_identity.json is rejected by the baseline entry."
+      },
+      "unresolved": [],
+      "route": "single_dataset"
+    },
+    {
+      "hole": "BH19",
+      "dataset_ids": [
+        "7e372a7e-58fc-43ad-8485-1719c4c0a5e"
+      ],
+      "suggested_cases": [
+        "01"
+      ],
+      "evidence": {
+        "01": "Directory syntax or source_identity.json is rejected by the baseline entry."
+      },
+      "unresolved": [],
+      "route": "single_dataset"
+    },
+    {
+      "hole": "BH20",
+      "dataset_ids": [
+        "a96c0726-e6ca-48ca-bc4b-3bec7593885"
+      ],
+      "suggested_cases": [
+        "01"
+      ],
+      "evidence": {
+        "01": "Directory syntax or source_identity.json is rejected by the baseline entry."
+      },
+      "unresolved": [],
+      "route": "single_dataset"
+    },
+    {
+      "hole": "BH22",
+      "dataset_ids": [
+        "68ca6e30-cb54-4aa4-b666-b703503f010"
+      ],
+      "suggested_cases": [
+        "01"
+      ],
+      "evidence": {
+        "01": "Directory syntax or source_identity.json is rejected by the baseline entry."
+      },
+      "unresolved": [],
+      "route": "single_dataset"
+    },
+    {
+      "hole": "BH23",
+      "dataset_ids": [
+        "3fae508e-4868-4cdf-b3ba-3bbd1142c23"
+      ],
+      "suggested_cases": [
+        "01"
+      ],
+      "evidence": {
+        "01": "Directory syntax or source_identity.json is rejected by the baseline entry."
+      },
+      "unresolved": [],
+      "route": "single_dataset"
+    },
+    {
+      "hole": "BH24",
+      "dataset_ids": [
+        "390e8684-f2a0-4bcf-aa17-74dcba4254d"
+      ],
+      "suggested_cases": [
+        "01"
+      ],
+      "evidence": {
+        "01": "Directory syntax or source_identity.json is rejected by the baseline entry."
+      },
+      "unresolved": [],
+      "route": "single_dataset"
+    },
+    {
+      "hole": "BH25",
+      "dataset_ids": [
+        "3dcdfc93-9fe4-4f28-8ab1-809421085ac"
+      ],
+      "suggested_cases": [
+        "01"
+      ],
+      "evidence": {
+        "01": "Directory syntax or source_identity.json is rejected by the baseline entry."
+      },
+      "unresolved": [],
+      "route": "single_dataset"
+    },
+    {
+      "hole": "BH26",
+      "dataset_ids": [
+        "a98c467b-c606-4820-81b7-abbbd6bdb15"
+      ],
+      "suggested_cases": [
+        "01"
+      ],
+      "evidence": {
+        "01": "Directory syntax or source_identity.json is rejected by the baseline entry."
+      },
+      "unresolved": [],
+      "route": "single_dataset"
+    },
+    {
+      "hole": "BH27",
+      "dataset_ids": [
+        "9c153513-0ce8-4609-8f49-f4f1284b534"
+      ],
+      "suggested_cases": [
+        "01"
+      ],
+      "evidence": {
+        "01": "Directory syntax or source_identity.json is rejected by the baseline entry."
+      },
+      "unresolved": [],
+      "route": "single_dataset"
+    },
+    {
+      "hole": "BID017",
+      "dataset_ids": [
+        "f0adf9dc-7ef9-493e-9df1-45936489c4f"
+      ],
+      "suggested_cases": [
+        "01"
+      ],
+      "evidence": {
+        "01": "Directory syntax or source_identity.json is rejected by the baseline entry."
+      },
+      "unresolved": [],
+      "route": "single_dataset"
+    },
+    {
+      "hole": "BJDD20_001",
+      "dataset_ids": [
+        "ef3a030c-0632-4749-bcb3-f4bae57e522"
+      ],
+      "suggested_cases": [
+        "01"
+      ],
+      "evidence": {
+        "01": "Directory syntax or source_identity.json is rejected by the baseline entry."
+      },
+      "unresolved": [],
+      "route": "single_dataset"
+    },
+    {
+      "hole": "BKD 1",
+      "dataset_ids": [
+        "8a606adc-1195-4b5b-8abb-f9b807b7029"
+      ],
+      "suggested_cases": [
+        "01"
+      ],
+      "evidence": {
+        "01": "Directory syntax or source_identity.json is rejected by the baseline entry."
+      },
+      "unresolved": [],
+      "route": "single_dataset"
+    },
+    {
+      "hole": "BKD 2",
+      "dataset_ids": [
+        "10594477-d221-4057-8d63-92606e2d10a"
+      ],
+      "suggested_cases": [
+        "01"
+      ],
+      "evidence": {
+        "01": "Directory syntax or source_identity.json is rejected by the baseline entry."
+      },
+      "unresolved": [],
+      "route": "single_dataset"
+    },
+    {
+      "hole": "BLRCD005",
+      "dataset_ids": [
+        "e286c6ce-6c17-4628-ba7d-b84095285f9"
+      ],
+      "suggested_cases": [
+        "01"
+      ],
+      "evidence": {
+        "01": "Directory syntax or source_identity.json is rejected by the baseline entry."
+      },
+      "unresolved": [],
+      "route": "single_dataset"
+    },
+    {
+      "hole": "BLRCD006",
+      "dataset_ids": [
+        "a0d7ddb9-dcf6-4217-8add-a6d14adbef0"
+      ],
+      "suggested_cases": [
+        "01"
+      ],
+      "evidence": {
+        "01": "Directory syntax or source_identity.json is rejected by the baseline entry."
+      },
+      "unresolved": [],
+      "route": "single_dataset"
+    },
+    {
+      "hole": "BLRCD007",
+      "dataset_ids": [
+        "62680c56-f4b2-44cc-b8a4-2f7dada2efe"
+      ],
+      "suggested_cases": [
+        "01"
+      ],
+      "evidence": {
+        "01": "Directory syntax or source_identity.json is rejected by the baseline entry."
+      },
+      "unresolved": [],
+      "route": "single_dataset"
+    },
+    {
+      "hole": "BM5346",
+      "dataset_ids": [
+        "7be5705b-315c-4a0a-acdf-a6b9af6ccee"
+      ],
+      "suggested_cases": [
+        "01",
+        "05",
+        "08"
+      ],
+      "evidence": {
+        "01": "Directory syntax or source_identity.json is rejected by the baseline entry.",
+        "08": [
+          {
+            "log_id": "357bc113-7070-4b2b-b4a3-04679c9a885",
+            "baseline_error": "Invalid three-column CSV: scalars/357bc113-7070-4b2b-b4a3-04679c9a885_Domain.csv"
+          },
+          {
+            "log_id": "e2abbc70-f418-4482-8caf-45503ff2895",
+            "baseline_error": "Invalid three-column CSV: scalars/e2abbc70-f418-4482-8caf-45503ff2895_Domain.csv"
+          }
+        ],
+        "05": {
+          "section_null_count": 3577,
+          "nonnull_mismatches": 0
+        }
+      },
+      "unresolved": [],
+      "route": "single_dataset"
+    },
+    {
+      "hole": "BM5969",
+      "dataset_ids": [
+        "bc7ea1a0-e332-4056-b296-efd9025f3cb"
+      ],
+      "suggested_cases": [
+        "01"
+      ],
+      "evidence": {
+        "01": "Directory syntax or source_identity.json is rejected by the baseline entry."
+      },
+      "unresolved": [],
+      "route": "single_dataset"
+    },
+    {
+      "hole": "BN011",
+      "dataset_ids": [
+        "ba1f7748-9bd1-45f7-9087-ff9c16eb2bc"
+      ],
+      "suggested_cases": [
+        "01"
+      ],
+      "evidence": {
+        "01": "Directory syntax or source_identity.json is rejected by the baseline entry."
+      },
+      "unresolved": [],
+      "route": "single_dataset"
+    },
+    {
+      "hole": "BN012",
+      "dataset_ids": [
+        "daf1b7d0-f153-4a80-8197-75d9e5d437f"
+      ],
+      "suggested_cases": [
+        "01"
+      ],
+      "evidence": {
+        "01": "Directory syntax or source_identity.json is rejected by the baseline entry."
+      },
+      "unresolved": [],
+      "route": "single_dataset"
+    },
+    {
+      "hole": "BNDD001",
+      "dataset_ids": [
+        "444d863f-2606-4020-9a34-12e79bac147",
+        "58a981e8-d7be-451e-9d44-772f2c4afd6"
+      ],
+      "suggested_cases": [
+        "01"
+      ],
+      "evidence": {
+        "01": "Directory syntax or source_identity.json is rejected by the baseline entry."
+      },
+      "unresolved": [],
+      "route": "multi_dataset_not_classified"
+    },
+    {
+      "hole": "BNDD002",
+      "dataset_ids": [
+        "4909b667-156a-456e-8ab3-134e46106ab"
+      ],
+      "suggested_cases": [
+        "01"
+      ],
+      "evidence": {
+        "01": "Directory syntax or source_identity.json is rejected by the baseline entry."
+      },
+      "unresolved": [],
+      "route": "single_dataset"
+    },
+    {
+      "hole": "BNDD003",
+      "dataset_ids": [
+        "e3fd7375-7a5b-4078-9bb5-905a17d0ee8"
+      ],
+      "suggested_cases": [
+        "01"
+      ],
+      "evidence": {
+        "01": "Directory syntax or source_identity.json is rejected by the baseline entry."
+      },
+      "unresolved": [],
+      "route": "single_dataset"
+    },
+    {
+      "hole": "BNDD004",
+      "dataset_ids": [
+        "81f10b03-da13-4e98-9ad9-5808b75d7d8"
+      ],
+      "suggested_cases": [
+        "01"
+      ],
+      "evidence": {
+        "01": "Directory syntax or source_identity.json is rejected by the baseline entry."
+      },
+      "unresolved": [],
+      "route": "single_dataset"
+    },
+    {
+      "hole": "BNDD005",
+      "dataset_ids": [
+        "98c3e94a-704c-4772-8120-07770c71b4c"
+      ],
+      "suggested_cases": [
+        "01"
+      ],
+      "evidence": {
+        "01": "Directory syntax or source_identity.json is rejected by the baseline entry."
+      },
+      "unresolved": [],
+      "route": "single_dataset"
+    },
+    {
+      "hole": "BNDD006",
+      "dataset_ids": [
+        "84d4e50a-effc-4fdb-9f4b-4b491f3c049"
+      ],
+      "suggested_cases": [
+        "01"
+      ],
+      "evidence": {
+        "01": "Directory syntax or source_identity.json is rejected by the baseline entry."
+      },
+      "unresolved": [],
+      "route": "single_dataset"
+    },
+    {
+      "hole": "BNDD007",
+      "dataset_ids": [
+        "b89cad8b-e852-44c5-aae3-ad65f207b4b"
+      ],
+      "suggested_cases": [
+        "01"
+      ],
+      "evidence": {
+        "01": "Directory syntax or source_identity.json is rejected by the baseline entry."
+      },
+      "unresolved": [],
+      "route": "single_dataset"
+    },
+    {
+      "hole": "BNRD002",
+      "dataset_ids": [
+        "ca9c5c0a-7175-47ec-9915-42af8d6d15b"
+      ],
+      "suggested_cases": [
+        "01"
+      ],
+      "evidence": {
+        "01": "Directory syntax or source_identity.json is rejected by the baseline entry."
+      },
+      "unresolved": [],
+      "route": "single_dataset"
+    },
+    {
+      "hole": "BNRD005",
+      "dataset_ids": [
+        "0991cc96-b4c9-4558-a458-f7f44590e55"
+      ],
+      "suggested_cases": [
+        "01"
+      ],
+      "evidence": {
+        "01": "Directory syntax or source_identity.json is rejected by the baseline entry."
+      },
+      "unresolved": [],
+      "route": "single_dataset"
+    },
+    {
+      "hole": "BNRD007",
+      "dataset_ids": [
+        "8859c2a0-d295-408d-8957-78745cb7e3b"
+      ],
+      "suggested_cases": [
+        "01"
+      ],
+      "evidence": {
+        "01": "Directory syntax or source_identity.json is rejected by the baseline entry."
+      },
+      "unresolved": [],
+      "route": "single_dataset"
+    },
+    {
+      "hole": "BNRD010",
+      "dataset_ids": [
+        "8de8a609-d0cd-42a2-b130-f2a7316f13b"
+      ],
+      "suggested_cases": [
+        "01"
+      ],
+      "evidence": {
+        "01": "Directory syntax or source_identity.json is rejected by the baseline entry."
+      },
+      "unresolved": [],
+      "route": "single_dataset"
+    },
+    {
+      "hole": "BNRD023",
+      "dataset_ids": [
+        "b82ed01c-81d0-4f2b-b286-7aad845f123"
+      ],
+      "suggested_cases": [
+        "01"
+      ],
+      "evidence": {
+        "01": "Directory syntax or source_identity.json is rejected by the baseline entry."
+      },
+      "unresolved": [],
+      "route": "single_dataset"
+    },
+    {
+      "hole": "BNRD024",
+      "dataset_ids": [
+        "7576594c-d77b-4d7c-bbc6-84a536985b9"
+      ],
+      "suggested_cases": [
+        "01"
+      ],
+      "evidence": {
+        "01": "Directory syntax or source_identity.json is rejected by the baseline entry."
+      },
+      "unresolved": [],
+      "route": "single_dataset"
+    },
+    {
+      "hole": "BOD202",
+      "dataset_ids": [
+        "8b660a9d-10aa-443f-82f1-df8772f645f"
+      ],
+      "suggested_cases": [
+        "01",
+        "06"
+      ],
+      "evidence": {
+        "01": "Directory syntax or source_identity.json is rejected by the baseline entry.",
+        "06": {
+          "float32_equivalent_image_bounds": 2
+        }
+      },
+      "unresolved": [],
+      "route": "single_dataset"
+    },
+    {
+      "hole": "BODH015",
+      "dataset_ids": [
+        "b0dd2e64-71c4-4ea2-8d6e-427f47f3b14"
+      ],
+      "suggested_cases": [
+        "01"
+      ],
+      "evidence": {
+        "01": "Directory syntax or source_identity.json is rejected by the baseline entry."
+      },
+      "unresolved": [],
+      "route": "single_dataset"
+    },
+    {
+      "hole": "BODH053",
+      "dataset_ids": [
+        "5d351f3b-05f1-4cb6-916d-d7ede3a4b4a"
+      ],
+      "suggested_cases": [
+        "01",
+        "06"
+      ],
+      "evidence": {
+        "01": "Directory syntax or source_identity.json is rejected by the baseline entry.",
+        "06": {
+          "float32_equivalent_image_bounds": 73
+        }
+      },
+      "unresolved": [],
+      "route": "single_dataset"
+    },
+    {
+      "hole": "Badaminna 1",
+      "dataset_ids": [
+        "772256e7-e8b7-45c9-92a9-7ebe8d0d69f"
+      ],
+      "suggested_cases": [
+        "01",
+        "06"
+      ],
+      "evidence": {
+        "01": "Directory syntax or source_identity.json is rejected by the baseline entry.",
+        "06": {
+          "float32_equivalent_image_bounds": 2
+        }
+      },
+      "unresolved": [],
+      "route": "single_dataset"
+    },
+    {
+      "hole": "Barbwire 1",
+      "dataset_ids": [
+        "77f2dc09-d9b0-486e-98ff-d5eaf77f6d1"
+      ],
+      "suggested_cases": [
+        "01",
+        "06"
+      ],
+      "evidence": {
+        "01": "Directory syntax or source_identity.json is rejected by the baseline entry.",
+        "06": {
+          "float32_equivalent_image_bounds": 3
+        }
+      },
+      "unresolved": [],
+      "route": "single_dataset"
+    },
+    {
+      "hole": "Barnicarndy 1",
+      "dataset_ids": [
+        "81eabec7-0d6d-4e58-8e8a-d0c579b9839",
+        "e8a3fd36-c666-4231-94d8-60e5bd11fb7"
+      ],
+      "suggested_cases": [
+        "01"
+      ],
+      "evidence": {
+        "01": "Directory syntax or source_identity.json is rejected by the baseline entry."
+      },
+      "unresolved": [],
+      "route": "multi_dataset_not_classified"
+    },
+    {
+      "hole": "Bedout 1",
+      "dataset_ids": [
+        "0f15a84c-f8a7-4212-9976-ffb8ec00dc5"
+      ],
+      "suggested_cases": [
+        "01",
+        "06"
+      ],
+      "evidence": {
+        "01": "Directory syntax or source_identity.json is rejected by the baseline entry.",
+        "06": {
+          "float32_equivalent_image_bounds": 2
+        }
+      },
+      "unresolved": [],
+      "route": "single_dataset"
+    },
+    {
+      "hole": "Beekeeper 1",
+      "dataset_ids": [
+        "efdd2653-509f-4c5e-9898-4c29f03b77d"
+      ],
+      "suggested_cases": [
+        "01",
+        "02",
+        "06"
+      ],
+      "evidence": {
+        "01": "Directory syntax or source_identity.json is rejected by the baseline entry.",
+        "02": {
+          "samples_compared": 3024,
+          "tray_local_mismatches": 0
+        },
+        "06": {
+          "float32_equivalent_image_bounds": 6
+        }
+      },
+      "unresolved": [],
+      "route": "single_dataset"
+    },
+    {
+      "hole": "Beharra 2",
+      "dataset_ids": [
+        "be00578e-2cf2-4be8-814b-c7b66ca34d0"
+      ],
+      "suggested_cases": [
+        "01",
+        "06"
+      ],
+      "evidence": {
+        "01": "Directory syntax or source_identity.json is rejected by the baseline entry.",
+        "06": {
+          "float32_equivalent_image_bounds": 3
+        }
+      },
+      "unresolved": [],
+      "route": "single_dataset"
+    },
+    {
+      "hole": "Beharra Springs 1",
+      "dataset_ids": [
+        "297b44f1-514a-416d-9dd9-38a81025f70"
+      ],
+      "suggested_cases": [
+        "01"
+      ],
+      "evidence": {
+        "01": "Directory syntax or source_identity.json is rejected by the baseline entry."
+      },
+      "unresolved": [],
+      "route": "single_dataset"
+    },
+    {
+      "hole": "Beharra Springs 2",
+      "dataset_ids": [
+        "9d05346b-20d6-4b54-8d3c-19b7acccddd",
+        "e09779aa-7a4d-41b6-9f6b-ecf198c0db2"
+      ],
+      "suggested_cases": [
+        "01"
+      ],
+      "evidence": {
+        "01": "Directory syntax or source_identity.json is rejected by the baseline entry."
+      },
+      "unresolved": [],
+      "route": "multi_dataset_not_classified"
+    },
+    {
+      "hole": "Beharra Springs 3",
+      "dataset_ids": [
+        "37d9c4bf-a079-482b-8685-fe3b9d707a7"
+      ],
+      "suggested_cases": [
+        "01"
+      ],
+      "evidence": {
+        "01": "Directory syntax or source_identity.json is rejected by the baseline entry."
+      },
+      "unresolved": [],
+      "route": "single_dataset"
+    },
+    {
+      "hole": "Beharra Springs North 1",
+      "dataset_ids": [
+        "4b7c4915-3e18-45f9-9347-a9d9bedb75a",
+        "88d0d6ee-3420-4677-8ca1-a89eb241782"
+      ],
+      "suggested_cases": [
+        "01"
+      ],
+      "evidence": {
+        "01": "Directory syntax or source_identity.json is rejected by the baseline entry."
+      },
+      "unresolved": [],
+      "route": "multi_dataset_not_classified"
+    },
+    {
+      "hole": "Black Ledge 1",
+      "dataset_ids": [
+        "cd248d5d-7467-4873-9d0a-6eea7ae76e3"
+      ],
+      "suggested_cases": [
+        "01"
+      ],
+      "evidence": {
+        "01": "Directory syntax or source_identity.json is rejected by the baseline entry."
+      },
+      "unresolved": [],
+      "route": "single_dataset"
+    },
+    {
+      "hole": "Blina 1",
+      "dataset_ids": [
+        "023b50cf-6f95-4049-ab86-517625a8cb0",
+        "1f6ce645-06f3-4a6d-8c94-c953065a414"
+      ],
+      "suggested_cases": [
+        "01"
+      ],
+      "evidence": {
+        "01": "Directory syntax or source_identity.json is rejected by the baseline entry."
+      },
+      "unresolved": [],
+      "route": "multi_dataset_not_classified"
+    },
+    {
+      "hole": "Blina 2",
+      "dataset_ids": [
+        "14a0909b-0fca-4fef-9905-e41c962f727"
+      ],
+      "suggested_cases": [
+        "01",
+        "02",
+        "06"
+      ],
+      "evidence": {
+        "01": "Directory syntax or source_identity.json is rejected by the baseline entry.",
+        "02": {
+          "samples_compared": 19706,
+          "tray_local_mismatches": 0
+        },
+        "06": {
+          "float32_equivalent_image_bounds": 48
+        }
+      },
+      "unresolved": [],
+      "route": "single_dataset"
+    },
+    {
+      "hole": "Blina 3",
+      "dataset_ids": [
+        "34369e38-dab6-4fdb-9634-60cb1313e3c"
+      ],
+      "suggested_cases": [
+        "01",
+        "06"
+      ],
+      "evidence": {
+        "01": "Directory syntax or source_identity.json is rejected by the baseline entry.",
+        "06": {
+          "float32_equivalent_image_bounds": 24
+        }
+      },
+      "unresolved": [],
+      "route": "single_dataset"
+    },
+    {
+      "hole": "Blina 4",
+      "dataset_ids": [
+        "a2a3262e-65e8-43bb-9a69-7af16ec44ab"
+      ],
+      "suggested_cases": [
+        "01",
+        "06"
+      ],
+      "evidence": {
+        "01": "Directory syntax or source_identity.json is rejected by the baseline entry.",
+        "06": {
+          "float32_equivalent_image_bounds": 5
+        }
+      },
+      "unresolved": [],
+      "route": "single_dataset"
+    },
+    {
+      "hole": "Blina 5",
+      "dataset_ids": [
+        "6fc4f66f-d2f4-4951-8814-9639e28d6af"
+      ],
+      "suggested_cases": [
+        "01",
+        "06"
+      ],
+      "evidence": {
+        "01": "Directory syntax or source_identity.json is rejected by the baseline entry.",
+        "06": {
+          "float32_equivalent_image_bounds": 6
+        }
+      },
+      "unresolved": [],
+      "route": "single_dataset"
+    },
+    {
+      "hole": "Bluebell 1",
+      "dataset_ids": [
+        "6f500c31-9339-4e4f-9132-cd238f37e47"
+      ],
+      "suggested_cases": [
+        "01",
+        "06"
+      ],
+      "evidence": {
+        "01": "Directory syntax or source_identity.json is rejected by the baseline entry.",
+        "06": {
+          "float32_equivalent_image_bounds": 3
+        }
+      },
+      "unresolved": [],
+      "route": "single_dataset"
+    },
+    {
+      "hole": "Boab 1",
+      "dataset_ids": [
+        "7ae2355d-f6e4-4205-8d17-59ff1e3aa76"
+      ],
+      "suggested_cases": [
+        "01",
+        "06"
+      ],
+      "evidence": {
+        "01": "Directory syntax or source_identity.json is rejected by the baseline entry.",
+        "06": {
+          "float32_equivalent_image_bounds": 50
+        }
+      },
+      "unresolved": [],
+      "route": "single_dataset"
+    },
+    {
+      "hole": "Bonaparte 2",
+      "dataset_ids": [
+        "34eaa5b2-dee0-4bcd-b1d5-e4b224d3049"
+      ],
+      "suggested_cases": [
+        "01",
+        "02",
+        "06"
+      ],
+      "evidence": {
+        "01": "Directory syntax or source_identity.json is rejected by the baseline entry.",
+        "02": {
+          "samples_compared": 8160,
+          "tray_local_mismatches": 0
+        },
+        "06": {
+          "float32_equivalent_image_bounds": 12
+        }
+      },
+      "unresolved": [],
+      "route": "single_dataset"
+    },
+    {
+      "hole": "Boondawari 1",
+      "dataset_ids": [
+        "8fd4fa93-2838-492c-b810-7b2fd504424"
+      ],
+      "suggested_cases": [
+        "01",
+        "06"
+      ],
+      "evidence": {
+        "01": "Directory syntax or source_identity.json is rejected by the baseline entry.",
+        "06": {
+          "float32_equivalent_image_bounds": 125
+        }
+      },
+      "unresolved": [],
+      "route": "single_dataset"
+    },
+    {
+      "hole": "Bootine 1",
+      "dataset_ids": [
+        "79c8c421-39f5-4003-98a8-69a76744e1d"
+      ],
+      "suggested_cases": [
+        "01"
+      ],
+      "evidence": {
+        "01": "Directory syntax or source_identity.json is rejected by the baseline entry."
+      },
+      "unresolved": [],
+      "route": "single_dataset"
+    },
+    {
+      "hole": "Tamala 1",
+      "dataset_ids": [
+        "01cfc34a-bd8c-4520-afff-3ab8682ef70",
+        "9012e9c6-f584-4b90-8370-dd55f48906b",
+        "b3c4bd42-a5af-4af3-9459-2d1c777af0a"
+      ],
+      "suggested_cases": [
+        "01"
+      ],
+      "evidence": {
+        "01": "Directory syntax or source_identity.json is rejected by the baseline entry."
+      },
+      "unresolved": [],
+      "route": "multi_dataset_not_classified"
+    }
+  ]
+}

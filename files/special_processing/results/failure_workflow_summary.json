@@ -1,0 +1,310 @@
+{
+  "date": "2026-10-11",
+  "normal_etl_files_unchanged": 59,
+  "external_python_files_parsed": 19,
+  "failure_selection": {
+    "failed_count": 139,
+    "excluded_nonfailed_count": 14,
+    "unique_group_counts": {
+      "01_source_identity": 93,
+      "06_float32_precision": 26,
+      "02_tray_local_sections": 18,
+      "08_literal_text_csv": 1,
+      "05_nullable_auxiliary_values": 1
+    },
+    "overlapping_issue_counts": {
+      "01": 139,
+      "02": 18,
+      "05": 1,
+      "06": 32,
+      "08": 3
+    }
+  },
+  "real_preparation_runs": [
+    {
+      "hole": "Beekeeper 1",
+      "route": "single",
+      "status": "passed",
+      "validated_through": 6,
+      "applied_cases": [
+        "01",
+        "02",
+        "06"
+      ],
+      "steps": [
+        {
+          "step": "1_inventory.py",
+          "exit_code": 0,
+          "seconds": 1.203
+        },
+        {
+          "step": "2_validate_payloads.py",
+          "exit_code": 0,
+          "seconds": 1.391
+        },
+        {
+          "step": "3_normalize_metadata.py",
+          "exit_code": 0,
+          "seconds": 0.312
+        },
+        {
+          "step": "4_align_samples.py",
+          "exit_code": 0,
+          "seconds": 0.469
+        },
+        {
+          "step": "5_build_columnar.py",
+          "exit_code": 0,
+          "seconds": 5.797
+        },
+        {
+          "step": "6_verify_prepared_data.py",
+          "exit_code": 0,
+          "seconds": 1.812
+        }
+      ],
+      "next_step": 7,
+      "sample_count": 3024,
+      "preparation_status": "passed_with_known_limitations",
+      "limitations": [
+        "F32 sample/wavelength order unconfirmed; no per-sample spectra published",
+        "Physical profile calibration and borehole trajectory unavailable",
+        "Source domain references remain unresolved",
+        "No confidence score computed",
+        "Database import and cloud upload not started"
+      ],
+      "step_seconds": 10.984
+    },
+    {
+      "hole": "BM5346",
+      "route": "single",
+      "status": "passed",
+      "validated_through": 6,
+      "applied_cases": [
+        "01",
+        "05",
+        "08"
+      ],
+      "steps": [
+        {
+          "step": "1_inventory.py",
+          "exit_code": 0,
+          "seconds": 1.609
+        },
+        {
+          "step": "2_validate_payloads.py",
+          "exit_code": 0,
+          "seconds": 3.766
+        },
+        {
+          "step": "3_normalize_metadata.py",
+          "exit_code": 0,
+          "seconds": 0.312
+        },
+        {
+          "step": "4_align_samples.py",
+          "exit_code": 0,
+          "seconds": 0.516
+        },
+        {
+          "step": "5_build_columnar.py",
+          "exit_code": 0,
+          "seconds": 18.828
+        },
+        {
+          "step": "6_verify_prepared_data.py",
+          "exit_code": 0,
+          "seconds": 2.344
+        }
+      ],
+      "next_step": 7,
+      "sample_count": 10800,
+      "preparation_status": "passed_with_known_limitations",
+      "limitations": [
+        "F32 sample/wavelength order unconfirmed; no per-sample spectra published",
+        "Physical profile calibration and borehole trajectory unavailable",
+        "Source domain references remain unresolved",
+        "No confidence score computed",
+        "Database import and cloud upload not started"
+      ],
+      "step_seconds": 27.375
+    },
+    {
+      "hole": "Tamala 1",
+      "route": "multi",
+      "status": "passed",
+      "validated_through": 32,
+      "applied_cases": [
+        "01",
+        "11"
+      ],
+      "steps": [
+        {
+          "step": "31_audit_multi_dataset_sources.py",
+          "exit_code": 0,
+          "seconds": 0.735
+        },
+        {
+          "step": "32_prepare_multi_dataset_payloads.py",
+          "exit_code": 0,
+          "seconds": 18.406
+        }
+      ],
+      "next_step": 33,
+      "dataset_count": 3,
+      "sample_count": 7390,
+      "dataset_sample_counts": [
+        6030,
+        680,
+        680
+      ],
+      "step_seconds": 19.141
+    }
+  ],
+  "synthetic_workflow_tests": [
+    {
+      "fixture": "interval_alias",
+      "baseline_failed_step": "4_align_samples.py",
+      "assigned_case": "03",
+      "diagnosis_status": "routed",
+      "unresolved": [],
+      "special_result": {
+        "hole": "BB1",
+        "route": "single",
+        "steps": [
+          {
+            "step": "1_inventory.py",
+            "exit_code": 0,
+            "seconds": 1.75
+          },
+          {
+            "step": "2_validate_payloads.py",
+            "exit_code": 0,
+            "seconds": 1.188
+          },
+          {
+            "step": "3_normalize_metadata.py",
+            "exit_code": 0,
+            "seconds": 0.344
+          },
+          {
+            "step": "4_align_samples.py",
+            "exit_code": 0,
+            "seconds": 0.593
+          },
+          {
+            "step": "5_build_columnar.py",
+            "exit_code": 0,
+            "seconds": 2.922
+          },
+          {
+            "step": "6_verify_prepared_data.py",
+            "exit_code": 0,
+            "seconds": 1.532
+          }
+        ],
+        "status": "passed",
+        "validated_through": 6,
+        "applied_cases": [
+          "03"
+        ],
+        "code_subdirectory": "hole_0000/code/etl4",
+        "work_subdirectory": "hole_0000/data",
+        "next_step": 7
+      },
+      "remaining_failure_count": 0,
+      "test_passed": true
+    },
+    {
+      "fixture": "image_alias",
+      "baseline_failed_step": "2_validate_payloads.py",
+      "assigned_case": "04",
+      "diagnosis_status": "routed",
+      "unresolved": [],
+      "special_result": {
+        "hole": "BB1",
+        "route": "single",
+        "steps": [
+          {
+            "step": "1_inventory.py",
+            "exit_code": 0,
+            "seconds": 1.765
+          },
+          {
+            "step": "2_validate_payloads.py",
+            "exit_code": 0,
+            "seconds": 1.235
+          },
+          {
+            "step": "3_normalize_metadata.py",
+            "exit_code": 0,
+            "seconds": 0.39
+          },
+          {
+            "step": "4_align_samples.py",
+            "exit_code": 0,
+            "seconds": 0.61
+          },
+          {
+            "step": "5_build_columnar.py",
+            "exit_code": 0,
+            "seconds": 3.171
+          },
+          {
+            "step": "6_verify_prepared_data.py",
+            "exit_code": 0,
+            "seconds": 1.563
+          }
+        ],
+        "status": "passed",
+        "validated_through": 6,
+        "applied_cases": [
+          "04"
+        ],
+        "code_subdirectory": "hole_0000/code/etl4",
+        "work_subdirectory": "hole_0000/data",
+        "next_step": 7
+      },
+      "remaining_failure_count": 0,
+      "test_passed": true
+    },
+    {
+      "fixture": "interval_difference",
+      "baseline_failed_step": "4_align_samples.py",
+      "assigned_case": null,
+      "diagnosis_status": "needs_review",
+      "unresolved": [
+        "Different interval logs share the same name"
+      ],
+      "test_passed": true
+    },
+    {
+      "fixture": "image_difference",
+      "baseline_failed_step": "2_validate_payloads.py",
+      "assigned_case": null,
+      "diagnosis_status": "needs_review",
+      "unresolved": [
+        "Thumbnail logs differ in content or associations",
+        "No supported special rule explains this failure"
+      ],
+      "test_passed": true
+    },
+    {
+      "fixture": "image_wrong_dataset",
+      "baseline_failed_step": "2_validate_payloads.py",
+      "assigned_case": null,
+      "diagnosis_status": "needs_review",
+      "unresolved": [
+        "ValueError: Invalid image path or dataset association",
+        "No supported special rule explains this failure"
+      ],
+      "test_passed": true
+    }
+  ],
+  "routing_unit_tests_passed": 9,
+  "adapter_builds_passed": 12,
+  "finite_float32_probes_passed": 3,
+  "raw_modified": false,
+  "database_modified": false,
+  "aws_modified": false
+}
