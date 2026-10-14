@@ -41,7 +41,9 @@ export default function HoleDetail({ holeId, onSelect }) {
         // separate request: every hole tries this, but the 5 database5553
         // holes answer instantly while everyone else is a live NVCL lookup
         // (a few seconds) - no need to hold up the rest of the panel on it
-        getSpectralSample(holeId).then((data) => !cancelled && setSpectral(data));
+        getSpectralSample(holeId)
+          .then((data) => !cancelled && setSpectral(data))
+          .catch((err) => !cancelled && setError(err.message));
       })
       .catch((err) => !cancelled && setError(err.message));
 
