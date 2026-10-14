@@ -1,5 +1,12 @@
 # Frontend API Handoff
 FastAPI backend for the HyLogger frontend.
+
+The active release is discovered from `core.active_release`; IDs and counts in
+examples below are fixtures, not deployment requirements. The current frontend
+uses these `/v1` routes. Cloud deployment is described in `../deployment/README.md`.
+Health reports `asset_backend`, `asset_storage_configured` and
+`media_verified_by_health: false`. In S3 mode `asset_root_available` is null;
+health alone does not verify asset access. Use the live smoke check for that.
 ## Base URL
 Local development:
 ```text
@@ -153,6 +160,7 @@ Optional:
 ```text
 log_ids
 image_log_id
+include_results (default true; false reads only sample information and images)
 ```
 Example mineral request:
 ```http

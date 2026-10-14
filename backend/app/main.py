@@ -1,9 +1,11 @@
 import math
+import os
+import logging
 from uuid import UUID
 
 from fastapi import FastAPI, HTTPException, Query
 from fastapi.middleware.cors import CORSMiddleware
-from fastapi.responses import FileResponse, Response
+from fastapi.responses import FileResponse, Response, JSONResponse
 
 from app.repository import (
     get_all_holes,
@@ -38,12 +40,26 @@ app = FastAPI(
 )
 
 
+@app.middleware("http")
+async def dependency_errors(request, call_next):
+    try:
+        response = await call_next(request)
+    except Exception as exc:
+        # Provider errors may contain connection strings. Log only the class.
+        logging.getLogger(__name__).error("Backend dependency failure: %s", type(exc).__name__)
+        response = JSONResponse({"detail": "Backend dependency unavailable"}, status_code=503)
+    response.headers["X-Content-Type-Options"] = "nosniff"
+    return response
+
+
 app.add_middleware(
     CORSMiddleware,
-    allow_origins=["*"],
+    allow_origins=[origin.strip() for origin in os.getenv(
+        "ETL4_ALLOWED_ORIGINS", "http://localhost:3000,http://127.0.0.1:3000"
+    ).split(",") if origin.strip()],
     allow_credentials=False,
-    allow_methods=["*"],
-    allow_headers=["*"],
+    allow_methods=["GET"],
+    allow_headers=["Accept", "Content-Type"],
 )
 
 
@@ -62,7 +78,7 @@ def health_check():
         status = (
             "ok"
             if health["release_id"] is not None
-            and health["asset_root_available"]
+            and health["asset_storage_configured"]
             else "degraded"
         )
 
@@ -168,8 +184,9 @@ def get_dataset_sample(
     revision_id: UUID,
     sample_no: int,
     axis_id: UUID,
-    log_ids: list[UUID] | None = Query(default=None),
+    log_ids: list[UUID] | None = Query(default=None, max_length=16),
     image_log_id: UUID | None = None,
+    include_results: bool = True,
 ):
     if sample_no < 0:
         raise HTTPException(
@@ -184,8 +201,8 @@ def get_dataset_sample(
             sample_no=sample_no,
             log_ids=(
                 [str(log_id) for log_id in log_ids]
-                if log_ids is not None
-                else None
+                if include_results and log_ids is not None
+                else (None if include_results else [])
             ),
             image_log_id=(
                 str(image_log_id)
@@ -212,7 +229,7 @@ def get_dataset_sample(
 
         raise HTTPException(
             status_code=503,
-            detail=message,
+            detail="Sample dependency unavailable",
         ) from exc
 
     if result is None:
@@ -233,7 +250,7 @@ def get_image_asset_content(asset_id: UUID):
     except ValueError as exc:
         raise HTTPException(
             status_code=503,
-            detail=str(exc),
+            detail="Image dependency unavailable",
         ) from exc
 
     if asset is None:
@@ -572,7 +589,7 @@ def get_dataset_scalar_values(
     except ValueError as exc:
         raise HTTPException(
             status_code=503,
-            detail=str(exc),
+            detail="Log dependency unavailable",
         ) from exc
 
     if result is None:
@@ -641,7 +658,7 @@ def get_dataset_profile_values(
     except ValueError as exc:
         raise HTTPException(
             status_code=503,
-            detail=str(exc),
+            detail="Log dependency unavailable",
         ) from exc
 
     if result is None:

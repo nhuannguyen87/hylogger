@@ -553,7 +553,7 @@ def get_boreholes_v1(
 
         return rows
 
-from app.media_reader import local_asset, parquet_group
+from app.media_reader import read_chunk_table
 
 
 def get_scalar_log_values(
@@ -650,25 +650,7 @@ def get_scalar_log_values(
         items = []
 
         for chunk in chunks:
-            asset, path = local_asset(
-                conn,
-                chunk["asset_id"],
-            )
-
-            if path is None:
-                raise ValueError(
-                    "Scalar asset is unavailable"
-                )
-
-            stat = path.stat()
-
-            table = parquet_group(
-                str(path),
-                chunk["sha256"],
-                stat.st_size,
-                stat.st_mtime_ns,
-                chunk["row_group"],
-            )
+            table = read_chunk_table(conn, chunk)
 
             for row in table.to_pylist():
                 sample_no = row["sample_no"]
@@ -868,25 +850,7 @@ def get_profile_log_values(
         items = []
 
         for chunk in chunks:
-            asset, path = local_asset(
-                conn,
-                chunk["asset_id"],
-            )
-
-            if path is None:
-                raise ValueError(
-                    "Profile asset is unavailable"
-                )
-
-            stat = path.stat()
-
-            table = parquet_group(
-                str(path),
-                chunk["sha256"],
-                stat.st_size,
-                stat.st_mtime_ns,
-                chunk["row_group"],
-            )
+            table = read_chunk_table(conn, chunk)
 
             for row in table.to_pylist():
                 sample_no = row["sample_no"]
@@ -928,7 +892,7 @@ def get_profile_log_values(
 
 
 def get_backend_health():
-    from app.media_reader import ETL4_ROOT
+    from app.media_reader import storage_health
 
     with get_connection() as conn:
         database = conn.execute(
@@ -955,7 +919,7 @@ def get_backend_health():
             if release is not None
             else None
         ),
-        "asset_root_available": ETL4_ROOT.exists(),
+        **storage_health(),
     }
 
 @lru_cache(maxsize=1)

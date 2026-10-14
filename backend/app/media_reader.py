@@ -16,6 +16,25 @@ load_dotenv()
 ETL4_ROOT = Path(os.environ.get("ETL4_ROOT", "")).resolve()
 
 
+def storage_health():
+    """Report configuration honestly; this does not prove every asset is readable."""
+    backend = asset_backend()
+    if backend == "s3":
+        configured = all(os.getenv(key, "").strip() for key in (
+            "ETL4_S3_BUCKET", "ETL4_S3_PREFIX", "ETL4_AWS_REGION",
+        ))
+        root_available = None
+    else:
+        root_available = bool(os.getenv("ETL4_ROOT", "").strip()) and ETL4_ROOT.is_dir()
+        configured = root_available
+    return {
+        "asset_backend": backend,
+        "asset_storage_configured": configured,
+        "asset_root_available": root_available,
+        "media_verified_by_health": False,
+    }
+
+
 def asset_backend():
     backend = os.getenv(
         "ETL4_ASSET_BACKEND",
@@ -196,6 +215,21 @@ INDICATOR_LABEL = (
     "Marker position is estimated from sample index; "
     "depth and results come from the selected sample."
 )
+
+
+def read_chunk_table(conn, chunk):
+    """Use the selected storage backend for paginated scalar/profile values too."""
+    if asset_backend() == "s3":
+        store = get_s3_store()
+        asset = store.asset(conn, chunk["asset_id"])
+        require(asset is not None, "Data asset is unavailable")
+        with pq.ParquetFile(pa.BufferReader(store.full(asset))) as parquet:
+            return parquet.read_row_group(chunk["row_group"])
+    asset, path = local_asset(conn, chunk["asset_id"])
+    require(path is not None, "Data asset is unavailable")
+    stat = path.stat()
+    return parquet_group(str(path), chunk["sha256"], stat.st_size,
+                         stat.st_mtime_ns, chunk["row_group"])
 
 
 def read_result(conn, log, axis_id, sample_no):
