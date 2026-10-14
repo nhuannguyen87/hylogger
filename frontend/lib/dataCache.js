@@ -1,8 +1,8 @@
 // Bump the database name when the cached result format changes.
 const DB_NAME = "hylogger-data-v1";
-const MAX_BYTES = 50 * 1024 * 1024;
+const MAX_BYTES = 128 * 1024 * 1024;
 const MAX_ENTRY_BYTES = 2 * 1024 * 1024;
-const MAX_ENTRIES = 512;
+const MAX_ENTRIES = 2048;
 const IO_TIMEOUT = 1500;
 export const CATALOG_TTL = 5 * 60 * 1000;
 export const DATA_TTL = 60 * 60 * 1000;
