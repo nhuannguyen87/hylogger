@@ -7,6 +7,7 @@ and which intervals are statistically unusual.
 Built for CITS5553. Stack matches the project brief: **Next.js → FastAPI→
 PostgreSQL/PostGIS**, with a scikit-learn anomaly step in between. The site runs
 on the FastAPI backend in `backend/`.
+Link to prototype: https://main.d25z3xff1lg1mi.amplifyapp.com/
 
 ---
 
