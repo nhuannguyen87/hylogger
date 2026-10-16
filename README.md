@@ -191,7 +191,7 @@ The site sends at most 16 `log_ids` per sample - the deployed API's limit.
 
 ## About the anomaly model
 
-The root-level `anomaly.py` implements Nitya Arya’s cross-hole anomaly model. It identifies unusual depth intervals and compares whole-hole measurement profiles. The model is unsupervised because the ETL4 pilot has no independently verified anomaly labels. Its flags are candidates for expert review, not predictions of ore or confirmed geological anomalies.
+The root-level `anomaly.py` implements a cross-hole anomaly model. It identifies unusual depth intervals and compares whole-hole measurement profiles. The model is unsupervised because the ETL4 pilot has no independently verified anomaly labels. Its flags are candidates for expert review, not predictions of ore or confirmed geological anomalies.
 
 ### Interval-level method
 
