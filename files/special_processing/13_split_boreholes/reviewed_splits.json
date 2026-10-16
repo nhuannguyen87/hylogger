@@ -1,0 +1,52 @@
+{
+  "BBDD0001": {
+    "5cdce620-01fe-431c-879a-8895db7ee88": [
+      "Bannockburn",
+      "Bannockburn"
+    ],
+    "ef0b0e13-cc0c-44b0-b481-93ba606b965": [
+      "Lake Roe - Bombara Prospect",
+      "Lake Roe-Bombara"
+    ]
+  },
+  "BBDD0002": {
+    "3b62926a-bf76-4c53-ad7c-38b7b498f94": [
+      "Lake Roe - Bombara Prospect",
+      "Lake Roe-Bombara"
+    ],
+    "7b0174c9-d72d-4d8d-8e36-727bf9f1ddd": [
+      "Bannockburn",
+      "Bannockburn"
+    ]
+  },
+  "BH01": {
+    "02608d56-3abb-470f-b8d1-a8c61128bef": [
+      "Behemoth",
+      "Behemoth"
+    ],
+    "e7f2477a-984d-4fe6-84a9-978f03fbe51": [
+      "",
+      "unnamed"
+    ]
+  },
+  "BH02": {
+    "249adaba-a658-415b-a1b1-45725bf8ff7": [
+      "",
+      "unnamed"
+    ],
+    "cb2539c5-92f9-4ebc-b437-bb5fa31a371": [
+      "Behemoth",
+      "Behemoth"
+    ]
+  },
+  "BNDD001": {
+    "444d863f-2606-4020-9a34-12e79bac147": [
+      "Stanley",
+      "Stanley"
+    ],
+    "58a981e8-d7be-451e-9d44-772f2c4afd6": [
+      "Binneringie",
+      "Binneringie"
+    ]
+  }
+}

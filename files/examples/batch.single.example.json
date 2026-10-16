@@ -1,0 +1,8 @@
+{
+  "packages": [
+    {
+      "directory": "REPLACE_WITH_STEP_28_PACKAGE_OBJECT_KEY_OR_ABSOLUTE_PATH",
+      "prepared_work_dir": "D:/etl4_work/batch_001"
+    }
+  ]
+}

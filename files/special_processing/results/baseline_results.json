@@ -1,0 +1,2090 @@
+{
+  "code_sha256": {
+    "_file_checks.py": "d9ccf94924a1d6176aa9833b6ab2df85e4e52771e3145f4ef4405d24c7945ae4",
+    "_settings.py": "580424e2ffad37a2e16f99aa26d039d667a3513de815edfcc12fbb01706df112",
+    "database\\14_verify_database_backup.py": "0eec379c4e08147dbc35c4cea0e58d8e3e78e6ff1ff700b8edcd406c130b9532",
+    "database\\20_audit_spectral_sources.py": "e43ef1b848783afc3b102961c86af9c0ca84a21b11a89464bd6ddb6b56cf5d94",
+    "database\\21_verify_spectral_bindings.py": "c429a35cce57c25133b3c2f46d91441afe6c2c02e8a5de354a74667c49931eb4",
+    "database\\22_prepare_spectral_access.py": "b1ab98e78319ed1931b5bed7a1a15c68370294955622898c05ace088773ddebc",
+    "database\\23_audit_dataset_image_groups.py": "7684c467c82717124ebe3710ed54c93ee7da331efa86b0cfda33ea935390388e",
+    "database\\24_detect_image_rows.py": "5c17cc0efd4bb95fd0186b414f2cf7687603b3da4e14a23e45b8e5f65036f1d5",
+    "database\\25_review_image_row_regions.py": "3b5a32470274e7bf7b92c6e41eb755f3b8a774d317a9de9235dee15734ecf58b",
+    "database\\26_bind_image_rows_to_samples.py": "f7f46d548dc9cfd65b25b46536e72f729586905567e74349565c6198cdb17101",
+    "database\\27_build_image_row_assets.py": "07e78c4c771b2ffd3c37f62526862f2bca145c562f7b1eb7aba953763877f9ef",
+    "database\\28_import_media_revision.py": "4636ab7bb1cf65ee4b68d962e89f336a7ead486caa69cf569ba56dd5d2aba1b1",
+    "database\\31_audit_multi_dataset_sources.py": "6977959b7e7c5ba463f1ab5688c5f47111d82112599719dddc019e478c16a1e8",
+    "database\\32_prepare_multi_dataset_payloads.py": "f1120cc72fb8e84dc77cafbb82e78b0f2c9b8d384de499c049ae7592ca1feed5",
+    "database\\33_prepare_multi_dataset_media.py": "e9a4a81b8df0a80138ed1c88f3e6a4aef0b15ebb9ef713dd1831feade57d197f",
+    "database\\37_import_final_version.py": "753e4fc96764718c04cb29f84a0c74aef999bfb5bc7e165b04a5d6ab6e48482e",
+    "database\\38_export_batch.py": "4e8b4fef2d2e02acf8c0a3ed7572ea7027cb23a8db1f403e6d054e7a22f99a5f",
+    "database\\39_upload_batch.py": "a76aad0bd0454144def41c1f34c43e358a8dfc52024b94bb20a2771331cde230",
+    "database\\40_merge_cloud_batch.py": "5ea25ad7a496397c953074aa8234fbb09b2f96e4a99f1c2886a7810775d350a1",
+    "database\\41_cleanup_batch.py": "3b34adfa7a8b1c812569092357bc4a49ef6d412ecd6af99378c343ee7d31f849",
+    "database\\7_preflight_database.py": "21ce90c0c409bddaa697cf9ce1431fc0f1a10581e07ca98c9b3f5f51085a101a",
+    "database\\8_apply_schema.py": "75ca4128be2dede42bc5fbd4af21fc67a9888a64cdf9e971e384f3bd9646454a",
+    "database\\_batch_files.py": "3d2059b441a7d30c50e76c11abe16b6f1eba018ada4d87d76eb431a602e7c3c7",
+    "database\\_db_common.py": "5af704527939f1036a250ab27e702353c693938a2ce4ebeb16038ca54c2da65c",
+    "database\\_db_files.py": "42521ce6ad2812047722e460dbb5923912fce9f3e75c38ed52a16ff60bca78e7",
+    "database\\_final_import.py": "92f48e95195af42d849bc870b8ff0d6910b8010fc5f2f0a36fdf15107b2ade39",
+    "database\\_ingest.py": "2f3bc0dd85000fba9bfb9c0fc6b72f5863f2262da0c897f972127d69733bd7eb",
+    "database\\_media_common.py": "a5a92351567c320073b950b66dd331a2fbca1da4236e9e2f69bc766fbb0a1d6d",
+    "database\\_media_import.py": "65e654a173a8af90614307e8da8b7bfdf0b4fb6c5dd309719dd37137f614e952",
+    "database\\_media_manifest.py": "d18884bb3c293ef1111b9d29671db8b3697c1e5ad37d9b967754dcf733a08f90",
+    "database\\_media_reader.py": "cb0f7e09443f7effd1e8374f79407ea3de887b0c96638a7a5f67d943a5d36d3d",
+    "database\\_media_rows.py": "57e65ebff15d562d9d8229f95740b1ab2e8b6c008563e3b718b397442d80b043",
+    "database\\_media_verification.py": "4864477e03f0dc16655a1b87f920820eee4bb23d68dad13ec5b2a93de1bac71a",
+    "database\\_multi_common.py": "3baca7d35ab95938725b45ea5129ff5e0801d964a34424964ce98eafe527bc48",
+    "database\\_multi_db.py": "f02395ec6c6a2e5453b125c7e2d22d829cedf24b64ff3ceb3f4e58e675158ff5",
+    "database\\_prepared_inputs.py": "8b2e6e99d31fbcc8957c677d98a1d90dfca5f1e6e03dad46f9f58cae9c282de3",
+    "database\\_publication.py": "db497555b43c10a7c69948a4e26f57fad9aa7ab47053ba217ecd90d0f2f2bdbf",
+    "database\\_run_reports.py": "53f6642f6447373307a4320eb29846e1ebab69c2b2c80c30a3fa972703cffdc2",
+    "database\\_s3_upload.py": "6e1b28f939280cd3fa90fe8397f47401bb812c54925143fe60420917b81e73f8",
+    "database\\_schema_docs.py": "b79638fe4813e490a814203a37837d75c282f8a761f1a501ad6ca774bbfa735e",
+    "database\\_verification.py": "a0b7da8d56c40bfbf6281cc0230f86f0267b17e4c9a35af864b7cd18db788e86",
+    "processing\\0_check_raw.py": "30a8b472fe9a4d426b29efbffc057aa83b46fefc4e2d7a39119fc189fa13cd34",
+    "processing\\1_inventory.py": "3e12a2958af847cbfaa33d50fcc15544e6c41d06699159516cb81c42bb6390ab",
+    "processing\\2_validate_payloads.py": "afa2c011deecb4fafe4d9e9a98cf617f92cf18400a2bef6505fedc7844f2d112",
+    "processing\\3_normalize_metadata.py": "c6fd3a26b5da4205c7ac464d456574180376e31f0252d6a437c2398e16f5ea7d",
+    "processing\\4_align_samples.py": "2698b577970a799a76cf24e05497347b9840b4632da2f4472296daf91447a0de",
+    "processing\\5_build_columnar.py": "8f1cf3058a71912599fefd734484ceac2f59134c1263284b48a1aca181c1e4b2",
+    "processing\\6_verify_prepared_data.py": "47b7f4b38ff8fb5b365f1a90d96d423f5bde4962ff2d7df7f190cfc6e3e29589",
+    "processing\\_etl_common.py": "088ddcfc70264080098683f11d3fa169f4f29c680f2a21a1c02b35da66ccb964",
+    "processing\\columnar_storage.py": "fe03716e6884ec3009b2c5a91c6a5e55de9ad87ada365b6233d87c4a47866431",
+    "processing\\metadata_normalization.py": "fa023208e98a57ab6661dbfb3226d2c146d9964223b95bc2ac02cea3e7ff9c31",
+    "processing\\payload_validation.py": "224e2a5e1247270ac4b0d34c8553075315ec68839a9879b103add99d3aa1b948",
+    "processing\\sample_alignment.py": "bc3eeaa57f611c498cfa948f96d7c0e074d1d1f0475229c233735a9874c895b5"
+  },
+  "requested_until": 6,
+  "results": [
+    {
+      "hole": "AMDD003",
+      "steps": [
+        {
+          "step": "1_inventory.py",
+          "exit_code": 1,
+          "seconds": 1.391
+        }
+      ],
+      "status": "failed",
+      "validated_through": 0,
+      "failed_step": "1_inventory.py",
+      "error": "[1/1] AMDD003: step 1 inventory\nSTOP: ValueError: Unlisted source file needs review: source_identity.json\n"
+    },
+    {
+      "hole": "AMODD0026",
+      "steps": [
+        {
+          "step": "1_inventory.py",
+          "exit_code": 1,
+          "seconds": 2.0
+        }
+      ],
+      "status": "failed",
+      "validated_through": 0,
+      "failed_step": "1_inventory.py",
+      "error": "[1/1] AMODD0026: step 1 inventory\nSTOP: ValueError: Unlisted source file needs review: source_identity.json\n"
+    },
+    {
+      "hole": "AMODD0028",
+      "steps": [
+        {
+          "step": "1_inventory.py",
+          "exit_code": 1,
+          "seconds": 2.109
+        }
+      ],
+      "status": "failed",
+      "validated_through": 0,
+      "failed_step": "1_inventory.py",
+      "error": "[1/1] AMODD0028: step 1 inventory\nSTOP: ValueError: Unlisted source file needs review: source_identity.json\n"
+    },
+    {
+      "hole": "AN15",
+      "steps": [
+        {
+          "step": "1_inventory.py",
+          "exit_code": 1,
+          "seconds": 1.265
+        }
+      ],
+      "status": "failed",
+      "validated_through": 0,
+      "failed_step": "1_inventory.py",
+      "error": "[1/1] AN15: step 1 inventory\nSTOP: ValueError: Unlisted source file needs review: source_identity.json\n"
+    },
+    {
+      "hole": "AN7",
+      "steps": [
+        {
+          "step": "1_inventory.py",
+          "exit_code": 1,
+          "seconds": 1.125
+        }
+      ],
+      "status": "failed",
+      "validated_through": 0,
+      "failed_step": "1_inventory.py",
+      "error": "[1/1] AN7: step 1 inventory\nSTOP: ValueError: Unlisted source file needs review: source_identity.json\n"
+    },
+    {
+      "hole": "ANDD0290",
+      "steps": [
+        {
+          "step": "1_inventory.py",
+          "exit_code": 1,
+          "seconds": 2.297
+        }
+      ],
+      "status": "failed",
+      "validated_through": 0,
+      "failed_step": "1_inventory.py",
+      "error": "[1/1] ANDD0290: step 1 inventory\nSTOP: ValueError: Unlisted source file needs review: source_identity.json\n"
+    },
+    {
+      "hole": "APRC004D",
+      "steps": [
+        {
+          "step": "1_inventory.py",
+          "exit_code": 1,
+          "seconds": 1.172
+        }
+      ],
+      "status": "failed",
+      "validated_through": 0,
+      "failed_step": "1_inventory.py",
+      "error": "[1/1] APRC004D: step 1 inventory\nSTOP: ValueError: Unlisted source file needs review: source_identity.json\n"
+    },
+    {
+      "hole": "AR15",
+      "steps": [
+        {
+          "step": "1_inventory.py",
+          "exit_code": 1,
+          "seconds": 1.188
+        }
+      ],
+      "status": "failed",
+      "validated_through": 0,
+      "failed_step": "1_inventory.py",
+      "error": "[1/1] AR15: step 1 inventory\nSTOP: ValueError: Unlisted source file needs review: source_identity.json\n"
+    },
+    {
+      "hole": "ARD001",
+      "steps": [
+        {
+          "step": "1_inventory.py",
+          "exit_code": 1,
+          "seconds": 1.234
+        }
+      ],
+      "status": "failed",
+      "validated_through": 0,
+      "failed_step": "1_inventory.py",
+      "error": "[1/1] ARD001: step 1 inventory\nSTOP: ValueError: Unlisted source file needs review: source_identity.json\n"
+    },
+    {
+      "hole": "ARD002",
+      "steps": [
+        {
+          "step": "1_inventory.py",
+          "exit_code": 1,
+          "seconds": 1.281
+        }
+      ],
+      "status": "failed",
+      "validated_through": 0,
+      "failed_step": "1_inventory.py",
+      "error": "[1/1] ARD002: step 1 inventory\nSTOP: ValueError: Unlisted source file needs review: source_identity.json\n"
+    },
+    {
+      "hole": "ARMCDD001",
+      "steps": [
+        {
+          "step": "1_inventory.py",
+          "exit_code": 1,
+          "seconds": 1.625
+        }
+      ],
+      "status": "failed",
+      "validated_through": 0,
+      "failed_step": "1_inventory.py",
+      "error": "[1/1] ARMCDD001: step 1 inventory\nSTOP: ValueError: Unlisted source file needs review: source_identity.json\n"
+    },
+    {
+      "hole": "ARMCRCD002A",
+      "steps": [
+        {
+          "step": "1_inventory.py",
+          "exit_code": 1,
+          "seconds": 1.594
+        }
+      ],
+      "status": "failed",
+      "validated_through": 0,
+      "failed_step": "1_inventory.py",
+      "error": "[1/1] ARMCRCD002A: step 1 inventory\nSTOP: ValueError: Unlisted source file needs review: source_identity.json\n"
+    },
+    {
+      "hole": "ATD101",
+      "steps": [
+        {
+          "step": "1_inventory.py",
+          "exit_code": 1,
+          "seconds": 2.125
+        }
+      ],
+      "status": "failed",
+      "validated_through": 0,
+      "failed_step": "1_inventory.py",
+      "error": "[1/1] ATD101: step 1 inventory\nSTOP: ValueError: Unlisted source file needs review: source_identity.json\n"
+    },
+    {
+      "hole": "AWD003",
+      "steps": [
+        {
+          "step": "1_inventory.py",
+          "exit_code": 1,
+          "seconds": 1.953
+        }
+      ],
+      "status": "failed",
+      "validated_through": 0,
+      "failed_step": "1_inventory.py",
+      "error": "[1/1] AWD003: step 1 inventory\nSTOP: ValueError: Unlisted source file needs review: source_identity.json\n"
+    },
+    {
+      "hole": "AZRCDD011",
+      "steps": [
+        {
+          "step": "1_inventory.py",
+          "exit_code": 1,
+          "seconds": 2.422
+        }
+      ],
+      "status": "failed",
+      "validated_through": 0,
+      "failed_step": "1_inventory.py",
+      "error": "[1/1] AZRCDD011: step 1 inventory\nSTOP: ValueError: Unlisted source file needs review: source_identity.json\n"
+    },
+    {
+      "hole": "AZRCDD012",
+      "steps": [
+        {
+          "step": "1_inventory.py",
+          "exit_code": 1,
+          "seconds": 2.563
+        }
+      ],
+      "status": "failed",
+      "validated_through": 0,
+      "failed_step": "1_inventory.py",
+      "error": "[1/1] AZRCDD012: step 1 inventory\nSTOP: ValueError: Unlisted source file needs review: source_identity.json\n"
+    },
+    {
+      "hole": "AZRCDD013",
+      "steps": [
+        {
+          "step": "1_inventory.py",
+          "exit_code": 1,
+          "seconds": 1.343
+        }
+      ],
+      "status": "failed",
+      "validated_through": 0,
+      "failed_step": "1_inventory.py",
+      "error": "[1/1] AZRCDD013: step 1 inventory\nSTOP: ValueError: Unlisted source file needs review: source_identity.json\n"
+    },
+    {
+      "hole": "AZRCDD015",
+      "steps": [
+        {
+          "step": "1_inventory.py",
+          "exit_code": 1,
+          "seconds": 1.578
+        }
+      ],
+      "status": "failed",
+      "validated_through": 0,
+      "failed_step": "1_inventory.py",
+      "error": "[1/1] AZRCDD015: step 1 inventory\nSTOP: ValueError: Unlisted source file needs review: source_identity.json\n"
+    },
+    {
+      "hole": "Abbarwardoo 1",
+      "status": "requires_multi_route",
+      "dataset_count": 3,
+      "note": "Use steps 31-33; this is not evidence of a special-case failure."
+    },
+    {
+      "hole": "Allanooka 1",
+      "status": "requires_multi_route",
+      "dataset_count": 3,
+      "note": "Use steps 31-33; this is not evidence of a special-case failure."
+    },
+    {
+      "hole": "Allanooka 2",
+      "steps": [
+        {
+          "step": "1_inventory.py",
+          "exit_code": 1,
+          "seconds": 0.172
+        }
+      ],
+      "status": "failed",
+      "validated_through": 0,
+      "failed_step": "1_inventory.py",
+      "error": "STOP: ValueError: Borehole IDs may contain only letters, digits, underscores, and hyphens\n"
+    },
+    {
+      "hole": "Amber 1",
+      "steps": [
+        {
+          "step": "1_inventory.py",
+          "exit_code": 1,
+          "seconds": 0.187
+        }
+      ],
+      "status": "failed",
+      "validated_through": 0,
+      "failed_step": "1_inventory.py",
+      "error": "STOP: ValueError: Borehole IDs may contain only letters, digits, underscores, and hyphens\n"
+    },
+    {
+      "hole": "Apium 1",
+      "status": "requires_multi_route",
+      "dataset_count": 2,
+      "note": "Use steps 31-33; this is not evidence of a special-case failure."
+    },
+    {
+      "hole": "Arrowsmith 1",
+      "steps": [
+        {
+          "step": "1_inventory.py",
+          "exit_code": 1,
+          "seconds": 0.234
+        }
+      ],
+      "status": "failed",
+      "validated_through": 0,
+      "failed_step": "1_inventory.py",
+      "error": "STOP: ValueError: Borehole IDs may contain only letters, digits, underscores, and hyphens\n"
+    },
+    {
+      "hole": "Arrowsmith 2",
+      "status": "requires_multi_route",
+      "dataset_count": 2,
+      "note": "Use steps 31-33; this is not evidence of a special-case failure."
+    },
+    {
+      "hole": "Atrax 1",
+      "steps": [
+        {
+          "step": "1_inventory.py",
+          "exit_code": 1,
+          "seconds": 0.188
+        }
+      ],
+      "status": "failed",
+      "validated_through": 0,
+      "failed_step": "1_inventory.py",
+      "error": "STOP: ValueError: Borehole IDs may contain only letters, digits, underscores, and hyphens\n"
+    },
+    {
+      "hole": "Austin 1",
+      "steps": [
+        {
+          "step": "1_inventory.py",
+          "exit_code": 1,
+          "seconds": 0.188
+        }
+      ],
+      "status": "failed",
+      "validated_through": 0,
+      "failed_step": "1_inventory.py",
+      "error": "STOP: ValueError: Borehole IDs may contain only letters, digits, underscores, and hyphens\n"
+    },
+    {
+      "hole": "BADD-001",
+      "steps": [
+        {
+          "step": "1_inventory.py",
+          "exit_code": 1,
+          "seconds": 1.109
+        }
+      ],
+      "status": "failed",
+      "validated_through": 0,
+      "failed_step": "1_inventory.py",
+      "error": "[1/1] BADD-001: step 1 inventory\nSTOP: ValueError: Unlisted source file needs review: source_identity.json\n"
+    },
+    {
+      "hole": "BADD-002",
+      "steps": [
+        {
+          "step": "1_inventory.py",
+          "exit_code": 1,
+          "seconds": 1.14
+        }
+      ],
+      "status": "failed",
+      "validated_through": 0,
+      "failed_step": "1_inventory.py",
+      "error": "[1/1] BADD-002: step 1 inventory\nSTOP: ValueError: Unlisted source file needs review: source_identity.json\n"
+    },
+    {
+      "hole": "BADD-003",
+      "steps": [
+        {
+          "step": "1_inventory.py",
+          "exit_code": 1,
+          "seconds": 1.047
+        }
+      ],
+      "status": "failed",
+      "validated_through": 0,
+      "failed_step": "1_inventory.py",
+      "error": "[1/1] BADD-003: step 1 inventory\nSTOP: ValueError: Unlisted source file needs review: source_identity.json\n"
+    },
+    {
+      "hole": "BARA 1",
+      "steps": [
+        {
+          "step": "1_inventory.py",
+          "exit_code": 1,
+          "seconds": 0.187
+        }
+      ],
+      "status": "failed",
+      "validated_through": 0,
+      "failed_step": "1_inventory.py",
+      "error": "STOP: ValueError: Borehole IDs may contain only letters, digits, underscores, and hyphens\n"
+    },
+    {
+      "hole": "BB1",
+      "steps": [
+        {
+          "step": "1_inventory.py",
+          "exit_code": 1,
+          "seconds": 0.89
+        }
+      ],
+      "status": "failed",
+      "validated_through": 0,
+      "failed_step": "1_inventory.py",
+      "error": "[1/1] BB1: step 1 inventory\nSTOP: ValueError: Unlisted source file needs review: source_identity.json\n"
+    },
+    {
+      "hole": "BB2",
+      "steps": [
+        {
+          "step": "1_inventory.py",
+          "exit_code": 1,
+          "seconds": 0.906
+        }
+      ],
+      "status": "failed",
+      "validated_through": 0,
+      "failed_step": "1_inventory.py",
+      "error": "[1/1] BB2: step 1 inventory\nSTOP: ValueError: Unlisted source file needs review: source_identity.json\n"
+    },
+    {
+      "hole": "BB3",
+      "steps": [
+        {
+          "step": "1_inventory.py",
+          "exit_code": 1,
+          "seconds": 0.938
+        }
+      ],
+      "status": "failed",
+      "validated_through": 0,
+      "failed_step": "1_inventory.py",
+      "error": "[1/1] BB3: step 1 inventory\nSTOP: ValueError: Unlisted source file needs review: source_identity.json\n"
+    },
+    {
+      "hole": "BB4",
+      "steps": [
+        {
+          "step": "1_inventory.py",
+          "exit_code": 1,
+          "seconds": 0.906
+        }
+      ],
+      "status": "failed",
+      "validated_through": 0,
+      "failed_step": "1_inventory.py",
+      "error": "[1/1] BB4: step 1 inventory\nSTOP: ValueError: Unlisted source file needs review: source_identity.json\n"
+    },
+    {
+      "hole": "BB5",
+      "steps": [
+        {
+          "step": "1_inventory.py",
+          "exit_code": 1,
+          "seconds": 0.938
+        }
+      ],
+      "status": "failed",
+      "validated_through": 0,
+      "failed_step": "1_inventory.py",
+      "error": "[1/1] BB5: step 1 inventory\nSTOP: ValueError: Unlisted source file needs review: source_identity.json\n"
+    },
+    {
+      "hole": "BBDD0001",
+      "status": "requires_multi_route",
+      "dataset_count": 2,
+      "note": "Use steps 31-33; this is not evidence of a special-case failure."
+    },
+    {
+      "hole": "BBDD0002",
+      "status": "requires_multi_route",
+      "dataset_count": 2,
+      "note": "Use steps 31-33; this is not evidence of a special-case failure."
+    },
+    {
+      "hole": "BBDD0003",
+      "steps": [
+        {
+          "step": "1_inventory.py",
+          "exit_code": 1,
+          "seconds": 1.766
+        }
+      ],
+      "status": "failed",
+      "validated_through": 0,
+      "failed_step": "1_inventory.py",
+      "error": "[1/1] BBDD0003: step 1 inventory\nSTOP: ValueError: Unlisted source file needs review: source_identity.json\n"
+    },
+    {
+      "hole": "BBDD0004",
+      "steps": [
+        {
+          "step": "1_inventory.py",
+          "exit_code": 1,
+          "seconds": 1.579
+        }
+      ],
+      "status": "failed",
+      "validated_through": 0,
+      "failed_step": "1_inventory.py",
+      "error": "[1/1] BBDD0004: step 1 inventory\nSTOP: ValueError: Unlisted source file needs review: source_identity.json\n"
+    },
+    {
+      "hole": "BBDD0005",
+      "steps": [
+        {
+          "step": "1_inventory.py",
+          "exit_code": 1,
+          "seconds": 1.672
+        }
+      ],
+      "status": "failed",
+      "validated_through": 0,
+      "failed_step": "1_inventory.py",
+      "error": "[1/1] BBDD0005: step 1 inventory\nSTOP: ValueError: Unlisted source file needs review: source_identity.json\n"
+    },
+    {
+      "hole": "BBDD0006",
+      "steps": [
+        {
+          "step": "1_inventory.py",
+          "exit_code": 1,
+          "seconds": 1.718
+        }
+      ],
+      "status": "failed",
+      "validated_through": 0,
+      "failed_step": "1_inventory.py",
+      "error": "[1/1] BBDD0006: step 1 inventory\nSTOP: ValueError: Unlisted source file needs review: source_identity.json\n"
+    },
+    {
+      "hole": "BBDD0007",
+      "steps": [
+        {
+          "step": "1_inventory.py",
+          "exit_code": 1,
+          "seconds": 1.938
+        }
+      ],
+      "status": "failed",
+      "validated_through": 0,
+      "failed_step": "1_inventory.py",
+      "error": "[1/1] BBDD0007: step 1 inventory\nSTOP: ValueError: Unlisted source file needs review: source_identity.json\n"
+    },
+    {
+      "hole": "BBDD0008",
+      "steps": [
+        {
+          "step": "1_inventory.py",
+          "exit_code": 1,
+          "seconds": 1.719
+        }
+      ],
+      "status": "failed",
+      "validated_through": 0,
+      "failed_step": "1_inventory.py",
+      "error": "[1/1] BBDD0008: step 1 inventory\nSTOP: ValueError: Unlisted source file needs review: source_identity.json\n"
+    },
+    {
+      "hole": "BBDD0009",
+      "steps": [
+        {
+          "step": "1_inventory.py",
+          "exit_code": 1,
+          "seconds": 1.688
+        }
+      ],
+      "status": "failed",
+      "validated_through": 0,
+      "failed_step": "1_inventory.py",
+      "error": "[1/1] BBDD0009: step 1 inventory\nSTOP: ValueError: Unlisted source file needs review: source_identity.json\n"
+    },
+    {
+      "hole": "BBDD0010",
+      "steps": [
+        {
+          "step": "1_inventory.py",
+          "exit_code": 1,
+          "seconds": 1.766
+        }
+      ],
+      "status": "failed",
+      "validated_through": 0,
+      "failed_step": "1_inventory.py",
+      "error": "[1/1] BBDD0010: step 1 inventory\nSTOP: ValueError: Unlisted source file needs review: source_identity.json\n"
+    },
+    {
+      "hole": "BBDD0011",
+      "steps": [
+        {
+          "step": "1_inventory.py",
+          "exit_code": 1,
+          "seconds": 1.766
+        }
+      ],
+      "status": "failed",
+      "validated_through": 0,
+      "failed_step": "1_inventory.py",
+      "error": "[1/1] BBDD0011: step 1 inventory\nSTOP: ValueError: Unlisted source file needs review: source_identity.json\n"
+    },
+    {
+      "hole": "BBDD0091",
+      "steps": [
+        {
+          "step": "1_inventory.py",
+          "exit_code": 1,
+          "seconds": 5.688
+        }
+      ],
+      "status": "failed",
+      "validated_through": 0,
+      "failed_step": "1_inventory.py",
+      "error": "[1/1] BBDD0091: step 1 inventory\nSTOP: ValueError: Unlisted source file needs review: source_identity.json\n"
+    },
+    {
+      "hole": "BBRD0056",
+      "steps": [
+        {
+          "step": "1_inventory.py",
+          "exit_code": 1,
+          "seconds": 1.718
+        }
+      ],
+      "status": "failed",
+      "validated_through": 0,
+      "failed_step": "1_inventory.py",
+      "error": "[1/1] BBRD0056: step 1 inventory\nSTOP: ValueError: Unlisted source file needs review: source_identity.json\n"
+    },
+    {
+      "hole": "BBRD072",
+      "steps": [
+        {
+          "step": "1_inventory.py",
+          "exit_code": 1,
+          "seconds": 1.296
+        }
+      ],
+      "status": "failed",
+      "validated_through": 0,
+      "failed_step": "1_inventory.py",
+      "error": "[1/1] BBRD072: step 1 inventory\nSTOP: ValueError: Unlisted source file needs review: source_identity.json\n"
+    },
+    {
+      "hole": "BBRD076",
+      "steps": [
+        {
+          "step": "1_inventory.py",
+          "exit_code": 1,
+          "seconds": 1.547
+        }
+      ],
+      "status": "failed",
+      "validated_through": 0,
+      "failed_step": "1_inventory.py",
+      "error": "[1/1] BBRD076: step 1 inventory\nSTOP: ValueError: Unlisted source file needs review: source_identity.json\n"
+    },
+    {
+      "hole": "BC20DD017",
+      "steps": [
+        {
+          "step": "1_inventory.py",
+          "exit_code": 1,
+          "seconds": 1.312
+        }
+      ],
+      "status": "failed",
+      "validated_through": 0,
+      "failed_step": "1_inventory.py",
+      "error": "[1/1] BC20DD017: step 1 inventory\nSTOP: ValueError: Unlisted source file needs review: source_identity.json\n"
+    },
+    {
+      "hole": "BCDD0001",
+      "steps": [
+        {
+          "step": "1_inventory.py",
+          "exit_code": 1,
+          "seconds": 1.235
+        }
+      ],
+      "status": "failed",
+      "validated_through": 0,
+      "failed_step": "1_inventory.py",
+      "error": "[1/1] BCDD0001: step 1 inventory\nSTOP: ValueError: Unlisted source file needs review: source_identity.json\n"
+    },
+    {
+      "hole": "BCDD0002",
+      "steps": [
+        {
+          "step": "1_inventory.py",
+          "exit_code": 1,
+          "seconds": 1.141
+        }
+      ],
+      "status": "failed",
+      "validated_through": 0,
+      "failed_step": "1_inventory.py",
+      "error": "[1/1] BCDD0002: step 1 inventory\nSTOP: ValueError: Unlisted source file needs review: source_identity.json\n"
+    },
+    {
+      "hole": "BCDD0003",
+      "steps": [
+        {
+          "step": "1_inventory.py",
+          "exit_code": 1,
+          "seconds": 1.344
+        }
+      ],
+      "status": "failed",
+      "validated_through": 0,
+      "failed_step": "1_inventory.py",
+      "error": "[1/1] BCDD0003: step 1 inventory\nSTOP: ValueError: Unlisted source file needs review: source_identity.json\n"
+    },
+    {
+      "hole": "BCDD0004",
+      "steps": [
+        {
+          "step": "1_inventory.py",
+          "exit_code": 1,
+          "seconds": 1.11
+        }
+      ],
+      "status": "failed",
+      "validated_through": 0,
+      "failed_step": "1_inventory.py",
+      "error": "[1/1] BCDD0004: step 1 inventory\nSTOP: ValueError: Unlisted source file needs review: source_identity.json\n"
+    },
+    {
+      "hole": "BCDD0005",
+      "steps": [
+        {
+          "step": "1_inventory.py",
+          "exit_code": 1,
+          "seconds": 1.062
+        }
+      ],
+      "status": "failed",
+      "validated_through": 0,
+      "failed_step": "1_inventory.py",
+      "error": "[1/1] BCDD0005: step 1 inventory\nSTOP: ValueError: Unlisted source file needs review: source_identity.json\n"
+    },
+    {
+      "hole": "BCMH0070",
+      "steps": [
+        {
+          "step": "1_inventory.py",
+          "exit_code": 1,
+          "seconds": 1.422
+        }
+      ],
+      "status": "failed",
+      "validated_through": 0,
+      "failed_step": "1_inventory.py",
+      "error": "[1/1] BCMH0070: step 1 inventory\nSTOP: ValueError: Unlisted source file needs review: source_identity.json\n"
+    },
+    {
+      "hole": "BCMH0071",
+      "steps": [
+        {
+          "step": "1_inventory.py",
+          "exit_code": 1,
+          "seconds": 1.235
+        }
+      ],
+      "status": "failed",
+      "validated_through": 0,
+      "failed_step": "1_inventory.py",
+      "error": "[1/1] BCMH0071: step 1 inventory\nSTOP: ValueError: Unlisted source file needs review: source_identity.json\n"
+    },
+    {
+      "hole": "BCMH0072",
+      "steps": [
+        {
+          "step": "1_inventory.py",
+          "exit_code": 1,
+          "seconds": 1.141
+        }
+      ],
+      "status": "failed",
+      "validated_through": 0,
+      "failed_step": "1_inventory.py",
+      "error": "[1/1] BCMH0072: step 1 inventory\nSTOP: ValueError: Unlisted source file needs review: source_identity.json\n"
+    },
+    {
+      "hole": "BCMH0073",
+      "steps": [
+        {
+          "step": "1_inventory.py",
+          "exit_code": 1,
+          "seconds": 1.188
+        }
+      ],
+      "status": "failed",
+      "validated_through": 0,
+      "failed_step": "1_inventory.py",
+      "error": "[1/1] BCMH0073: step 1 inventory\nSTOP: ValueError: Unlisted source file needs review: source_identity.json\n"
+    },
+    {
+      "hole": "BDD001",
+      "steps": [
+        {
+          "step": "1_inventory.py",
+          "exit_code": 1,
+          "seconds": 1.938
+        }
+      ],
+      "status": "failed",
+      "validated_through": 0,
+      "failed_step": "1_inventory.py",
+      "error": "[1/1] BDD001: step 1 inventory\nSTOP: ValueError: Unlisted source file needs review: source_identity.json\n"
+    },
+    {
+      "hole": "BDD002",
+      "steps": [
+        {
+          "step": "1_inventory.py",
+          "exit_code": 1,
+          "seconds": 1.75
+        }
+      ],
+      "status": "failed",
+      "validated_through": 0,
+      "failed_step": "1_inventory.py",
+      "error": "[1/1] BDD002: step 1 inventory\nSTOP: ValueError: Unlisted source file needs review: source_identity.json\n"
+    },
+    {
+      "hole": "BDD003",
+      "steps": [
+        {
+          "step": "1_inventory.py",
+          "exit_code": 1,
+          "seconds": 1.5
+        }
+      ],
+      "status": "failed",
+      "validated_through": 0,
+      "failed_step": "1_inventory.py",
+      "error": "[1/1] BDD003: step 1 inventory\nSTOP: ValueError: Unlisted source file needs review: source_identity.json\n"
+    },
+    {
+      "hole": "BDD082",
+      "steps": [
+        {
+          "step": "1_inventory.py",
+          "exit_code": 1,
+          "seconds": 1.063
+        }
+      ],
+      "status": "failed",
+      "validated_through": 0,
+      "failed_step": "1_inventory.py",
+      "error": "[1/1] BDD082: step 1 inventory\nSTOP: ValueError: Unlisted source file needs review: source_identity.json\n"
+    },
+    {
+      "hole": "BDD083",
+      "steps": [
+        {
+          "step": "1_inventory.py",
+          "exit_code": 1,
+          "seconds": 1.062
+        }
+      ],
+      "status": "failed",
+      "validated_through": 0,
+      "failed_step": "1_inventory.py",
+      "error": "[1/1] BDD083: step 1 inventory\nSTOP: ValueError: Unlisted source file needs review: source_identity.json\n"
+    },
+    {
+      "hole": "BDD1",
+      "steps": [
+        {
+          "step": "1_inventory.py",
+          "exit_code": 1,
+          "seconds": 1.109
+        }
+      ],
+      "status": "failed",
+      "validated_through": 0,
+      "failed_step": "1_inventory.py",
+      "error": "[1/1] BDD1: step 1 inventory\nSTOP: ValueError: Unlisted source file needs review: source_identity.json\n"
+    },
+    {
+      "hole": "BDD2",
+      "steps": [
+        {
+          "step": "1_inventory.py",
+          "exit_code": 1,
+          "seconds": 1.281
+        }
+      ],
+      "status": "failed",
+      "validated_through": 0,
+      "failed_step": "1_inventory.py",
+      "error": "[1/1] BDD2: step 1 inventory\nSTOP: ValueError: Unlisted source file needs review: source_identity.json\n"
+    },
+    {
+      "hole": "BDD3",
+      "steps": [
+        {
+          "step": "1_inventory.py",
+          "exit_code": 1,
+          "seconds": 1.281
+        }
+      ],
+      "status": "failed",
+      "validated_through": 0,
+      "failed_step": "1_inventory.py",
+      "error": "[1/1] BDD3: step 1 inventory\nSTOP: ValueError: Unlisted source file needs review: source_identity.json\n"
+    },
+    {
+      "hole": "BDD4",
+      "steps": [
+        {
+          "step": "1_inventory.py",
+          "exit_code": 1,
+          "seconds": 1.235
+        }
+      ],
+      "status": "failed",
+      "validated_through": 0,
+      "failed_step": "1_inventory.py",
+      "error": "[1/1] BDD4: step 1 inventory\nSTOP: ValueError: Unlisted source file needs review: source_identity.json\n"
+    },
+    {
+      "hole": "BDD5",
+      "steps": [
+        {
+          "step": "1_inventory.py",
+          "exit_code": 1,
+          "seconds": 1.141
+        }
+      ],
+      "status": "failed",
+      "validated_through": 0,
+      "failed_step": "1_inventory.py",
+      "error": "[1/1] BDD5: step 1 inventory\nSTOP: ValueError: Unlisted source file needs review: source_identity.json\n"
+    },
+    {
+      "hole": "BDD6",
+      "steps": [
+        {
+          "step": "1_inventory.py",
+          "exit_code": 1,
+          "seconds": 1.172
+        }
+      ],
+      "status": "failed",
+      "validated_through": 0,
+      "failed_step": "1_inventory.py",
+      "error": "[1/1] BDD6: step 1 inventory\nSTOP: ValueError: Unlisted source file needs review: source_identity.json\n"
+    },
+    {
+      "hole": "BDD6A",
+      "steps": [
+        {
+          "step": "1_inventory.py",
+          "exit_code": 1,
+          "seconds": 1.438
+        }
+      ],
+      "status": "failed",
+      "validated_through": 0,
+      "failed_step": "1_inventory.py",
+      "error": "[1/1] BDD6A: step 1 inventory\nSTOP: ValueError: Unlisted source file needs review: source_identity.json\n"
+    },
+    {
+      "hole": "BDD7",
+      "steps": [
+        {
+          "step": "1_inventory.py",
+          "exit_code": 1,
+          "seconds": 1.188
+        }
+      ],
+      "status": "failed",
+      "validated_through": 0,
+      "failed_step": "1_inventory.py",
+      "error": "[1/1] BDD7: step 1 inventory\nSTOP: ValueError: Unlisted source file needs review: source_identity.json\n"
+    },
+    {
+      "hole": "BDD8",
+      "steps": [
+        {
+          "step": "1_inventory.py",
+          "exit_code": 1,
+          "seconds": 1.204
+        }
+      ],
+      "status": "failed",
+      "validated_through": 0,
+      "failed_step": "1_inventory.py",
+      "error": "[1/1] BDD8: step 1 inventory\nSTOP: ValueError: Unlisted source file needs review: source_identity.json\n"
+    },
+    {
+      "hole": "BDDD0017",
+      "steps": [
+        {
+          "step": "1_inventory.py",
+          "exit_code": 1,
+          "seconds": 2.89
+        }
+      ],
+      "status": "failed",
+      "validated_through": 0,
+      "failed_step": "1_inventory.py",
+      "error": "[1/1] BDDD0017: step 1 inventory\nSTOP: ValueError: Unlisted source file needs review: source_identity.json\n"
+    },
+    {
+      "hole": "BDDD0019",
+      "steps": [
+        {
+          "step": "1_inventory.py",
+          "exit_code": 1,
+          "seconds": 4.656
+        }
+      ],
+      "status": "failed",
+      "validated_through": 0,
+      "failed_step": "1_inventory.py",
+      "error": "[1/1] BDDD0019: step 1 inventory\nSTOP: ValueError: Unlisted source file needs review: source_identity.json\n"
+    },
+    {
+      "hole": "BDRCD009",
+      "steps": [
+        {
+          "step": "1_inventory.py",
+          "exit_code": 1,
+          "seconds": 1.719
+        }
+      ],
+      "status": "failed",
+      "validated_through": 0,
+      "failed_step": "1_inventory.py",
+      "error": "[1/1] BDRCD009: step 1 inventory\nSTOP: ValueError: Unlisted source file needs review: source_identity.json\n"
+    },
+    {
+      "hole": "BDRCD018",
+      "steps": [
+        {
+          "step": "1_inventory.py",
+          "exit_code": 1,
+          "seconds": 1.485
+        }
+      ],
+      "status": "failed",
+      "validated_through": 0,
+      "failed_step": "1_inventory.py",
+      "error": "[1/1] BDRCD018: step 1 inventory\nSTOP: ValueError: Unlisted source file needs review: source_identity.json\n"
+    },
+    {
+      "hole": "BDRCD019",
+      "steps": [
+        {
+          "step": "1_inventory.py",
+          "exit_code": 1,
+          "seconds": 1.719
+        }
+      ],
+      "status": "failed",
+      "validated_through": 0,
+      "failed_step": "1_inventory.py",
+      "error": "[1/1] BDRCD019: step 1 inventory\nSTOP: ValueError: Unlisted source file needs review: source_identity.json\n"
+    },
+    {
+      "hole": "BH01",
+      "status": "requires_multi_route",
+      "dataset_count": 2,
+      "note": "Use steps 31-33; this is not evidence of a special-case failure."
+    },
+    {
+      "hole": "BH02",
+      "status": "requires_multi_route",
+      "dataset_count": 2,
+      "note": "Use steps 31-33; this is not evidence of a special-case failure."
+    },
+    {
+      "hole": "BH03",
+      "steps": [
+        {
+          "step": "1_inventory.py",
+          "exit_code": 1,
+          "seconds": 1.203
+        }
+      ],
+      "status": "failed",
+      "validated_through": 0,
+      "failed_step": "1_inventory.py",
+      "error": "[1/1] BH03: step 1 inventory\nSTOP: ValueError: Unlisted source file needs review: source_identity.json\n"
+    },
+    {
+      "hole": "BH04",
+      "steps": [
+        {
+          "step": "1_inventory.py",
+          "exit_code": 1,
+          "seconds": 1.079
+        }
+      ],
+      "status": "failed",
+      "validated_through": 0,
+      "failed_step": "1_inventory.py",
+      "error": "[1/1] BH04: step 1 inventory\nSTOP: ValueError: Unlisted source file needs review: source_identity.json\n"
+    },
+    {
+      "hole": "BH05",
+      "steps": [
+        {
+          "step": "1_inventory.py",
+          "exit_code": 1,
+          "seconds": 1.141
+        }
+      ],
+      "status": "failed",
+      "validated_through": 0,
+      "failed_step": "1_inventory.py",
+      "error": "[1/1] BH05: step 1 inventory\nSTOP: ValueError: Unlisted source file needs review: source_identity.json\n"
+    },
+    {
+      "hole": "BH06",
+      "steps": [
+        {
+          "step": "1_inventory.py",
+          "exit_code": 1,
+          "seconds": 1.078
+        }
+      ],
+      "status": "failed",
+      "validated_through": 0,
+      "failed_step": "1_inventory.py",
+      "error": "[1/1] BH06: step 1 inventory\nSTOP: ValueError: Unlisted source file needs review: source_identity.json\n"
+    },
+    {
+      "hole": "BH07",
+      "steps": [
+        {
+          "step": "1_inventory.py",
+          "exit_code": 1,
+          "seconds": 1.063
+        }
+      ],
+      "status": "failed",
+      "validated_through": 0,
+      "failed_step": "1_inventory.py",
+      "error": "[1/1] BH07: step 1 inventory\nSTOP: ValueError: Unlisted source file needs review: source_identity.json\n"
+    },
+    {
+      "hole": "BH08",
+      "steps": [
+        {
+          "step": "1_inventory.py",
+          "exit_code": 1,
+          "seconds": 1.125
+        }
+      ],
+      "status": "failed",
+      "validated_through": 0,
+      "failed_step": "1_inventory.py",
+      "error": "[1/1] BH08: step 1 inventory\nSTOP: ValueError: Unlisted source file needs review: source_identity.json\n"
+    },
+    {
+      "hole": "BH10",
+      "steps": [
+        {
+          "step": "1_inventory.py",
+          "exit_code": 1,
+          "seconds": 1.016
+        }
+      ],
+      "status": "failed",
+      "validated_through": 0,
+      "failed_step": "1_inventory.py",
+      "error": "[1/1] BH10: step 1 inventory\nSTOP: ValueError: Unlisted source file needs review: source_identity.json\n"
+    },
+    {
+      "hole": "BH11",
+      "steps": [
+        {
+          "step": "1_inventory.py",
+          "exit_code": 1,
+          "seconds": 1.094
+        }
+      ],
+      "status": "failed",
+      "validated_through": 0,
+      "failed_step": "1_inventory.py",
+      "error": "[1/1] BH11: step 1 inventory\nSTOP: ValueError: Unlisted source file needs review: source_identity.json\n"
+    },
+    {
+      "hole": "BH12",
+      "steps": [
+        {
+          "step": "1_inventory.py",
+          "exit_code": 1,
+          "seconds": 1.0
+        }
+      ],
+      "status": "failed",
+      "validated_through": 0,
+      "failed_step": "1_inventory.py",
+      "error": "[1/1] BH12: step 1 inventory\nSTOP: ValueError: Unlisted source file needs review: source_identity.json\n"
+    },
+    {
+      "hole": "BH13",
+      "steps": [
+        {
+          "step": "1_inventory.py",
+          "exit_code": 1,
+          "seconds": 1.078
+        }
+      ],
+      "status": "failed",
+      "validated_through": 0,
+      "failed_step": "1_inventory.py",
+      "error": "[1/1] BH13: step 1 inventory\nSTOP: ValueError: Unlisted source file needs review: source_identity.json\n"
+    },
+    {
+      "hole": "BH14",
+      "steps": [
+        {
+          "step": "1_inventory.py",
+          "exit_code": 1,
+          "seconds": 1.078
+        }
+      ],
+      "status": "failed",
+      "validated_through": 0,
+      "failed_step": "1_inventory.py",
+      "error": "[1/1] BH14: step 1 inventory\nSTOP: ValueError: Unlisted source file needs review: source_identity.json\n"
+    },
+    {
+      "hole": "BH15",
+      "steps": [
+        {
+          "step": "1_inventory.py",
+          "exit_code": 1,
+          "seconds": 1.016
+        }
+      ],
+      "status": "failed",
+      "validated_through": 0,
+      "failed_step": "1_inventory.py",
+      "error": "[1/1] BH15: step 1 inventory\nSTOP: ValueError: Unlisted source file needs review: source_identity.json\n"
+    },
+    {
+      "hole": "BH16",
+      "steps": [
+        {
+          "step": "1_inventory.py",
+          "exit_code": 1,
+          "seconds": 1.203
+        }
+      ],
+      "status": "failed",
+      "validated_through": 0,
+      "failed_step": "1_inventory.py",
+      "error": "[1/1] BH16: step 1 inventory\nSTOP: ValueError: Unlisted source file needs review: source_identity.json\n"
+    },
+    {
+      "hole": "BH18",
+      "steps": [
+        {
+          "step": "1_inventory.py",
+          "exit_code": 1,
+          "seconds": 1.234
+        }
+      ],
+      "status": "failed",
+      "validated_through": 0,
+      "failed_step": "1_inventory.py",
+      "error": "[1/1] BH18: step 1 inventory\nSTOP: ValueError: Unlisted source file needs review: source_identity.json\n"
+    },
+    {
+      "hole": "BH19",
+      "steps": [
+        {
+          "step": "1_inventory.py",
+          "exit_code": 1,
+          "seconds": 1.094
+        }
+      ],
+      "status": "failed",
+      "validated_through": 0,
+      "failed_step": "1_inventory.py",
+      "error": "[1/1] BH19: step 1 inventory\nSTOP: ValueError: Unlisted source file needs review: source_identity.json\n"
+    },
+    {
+      "hole": "BH20",
+      "steps": [
+        {
+          "step": "1_inventory.py",
+          "exit_code": 1,
+          "seconds": 1.094
+        }
+      ],
+      "status": "failed",
+      "validated_through": 0,
+      "failed_step": "1_inventory.py",
+      "error": "[1/1] BH20: step 1 inventory\nSTOP: ValueError: Unlisted source file needs review: source_identity.json\n"
+    },
+    {
+      "hole": "BH22",
+      "steps": [
+        {
+          "step": "1_inventory.py",
+          "exit_code": 1,
+          "seconds": 1.047
+        }
+      ],
+      "status": "failed",
+      "validated_through": 0,
+      "failed_step": "1_inventory.py",
+      "error": "[1/1] BH22: step 1 inventory\nSTOP: ValueError: Unlisted source file needs review: source_identity.json\n"
+    },
+    {
+      "hole": "BH23",
+      "steps": [
+        {
+          "step": "1_inventory.py",
+          "exit_code": 1,
+          "seconds": 1.047
+        }
+      ],
+      "status": "failed",
+      "validated_through": 0,
+      "failed_step": "1_inventory.py",
+      "error": "[1/1] BH23: step 1 inventory\nSTOP: ValueError: Unlisted source file needs review: source_identity.json\n"
+    },
+    {
+      "hole": "BH24",
+      "steps": [
+        {
+          "step": "1_inventory.py",
+          "exit_code": 1,
+          "seconds": 1.078
+        }
+      ],
+      "status": "failed",
+      "validated_through": 0,
+      "failed_step": "1_inventory.py",
+      "error": "[1/1] BH24: step 1 inventory\nSTOP: ValueError: Unlisted source file needs review: source_identity.json\n"
+    },
+    {
+      "hole": "BH25",
+      "steps": [
+        {
+          "step": "1_inventory.py",
+          "exit_code": 1,
+          "seconds": 1.063
+        }
+      ],
+      "status": "failed",
+      "validated_through": 0,
+      "failed_step": "1_inventory.py",
+      "error": "[1/1] BH25: step 1 inventory\nSTOP: ValueError: Unlisted source file needs review: source_identity.json\n"
+    },
+    {
+      "hole": "BH26",
+      "steps": [
+        {
+          "step": "1_inventory.py",
+          "exit_code": 1,
+          "seconds": 1.078
+        }
+      ],
+      "status": "failed",
+      "validated_through": 0,
+      "failed_step": "1_inventory.py",
+      "error": "[1/1] BH26: step 1 inventory\nSTOP: ValueError: Unlisted source file needs review: source_identity.json\n"
+    },
+    {
+      "hole": "BH27",
+      "steps": [
+        {
+          "step": "1_inventory.py",
+          "exit_code": 1,
+          "seconds": 1.109
+        }
+      ],
+      "status": "failed",
+      "validated_through": 0,
+      "failed_step": "1_inventory.py",
+      "error": "[1/1] BH27: step 1 inventory\nSTOP: ValueError: Unlisted source file needs review: source_identity.json\n"
+    },
+    {
+      "hole": "BID017",
+      "steps": [
+        {
+          "step": "1_inventory.py",
+          "exit_code": 1,
+          "seconds": 1.171
+        }
+      ],
+      "status": "failed",
+      "validated_through": 0,
+      "failed_step": "1_inventory.py",
+      "error": "[1/1] BID017: step 1 inventory\nSTOP: ValueError: Unlisted source file needs review: source_identity.json\n"
+    },
+    {
+      "hole": "BJDD20_001",
+      "steps": [
+        {
+          "step": "1_inventory.py",
+          "exit_code": 1,
+          "seconds": 1.157
+        }
+      ],
+      "status": "failed",
+      "validated_through": 0,
+      "failed_step": "1_inventory.py",
+      "error": "[1/1] BJDD20_001: step 1 inventory\nSTOP: ValueError: Unlisted source file needs review: source_identity.json\n"
+    },
+    {
+      "hole": "BKD 1",
+      "steps": [
+        {
+          "step": "1_inventory.py",
+          "exit_code": 1,
+          "seconds": 0.204
+        }
+      ],
+      "status": "failed",
+      "validated_through": 0,
+      "failed_step": "1_inventory.py",
+      "error": "STOP: ValueError: Borehole IDs may contain only letters, digits, underscores, and hyphens\n"
+    },
+    {
+      "hole": "BKD 2",
+      "steps": [
+        {
+          "step": "1_inventory.py",
+          "exit_code": 1,
+          "seconds": 0.171
+        }
+      ],
+      "status": "failed",
+      "validated_through": 0,
+      "failed_step": "1_inventory.py",
+      "error": "STOP: ValueError: Borehole IDs may contain only letters, digits, underscores, and hyphens\n"
+    },
+    {
+      "hole": "BLRCD005",
+      "steps": [
+        {
+          "step": "1_inventory.py",
+          "exit_code": 1,
+          "seconds": 1.344
+        }
+      ],
+      "status": "failed",
+      "validated_through": 0,
+      "failed_step": "1_inventory.py",
+      "error": "[1/1] BLRCD005: step 1 inventory\nSTOP: ValueError: Unlisted source file needs review: source_identity.json\n"
+    },
+    {
+      "hole": "BLRCD006",
+      "steps": [
+        {
+          "step": "1_inventory.py",
+          "exit_code": 1,
+          "seconds": 1.297
+        }
+      ],
+      "status": "failed",
+      "validated_through": 0,
+      "failed_step": "1_inventory.py",
+      "error": "[1/1] BLRCD006: step 1 inventory\nSTOP: ValueError: Unlisted source file needs review: source_identity.json\n"
+    },
+    {
+      "hole": "BLRCD007",
+      "steps": [
+        {
+          "step": "1_inventory.py",
+          "exit_code": 1,
+          "seconds": 1.359
+        }
+      ],
+      "status": "failed",
+      "validated_through": 0,
+      "failed_step": "1_inventory.py",
+      "error": "[1/1] BLRCD007: step 1 inventory\nSTOP: ValueError: Unlisted source file needs review: source_identity.json\n"
+    },
+    {
+      "hole": "BM5346",
+      "steps": [
+        {
+          "step": "1_inventory.py",
+          "exit_code": 1,
+          "seconds": 1.609
+        }
+      ],
+      "status": "failed",
+      "validated_through": 0,
+      "failed_step": "1_inventory.py",
+      "error": "[1/1] BM5346: step 1 inventory\nSTOP: ValueError: Unlisted source file needs review: source_identity.json\n"
+    },
+    {
+      "hole": "BM5969",
+      "steps": [
+        {
+          "step": "1_inventory.py",
+          "exit_code": 1,
+          "seconds": 1.609
+        }
+      ],
+      "status": "failed",
+      "validated_through": 0,
+      "failed_step": "1_inventory.py",
+      "error": "[1/1] BM5969: step 1 inventory\nSTOP: ValueError: Unlisted source file needs review: source_identity.json\n"
+    },
+    {
+      "hole": "BN011",
+      "steps": [
+        {
+          "step": "1_inventory.py",
+          "exit_code": 1,
+          "seconds": 1.359
+        }
+      ],
+      "status": "failed",
+      "validated_through": 0,
+      "failed_step": "1_inventory.py",
+      "error": "[1/1] BN011: step 1 inventory\nSTOP: ValueError: Unlisted source file needs review: source_identity.json\n"
+    },
+    {
+      "hole": "BN012",
+      "steps": [
+        {
+          "step": "1_inventory.py",
+          "exit_code": 1,
+          "seconds": 1.36
+        }
+      ],
+      "status": "failed",
+      "validated_through": 0,
+      "failed_step": "1_inventory.py",
+      "error": "[1/1] BN012: step 1 inventory\nSTOP: ValueError: Unlisted source file needs review: source_identity.json\n"
+    },
+    {
+      "hole": "BNDD001",
+      "status": "requires_multi_route",
+      "dataset_count": 2,
+      "note": "Use steps 31-33; this is not evidence of a special-case failure."
+    },
+    {
+      "hole": "BNDD002",
+      "steps": [
+        {
+          "step": "1_inventory.py",
+          "exit_code": 1,
+          "seconds": 1.172
+        }
+      ],
+      "status": "failed",
+      "validated_through": 0,
+      "failed_step": "1_inventory.py",
+      "error": "[1/1] BNDD002: step 1 inventory\nSTOP: ValueError: Unlisted source file needs review: source_identity.json\n"
+    },
+    {
+      "hole": "BNDD003",
+      "steps": [
+        {
+          "step": "1_inventory.py",
+          "exit_code": 1,
+          "seconds": 1.203
+        }
+      ],
+      "status": "failed",
+      "validated_through": 0,
+      "failed_step": "1_inventory.py",
+      "error": "[1/1] BNDD003: step 1 inventory\nSTOP: ValueError: Unlisted source file needs review: source_identity.json\n"
+    },
+    {
+      "hole": "BNDD004",
+      "steps": [
+        {
+          "step": "1_inventory.py",
+          "exit_code": 1,
+          "seconds": 1.157
+        }
+      ],
+      "status": "failed",
+      "validated_through": 0,
+      "failed_step": "1_inventory.py",
+      "error": "[1/1] BNDD004: step 1 inventory\nSTOP: ValueError: Unlisted source file needs review: source_identity.json\n"
+    },
+    {
+      "hole": "BNDD005",
+      "steps": [
+        {
+          "step": "1_inventory.py",
+          "exit_code": 1,
+          "seconds": 1.156
+        }
+      ],
+      "status": "failed",
+      "validated_through": 0,
+      "failed_step": "1_inventory.py",
+      "error": "[1/1] BNDD005: step 1 inventory\nSTOP: ValueError: Unlisted source file needs review: source_identity.json\n"
+    },
+    {
+      "hole": "BNDD006",
+      "steps": [
+        {
+          "step": "1_inventory.py",
+          "exit_code": 1,
+          "seconds": 1.61
+        }
+      ],
+      "status": "failed",
+      "validated_through": 0,
+      "failed_step": "1_inventory.py",
+      "error": "[1/1] BNDD006: step 1 inventory\nSTOP: ValueError: Unlisted source file needs review: source_identity.json\n"
+    },
+    {
+      "hole": "BNDD007",
+      "steps": [
+        {
+          "step": "1_inventory.py",
+          "exit_code": 1,
+          "seconds": 1.187
+        }
+      ],
+      "status": "failed",
+      "validated_through": 0,
+      "failed_step": "1_inventory.py",
+      "error": "[1/1] BNDD007: step 1 inventory\nSTOP: ValueError: Unlisted source file needs review: source_identity.json\n"
+    },
+    {
+      "hole": "BNRD002",
+      "steps": [
+        {
+          "step": "1_inventory.py",
+          "exit_code": 1,
+          "seconds": 1.203
+        }
+      ],
+      "status": "failed",
+      "validated_through": 0,
+      "failed_step": "1_inventory.py",
+      "error": "[1/1] BNRD002: step 1 inventory\nSTOP: ValueError: Unlisted source file needs review: source_identity.json\n"
+    },
+    {
+      "hole": "BNRD005",
+      "steps": [
+        {
+          "step": "1_inventory.py",
+          "exit_code": 1,
+          "seconds": 1.281
+        }
+      ],
+      "status": "failed",
+      "validated_through": 0,
+      "failed_step": "1_inventory.py",
+      "error": "[1/1] BNRD005: step 1 inventory\nSTOP: ValueError: Unlisted source file needs review: source_identity.json\n"
+    },
+    {
+      "hole": "BNRD007",
+      "steps": [
+        {
+          "step": "1_inventory.py",
+          "exit_code": 1,
+          "seconds": 1.281
+        }
+      ],
+      "status": "failed",
+      "validated_through": 0,
+      "failed_step": "1_inventory.py",
+      "error": "[1/1] BNRD007: step 1 inventory\nSTOP: ValueError: Unlisted source file needs review: source_identity.json\n"
+    },
+    {
+      "hole": "BNRD010",
+      "steps": [
+        {
+          "step": "1_inventory.py",
+          "exit_code": 1,
+          "seconds": 1.157
+        }
+      ],
+      "status": "failed",
+      "validated_through": 0,
+      "failed_step": "1_inventory.py",
+      "error": "[1/1] BNRD010: step 1 inventory\nSTOP: ValueError: Unlisted source file needs review: source_identity.json\n"
+    },
+    {
+      "hole": "BNRD023",
+      "steps": [
+        {
+          "step": "1_inventory.py",
+          "exit_code": 1,
+          "seconds": 1.219
+        }
+      ],
+      "status": "failed",
+      "validated_through": 0,
+      "failed_step": "1_inventory.py",
+      "error": "[1/1] BNRD023: step 1 inventory\nSTOP: ValueError: Unlisted source file needs review: source_identity.json\n"
+    },
+    {
+      "hole": "BNRD024",
+      "steps": [
+        {
+          "step": "1_inventory.py",
+          "exit_code": 1,
+          "seconds": 1.25
+        }
+      ],
+      "status": "failed",
+      "validated_through": 0,
+      "failed_step": "1_inventory.py",
+      "error": "[1/1] BNRD024: step 1 inventory\nSTOP: ValueError: Unlisted source file needs review: source_identity.json\n"
+    },
+    {
+      "hole": "BOD202",
+      "steps": [
+        {
+          "step": "1_inventory.py",
+          "exit_code": 1,
+          "seconds": 1.406
+        }
+      ],
+      "status": "failed",
+      "validated_through": 0,
+      "failed_step": "1_inventory.py",
+      "error": "[1/1] BOD202: step 1 inventory\nSTOP: ValueError: Unlisted source file needs review: source_identity.json\n"
+    },
+    {
+      "hole": "BODH015",
+      "steps": [
+        {
+          "step": "1_inventory.py",
+          "exit_code": 1,
+          "seconds": 2.11
+        }
+      ],
+      "status": "failed",
+      "validated_through": 0,
+      "failed_step": "1_inventory.py",
+      "error": "[1/1] BODH015: step 1 inventory\nSTOP: ValueError: Unlisted source file needs review: source_identity.json\n"
+    },
+    {
+      "hole": "BODH053",
+      "steps": [
+        {
+          "step": "1_inventory.py",
+          "exit_code": 1,
+          "seconds": 3.079
+        }
+      ],
+      "status": "failed",
+      "validated_through": 0,
+      "failed_step": "1_inventory.py",
+      "error": "[1/1] BODH053: step 1 inventory\nSTOP: ValueError: Unlisted source file needs review: source_identity.json\n"
+    },
+    {
+      "hole": "Badaminna 1",
+      "steps": [
+        {
+          "step": "1_inventory.py",
+          "exit_code": 1,
+          "seconds": 0.188
+        }
+      ],
+      "status": "failed",
+      "validated_through": 0,
+      "failed_step": "1_inventory.py",
+      "error": "STOP: ValueError: Borehole IDs may contain only letters, digits, underscores, and hyphens\n"
+    },
+    {
+      "hole": "Barbwire 1",
+      "steps": [
+        {
+          "step": "1_inventory.py",
+          "exit_code": 1,
+          "seconds": 0.218
+        }
+      ],
+      "status": "failed",
+      "validated_through": 0,
+      "failed_step": "1_inventory.py",
+      "error": "STOP: ValueError: Borehole IDs may contain only letters, digits, underscores, and hyphens\n"
+    },
+    {
+      "hole": "Barnicarndy 1",
+      "status": "requires_multi_route",
+      "dataset_count": 2,
+      "note": "Use steps 31-33; this is not evidence of a special-case failure."
+    },
+    {
+      "hole": "Bedout 1",
+      "steps": [
+        {
+          "step": "1_inventory.py",
+          "exit_code": 1,
+          "seconds": 0.203
+        }
+      ],
+      "status": "failed",
+      "validated_through": 0,
+      "failed_step": "1_inventory.py",
+      "error": "STOP: ValueError: Borehole IDs may contain only letters, digits, underscores, and hyphens\n"
+    },
+    {
+      "hole": "Beekeeper 1",
+      "steps": [
+        {
+          "step": "1_inventory.py",
+          "exit_code": 1,
+          "seconds": 0.172
+        }
+      ],
+      "status": "failed",
+      "validated_through": 0,
+      "failed_step": "1_inventory.py",
+      "error": "STOP: ValueError: Borehole IDs may contain only letters, digits, underscores, and hyphens\n"
+    },
+    {
+      "hole": "Beharra 2",
+      "steps": [
+        {
+          "step": "1_inventory.py",
+          "exit_code": 1,
+          "seconds": 0.187
+        }
+      ],
+      "status": "failed",
+      "validated_through": 0,
+      "failed_step": "1_inventory.py",
+      "error": "STOP: ValueError: Borehole IDs may contain only letters, digits, underscores, and hyphens\n"
+    },
+    {
+      "hole": "Beharra Springs 1",
+      "steps": [
+        {
+          "step": "1_inventory.py",
+          "exit_code": 1,
+          "seconds": 0.234
+        }
+      ],
+      "status": "failed",
+      "validated_through": 0,
+      "failed_step": "1_inventory.py",
+      "error": "STOP: ValueError: Borehole IDs may contain only letters, digits, underscores, and hyphens\n"
+    },
+    {
+      "hole": "Beharra Springs 2",
+      "status": "requires_multi_route",
+      "dataset_count": 2,
+      "note": "Use steps 31-33; this is not evidence of a special-case failure."
+    },
+    {
+      "hole": "Beharra Springs 3",
+      "steps": [
+        {
+          "step": "1_inventory.py",
+          "exit_code": 1,
+          "seconds": 0.187
+        }
+      ],
+      "status": "failed",
+      "validated_through": 0,
+      "failed_step": "1_inventory.py",
+      "error": "STOP: ValueError: Borehole IDs may contain only letters, digits, underscores, and hyphens\n"
+    },
+    {
+      "hole": "Beharra Springs North 1",
+      "status": "requires_multi_route",
+      "dataset_count": 2,
+      "note": "Use steps 31-33; this is not evidence of a special-case failure."
+    },
+    {
+      "hole": "Black Ledge 1",
+      "steps": [
+        {
+          "step": "1_inventory.py",
+          "exit_code": 1,
+          "seconds": 0.219
+        }
+      ],
+      "status": "failed",
+      "validated_through": 0,
+      "failed_step": "1_inventory.py",
+      "error": "STOP: ValueError: Borehole IDs may contain only letters, digits, underscores, and hyphens\n"
+    },
+    {
+      "hole": "Blina 1",
+      "status": "requires_multi_route",
+      "dataset_count": 2,
+      "note": "Use steps 31-33; this is not evidence of a special-case failure."
+    },
+    {
+      "hole": "Blina 2",
+      "steps": [
+        {
+          "step": "1_inventory.py",
+          "exit_code": 1,
+          "seconds": 0.172
+        }
+      ],
+      "status": "failed",
+      "validated_through": 0,
+      "failed_step": "1_inventory.py",
+      "error": "STOP: ValueError: Borehole IDs may contain only letters, digits, underscores, and hyphens\n"
+    },
+    {
+      "hole": "Blina 3",
+      "steps": [
+        {
+          "step": "1_inventory.py",
+          "exit_code": 1,
+          "seconds": 0.203
+        }
+      ],
+      "status": "failed",
+      "validated_through": 0,
+      "failed_step": "1_inventory.py",
+      "error": "STOP: ValueError: Borehole IDs may contain only letters, digits, underscores, and hyphens\n"
+    },
+    {
+      "hole": "Blina 4",
+      "steps": [
+        {
+          "step": "1_inventory.py",
+          "exit_code": 1,
+          "seconds": 0.187
+        }
+      ],
+      "status": "failed",
+      "validated_through": 0,
+      "failed_step": "1_inventory.py",
+      "error": "STOP: ValueError: Borehole IDs may contain only letters, digits, underscores, and hyphens\n"
+    },
+    {
+      "hole": "Blina 5",
+      "steps": [
+        {
+          "step": "1_inventory.py",
+          "exit_code": 1,
+          "seconds": 0.203
+        }
+      ],
+      "status": "failed",
+      "validated_through": 0,
+      "failed_step": "1_inventory.py",
+      "error": "STOP: ValueError: Borehole IDs may contain only letters, digits, underscores, and hyphens\n"
+    },
+    {
+      "hole": "Bluebell 1",
+      "steps": [
+        {
+          "step": "1_inventory.py",
+          "exit_code": 1,
+          "seconds": 0.203
+        }
+      ],
+      "status": "failed",
+      "validated_through": 0,
+      "failed_step": "1_inventory.py",
+      "error": "STOP: ValueError: Borehole IDs may contain only letters, digits, underscores, and hyphens\n"
+    },
+    {
+      "hole": "Boab 1",
+      "steps": [
+        {
+          "step": "1_inventory.py",
+          "exit_code": 1,
+          "seconds": 0.203
+        }
+      ],
+      "status": "failed",
+      "validated_through": 0,
+      "failed_step": "1_inventory.py",
+      "error": "STOP: ValueError: Borehole IDs may contain only letters, digits, underscores, and hyphens\n"
+    },
+    {
+      "hole": "Bonaparte 2",
+      "steps": [
+        {
+          "step": "1_inventory.py",
+          "exit_code": 1,
+          "seconds": 0.203
+        }
+      ],
+      "status": "failed",
+      "validated_through": 0,
+      "failed_step": "1_inventory.py",
+      "error": "STOP: ValueError: Borehole IDs may contain only letters, digits, underscores, and hyphens\n"
+    },
+    {
+      "hole": "Boondawari 1",
+      "steps": [
+        {
+          "step": "1_inventory.py",
+          "exit_code": 1,
+          "seconds": 0.172
+        }
+      ],
+      "status": "failed",
+      "validated_through": 0,
+      "failed_step": "1_inventory.py",
+      "error": "STOP: ValueError: Borehole IDs may contain only letters, digits, underscores, and hyphens\n"
+    },
+    {
+      "hole": "Bootine 1",
+      "steps": [
+        {
+          "step": "1_inventory.py",
+          "exit_code": 1,
+          "seconds": 0.188
+        }
+      ],
+      "status": "failed",
+      "validated_through": 0,
+      "failed_step": "1_inventory.py",
+      "error": "STOP: ValueError: Borehole IDs may contain only letters, digits, underscores, and hyphens\n"
+    },
+    {
+      "hole": "Tamala 1",
+      "status": "requires_multi_route",
+      "dataset_count": 3,
+      "note": "Use steps 31-33; this is not evidence of a special-case failure."
+    }
+  ]
+}

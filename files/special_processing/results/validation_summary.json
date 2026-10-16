@@ -1,0 +1,912 @@
+{
+  "date": "2026-10-11",
+  "baseline_counts": {
+    "failed": 139,
+    "requires_multi_route": 14
+  },
+  "baseline_code_unchanged_files": 59,
+  "classification_counts": {
+    "01": 139,
+    "06": 32,
+    "02": 18,
+    "08": 3,
+    "05": 1
+  },
+  "identity_only_results": [
+    {
+      "hole": "Beekeeper 1",
+      "steps": [
+        {
+          "step": "1_inventory.py",
+          "exit_code": 0,
+          "seconds": 1.187
+        },
+        {
+          "step": "2_validate_payloads.py",
+          "exit_code": 0,
+          "seconds": 4.594
+        },
+        {
+          "step": "3_normalize_metadata.py",
+          "exit_code": 0,
+          "seconds": 0.328
+        },
+        {
+          "step": "4_align_samples.py",
+          "exit_code": 1,
+          "seconds": 0.344
+        }
+      ],
+      "status": "failed",
+      "validated_through": 3,
+      "failed_step": "4_align_samples.py"
+    },
+    {
+      "hole": "BM5346",
+      "steps": [
+        {
+          "step": "1_inventory.py",
+          "exit_code": 0,
+          "seconds": 1.359
+        },
+        {
+          "step": "2_validate_payloads.py",
+          "exit_code": 1,
+          "seconds": 11.406
+        }
+      ],
+      "status": "failed",
+      "validated_through": 1,
+      "failed_step": "2_validate_payloads.py"
+    },
+    {
+      "hole": "ARMCDD001",
+      "steps": [
+        {
+          "step": "1_inventory.py",
+          "exit_code": 0,
+          "seconds": 1.469
+        },
+        {
+          "step": "2_validate_payloads.py",
+          "exit_code": 1,
+          "seconds": 34.875
+        }
+      ],
+      "status": "failed",
+      "validated_through": 1,
+      "failed_step": "2_validate_payloads.py"
+    },
+    {
+      "hole": "BB1",
+      "steps": [
+        {
+          "step": "1_inventory.py",
+          "exit_code": 0,
+          "seconds": 0.797
+        },
+        {
+          "step": "2_validate_payloads.py",
+          "exit_code": 0,
+          "seconds": 1.719
+        },
+        {
+          "step": "3_normalize_metadata.py",
+          "exit_code": 0,
+          "seconds": 0.265
+        },
+        {
+          "step": "4_align_samples.py",
+          "exit_code": 0,
+          "seconds": 0.422
+        }
+      ],
+      "status": "passed",
+      "validated_through": 4
+    }
+  ],
+  "adapted_results": [
+    {
+      "hole": "Beekeeper 1",
+      "steps": [
+        {
+          "step": "1_inventory.py",
+          "exit_code": 0,
+          "seconds": 1.047
+        },
+        {
+          "step": "2_validate_payloads.py",
+          "exit_code": 0,
+          "seconds": 1.313
+        },
+        {
+          "step": "3_normalize_metadata.py",
+          "exit_code": 0,
+          "seconds": 0.297
+        },
+        {
+          "step": "4_align_samples.py",
+          "exit_code": 0,
+          "seconds": 0.437
+        },
+        {
+          "step": "5_build_columnar.py",
+          "exit_code": 0,
+          "seconds": 15.484
+        },
+        {
+          "step": "6_verify_prepared_data.py",
+          "exit_code": 0,
+          "seconds": 1.813
+        }
+      ],
+      "status": "passed",
+      "validated_through": 6
+    },
+    {
+      "hole": "BM5346",
+      "steps": [
+        {
+          "step": "1_inventory.py",
+          "exit_code": 0,
+          "seconds": 1.468
+        },
+        {
+          "step": "2_validate_payloads.py",
+          "exit_code": 0,
+          "seconds": 5.547
+        },
+        {
+          "step": "3_normalize_metadata.py",
+          "exit_code": 0,
+          "seconds": 0.313
+        },
+        {
+          "step": "4_align_samples.py",
+          "exit_code": 0,
+          "seconds": 0.531
+        },
+        {
+          "step": "5_build_columnar.py",
+          "exit_code": 0,
+          "seconds": 62.031
+        },
+        {
+          "step": "6_verify_prepared_data.py",
+          "exit_code": 0,
+          "seconds": 2.25
+        }
+      ],
+      "status": "passed",
+      "validated_through": 6
+    },
+    {
+      "hole": "ARMCDD001",
+      "steps": [
+        {
+          "step": "1_inventory.py",
+          "exit_code": 0,
+          "seconds": 1.453
+        },
+        {
+          "step": "2_validate_payloads.py",
+          "exit_code": 0,
+          "seconds": 17.828
+        },
+        {
+          "step": "3_normalize_metadata.py",
+          "exit_code": 0,
+          "seconds": 0.313
+        },
+        {
+          "step": "4_align_samples.py",
+          "exit_code": 0,
+          "seconds": 0.828
+        },
+        {
+          "step": "5_build_columnar.py",
+          "exit_code": 0,
+          "seconds": 206.859
+        },
+        {
+          "step": "6_verify_prepared_data.py",
+          "exit_code": 0,
+          "seconds": 2.047
+        }
+      ],
+      "status": "passed",
+      "validated_through": 6
+    },
+    {
+      "hole": "BB1",
+      "steps": [
+        {
+          "step": "1_inventory.py",
+          "exit_code": 0,
+          "seconds": 0.828
+        },
+        {
+          "step": "2_validate_payloads.py",
+          "exit_code": 0,
+          "seconds": 0.797
+        },
+        {
+          "step": "3_normalize_metadata.py",
+          "exit_code": 0,
+          "seconds": 0.313
+        },
+        {
+          "step": "4_align_samples.py",
+          "exit_code": 0,
+          "seconds": 0.469
+        },
+        {
+          "step": "5_build_columnar.py",
+          "exit_code": 0,
+          "seconds": 2.906
+        },
+        {
+          "step": "6_verify_prepared_data.py",
+          "exit_code": 0,
+          "seconds": 1.734
+        }
+      ],
+      "status": "passed",
+      "validated_through": 6
+    }
+  ],
+  "synthetic_tests": [
+    {
+      "case": "interval_alias",
+      "test_passed": true,
+      "expected_accepted": true,
+      "baseline": {
+        "hole": "BB1",
+        "steps": [
+          {
+            "step": "1_inventory.py",
+            "exit_code": 0,
+            "seconds": 1.86
+          },
+          {
+            "step": "2_validate_payloads.py",
+            "exit_code": 0,
+            "seconds": 2.203
+          },
+          {
+            "step": "3_normalize_metadata.py",
+            "exit_code": 0,
+            "seconds": 0.344
+          },
+          {
+            "step": "4_align_samples.py",
+            "exit_code": 1,
+            "seconds": 0.328
+          }
+        ],
+        "status": "failed",
+        "validated_through": 3,
+        "failed_step": "4_align_samples.py"
+      },
+      "adapted": {
+        "hole": "BB1",
+        "steps": [
+          {
+            "step": "1_inventory.py",
+            "exit_code": 0,
+            "seconds": 1.828
+          },
+          {
+            "step": "2_validate_payloads.py",
+            "exit_code": 0,
+            "seconds": 1.25
+          },
+          {
+            "step": "3_normalize_metadata.py",
+            "exit_code": 0,
+            "seconds": 0.391
+          },
+          {
+            "step": "4_align_samples.py",
+            "exit_code": 0,
+            "seconds": 0.515
+          },
+          {
+            "step": "5_build_columnar.py",
+            "exit_code": 0,
+            "seconds": 2.969
+          },
+          {
+            "step": "6_verify_prepared_data.py",
+            "exit_code": 0,
+            "seconds": 1.531
+          }
+        ],
+        "status": "passed",
+        "validated_through": 6
+      }
+    },
+    {
+      "case": "interval_difference",
+      "test_passed": true,
+      "expected_accepted": false,
+      "baseline": {
+        "hole": "BB1",
+        "steps": [
+          {
+            "step": "1_inventory.py",
+            "exit_code": 0,
+            "seconds": 1.922
+          },
+          {
+            "step": "2_validate_payloads.py",
+            "exit_code": 0,
+            "seconds": 2.375
+          },
+          {
+            "step": "3_normalize_metadata.py",
+            "exit_code": 0,
+            "seconds": 0.391
+          },
+          {
+            "step": "4_align_samples.py",
+            "exit_code": 1,
+            "seconds": 0.359
+          }
+        ],
+        "status": "failed",
+        "validated_through": 3,
+        "failed_step": "4_align_samples.py"
+      },
+      "adapted": {
+        "hole": "BB1",
+        "steps": [
+          {
+            "step": "1_inventory.py",
+            "exit_code": 0,
+            "seconds": 1.797
+          },
+          {
+            "step": "2_validate_payloads.py",
+            "exit_code": 0,
+            "seconds": 1.437
+          },
+          {
+            "step": "3_normalize_metadata.py",
+            "exit_code": 1,
+            "seconds": 0.375
+          }
+        ],
+        "status": "failed",
+        "validated_through": 2,
+        "failed_step": "3_normalize_metadata.py"
+      }
+    },
+    {
+      "case": "image_alias",
+      "test_passed": true,
+      "expected_accepted": true,
+      "baseline": {
+        "hole": "BB1",
+        "steps": [
+          {
+            "step": "1_inventory.py",
+            "exit_code": 0,
+            "seconds": 1.797
+          },
+          {
+            "step": "2_validate_payloads.py",
+            "exit_code": 1,
+            "seconds": 2.141
+          }
+        ],
+        "status": "failed",
+        "validated_through": 1,
+        "failed_step": "2_validate_payloads.py"
+      },
+      "adapted": {
+        "hole": "BB1",
+        "steps": [
+          {
+            "step": "1_inventory.py",
+            "exit_code": 0,
+            "seconds": 1.703
+          },
+          {
+            "step": "2_validate_payloads.py",
+            "exit_code": 0,
+            "seconds": 1.187
+          },
+          {
+            "step": "3_normalize_metadata.py",
+            "exit_code": 0,
+            "seconds": 0.328
+          },
+          {
+            "step": "4_align_samples.py",
+            "exit_code": 0,
+            "seconds": 0.5
+          },
+          {
+            "step": "5_build_columnar.py",
+            "exit_code": 0,
+            "seconds": 2.828
+          },
+          {
+            "step": "6_verify_prepared_data.py",
+            "exit_code": 0,
+            "seconds": 1.532
+          }
+        ],
+        "status": "passed",
+        "validated_through": 6
+      }
+    },
+    {
+      "case": "image_difference",
+      "test_passed": true,
+      "expected_accepted": false,
+      "baseline": {
+        "hole": "BB1",
+        "steps": [
+          {
+            "step": "1_inventory.py",
+            "exit_code": 0,
+            "seconds": 1.75
+          },
+          {
+            "step": "2_validate_payloads.py",
+            "exit_code": 1,
+            "seconds": 2.235
+          }
+        ],
+        "status": "failed",
+        "validated_through": 1,
+        "failed_step": "2_validate_payloads.py"
+      },
+      "adapted": {
+        "hole": "BB1",
+        "steps": [
+          {
+            "step": "1_inventory.py",
+            "exit_code": 0,
+            "seconds": 1.984
+          },
+          {
+            "step": "2_validate_payloads.py",
+            "exit_code": 0,
+            "seconds": 1.469
+          },
+          {
+            "step": "3_normalize_metadata.py",
+            "exit_code": 0,
+            "seconds": 0.406
+          },
+          {
+            "step": "4_align_samples.py",
+            "exit_code": 1,
+            "seconds": 0.516
+          }
+        ],
+        "status": "failed",
+        "validated_through": 3,
+        "failed_step": "4_align_samples.py"
+      }
+    },
+    {
+      "case": "image_wrong_dataset",
+      "test_passed": true,
+      "expected_accepted": false,
+      "baseline": {
+        "hole": "BB1",
+        "steps": [
+          {
+            "step": "1_inventory.py",
+            "exit_code": 0,
+            "seconds": 2.078
+          },
+          {
+            "step": "2_validate_payloads.py",
+            "exit_code": 1,
+            "seconds": 2.265
+          }
+        ],
+        "status": "failed",
+        "validated_through": 1,
+        "failed_step": "2_validate_payloads.py"
+      },
+      "adapted": {
+        "hole": "BB1",
+        "steps": [
+          {
+            "step": "1_inventory.py",
+            "exit_code": 0,
+            "seconds": 2.063
+          },
+          {
+            "step": "2_validate_payloads.py",
+            "exit_code": 0,
+            "seconds": 1.422
+          },
+          {
+            "step": "3_normalize_metadata.py",
+            "exit_code": 0,
+            "seconds": 0.437
+          },
+          {
+            "step": "4_align_samples.py",
+            "exit_code": 1,
+            "seconds": 0.438
+          }
+        ],
+        "status": "failed",
+        "validated_through": 3,
+        "failed_step": "4_align_samples.py"
+      }
+    },
+    {
+      "case": "nullable_section",
+      "test_passed": true,
+      "expected_accepted": true,
+      "baseline": {
+        "hole": "BB1",
+        "steps": [
+          {
+            "step": "1_inventory.py",
+            "exit_code": 0,
+            "seconds": 1.907
+          },
+          {
+            "step": "2_validate_payloads.py",
+            "exit_code": 0,
+            "seconds": 2.296
+          },
+          {
+            "step": "3_normalize_metadata.py",
+            "exit_code": 0,
+            "seconds": 0.36
+          },
+          {
+            "step": "4_align_samples.py",
+            "exit_code": 1,
+            "seconds": 0.484
+          }
+        ],
+        "status": "failed",
+        "validated_through": 3,
+        "failed_step": "4_align_samples.py"
+      },
+      "adapted": {
+        "hole": "BB1",
+        "steps": [
+          {
+            "step": "1_inventory.py",
+            "exit_code": 0,
+            "seconds": 1.797
+          },
+          {
+            "step": "2_validate_payloads.py",
+            "exit_code": 0,
+            "seconds": 1.266
+          },
+          {
+            "step": "3_normalize_metadata.py",
+            "exit_code": 0,
+            "seconds": 0.343
+          },
+          {
+            "step": "4_align_samples.py",
+            "exit_code": 0,
+            "seconds": 0.5
+          },
+          {
+            "step": "5_build_columnar.py",
+            "exit_code": 0,
+            "seconds": 3.047
+          },
+          {
+            "step": "6_verify_prepared_data.py",
+            "exit_code": 0,
+            "seconds": 1.485
+          }
+        ],
+        "status": "passed",
+        "validated_through": 6
+      }
+    },
+    {
+      "case": "wrong_nonnull_section",
+      "test_passed": true,
+      "expected_accepted": false,
+      "baseline": {
+        "hole": "BB1",
+        "steps": [
+          {
+            "step": "1_inventory.py",
+            "exit_code": 0,
+            "seconds": 1.859
+          },
+          {
+            "step": "2_validate_payloads.py",
+            "exit_code": 0,
+            "seconds": 2.532
+          },
+          {
+            "step": "3_normalize_metadata.py",
+            "exit_code": 0,
+            "seconds": 0.406
+          },
+          {
+            "step": "4_align_samples.py",
+            "exit_code": 1,
+            "seconds": 0.453
+          }
+        ],
+        "status": "failed",
+        "validated_through": 3,
+        "failed_step": "4_align_samples.py"
+      },
+      "adapted": {
+        "hole": "BB1",
+        "steps": [
+          {
+            "step": "1_inventory.py",
+            "exit_code": 0,
+            "seconds": 1.859
+          },
+          {
+            "step": "2_validate_payloads.py",
+            "exit_code": 0,
+            "seconds": 1.313
+          },
+          {
+            "step": "3_normalize_metadata.py",
+            "exit_code": 0,
+            "seconds": 0.594
+          },
+          {
+            "step": "4_align_samples.py",
+            "exit_code": 1,
+            "seconds": 0.422
+          }
+        ],
+        "status": "failed",
+        "validated_through": 3,
+        "failed_step": "4_align_samples.py"
+      }
+    },
+    {
+      "case": "unavailable_profile",
+      "test_passed": true,
+      "expected_accepted": true,
+      "baseline": {
+        "hole": "BB1",
+        "steps": [
+          {
+            "step": "1_inventory.py",
+            "exit_code": 1,
+            "seconds": 1.125
+          }
+        ],
+        "status": "failed",
+        "validated_through": 0,
+        "failed_step": "1_inventory.py"
+      },
+      "adapted": {
+        "hole": "BB1",
+        "steps": [
+          {
+            "step": "1_inventory.py",
+            "exit_code": 0,
+            "seconds": 1.891
+          },
+          {
+            "step": "2_validate_payloads.py",
+            "exit_code": 0,
+            "seconds": 2.688
+          },
+          {
+            "step": "3_normalize_metadata.py",
+            "exit_code": 0,
+            "seconds": 0.422
+          },
+          {
+            "step": "4_align_samples.py",
+            "exit_code": 0,
+            "seconds": 0.609
+          },
+          {
+            "step": "5_build_columnar.py",
+            "exit_code": 0,
+            "seconds": 3.078
+          },
+          {
+            "step": "6_verify_prepared_data.py",
+            "exit_code": 0,
+            "seconds": 1.563
+          }
+        ],
+        "status": "passed",
+        "validated_through": 6
+      }
+    },
+    {
+      "case": "contradictory_unavailable",
+      "test_passed": true,
+      "expected_accepted": false,
+      "baseline": {
+        "hole": "BB1",
+        "steps": [
+          {
+            "step": "1_inventory.py",
+            "exit_code": 1,
+            "seconds": 0.954
+          }
+        ],
+        "status": "failed",
+        "validated_through": 0,
+        "failed_step": "1_inventory.py"
+      },
+      "adapted": {
+        "hole": "BB1",
+        "steps": [
+          {
+            "step": "1_inventory.py",
+            "exit_code": 1,
+            "seconds": 0.921
+          }
+        ],
+        "status": "failed",
+        "validated_through": 0,
+        "failed_step": "1_inventory.py"
+      }
+    },
+    {
+      "case": "profile_float32",
+      "test_passed": true,
+      "expected_accepted": true,
+      "baseline": {
+        "hole": "BB1",
+        "steps": [
+          {
+            "step": "1_inventory.py",
+            "exit_code": 0,
+            "seconds": 1.89
+          },
+          {
+            "step": "2_validate_payloads.py",
+            "exit_code": 0,
+            "seconds": 2.86
+          },
+          {
+            "step": "3_normalize_metadata.py",
+            "exit_code": 0,
+            "seconds": 0.453
+          },
+          {
+            "step": "4_align_samples.py",
+            "exit_code": 1,
+            "seconds": 0.437
+          }
+        ],
+        "status": "failed",
+        "validated_through": 3,
+        "failed_step": "4_align_samples.py"
+      },
+      "adapted": {
+        "hole": "BB1",
+        "steps": [
+          {
+            "step": "1_inventory.py",
+            "exit_code": 0,
+            "seconds": 1.797
+          },
+          {
+            "step": "2_validate_payloads.py",
+            "exit_code": 0,
+            "seconds": 1.281
+          },
+          {
+            "step": "3_normalize_metadata.py",
+            "exit_code": 0,
+            "seconds": 0.359
+          },
+          {
+            "step": "4_align_samples.py",
+            "exit_code": 0,
+            "seconds": 0.641
+          },
+          {
+            "step": "5_build_columnar.py",
+            "exit_code": 0,
+            "seconds": 3.953
+          },
+          {
+            "step": "6_verify_prepared_data.py",
+            "exit_code": 0,
+            "seconds": 1.547
+          }
+        ],
+        "status": "passed",
+        "validated_through": 6
+      }
+    },
+    {
+      "case": "profile_different",
+      "test_passed": true,
+      "expected_accepted": false,
+      "baseline": {
+        "hole": "BB1",
+        "steps": [
+          {
+            "step": "1_inventory.py",
+            "exit_code": 0,
+            "seconds": 1.937
+          },
+          {
+            "step": "2_validate_payloads.py",
+            "exit_code": 0,
+            "seconds": 2.453
+          },
+          {
+            "step": "3_normalize_metadata.py",
+            "exit_code": 0,
+            "seconds": 0.375
+          },
+          {
+            "step": "4_align_samples.py",
+            "exit_code": 1,
+            "seconds": 0.438
+          }
+        ],
+        "status": "failed",
+        "validated_through": 3,
+        "failed_step": "4_align_samples.py"
+      },
+      "adapted": {
+        "hole": "BB1",
+        "steps": [
+          {
+            "step": "1_inventory.py",
+            "exit_code": 0,
+            "seconds": 1.765
+          },
+          {
+            "step": "2_validate_payloads.py",
+            "exit_code": 0,
+            "seconds": 1.25
+          },
+          {
+            "step": "3_normalize_metadata.py",
+            "exit_code": 0,
+            "seconds": 0.391
+          },
+          {
+            "step": "4_align_samples.py",
+            "exit_code": 1,
+            "seconds": 0.953
+          }
+        ],
+        "status": "failed",
+        "validated_through": 3,
+        "failed_step": "4_align_samples.py"
+      }
+    }
+  ],
+  "tamala": {
+    "status": "passed",
+    "dataset_count": 3,
+    "verified_steps": [
+      31,
+      32
+    ],
+    "database_imported": false,
+    "aws_uploaded": false
+  },
+  "limitations": [
+    "Only four representative single-dataset holes reran steps 1-6.",
+    "Current classification is routing evidence, not full acceptance of 139 holes.",
+    "Historical sources absent from raw were not presented as new full-hole runs.",
+    "No new database, cloud, full media preparation or cuttings presentation validation."
+  ]
+}

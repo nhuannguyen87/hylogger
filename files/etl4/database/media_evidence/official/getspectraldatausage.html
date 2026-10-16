@@ -1,0 +1,24 @@
+<!DOCTYPE HTML>
+<html xmlns:th="http://www.thymeleaf.org">
+  <head>
+		<title>NVCL Data Services :: Get Spectral Data</title>
+		<link rel="stylesheet" href="style/style.css" type="text/css"/>
+  </head>
+  <body  class="NVCLDSBody">
+  <h2 class="NVCLDSh2">NVCL Data Services : Get Spectral Data</h2>
+  <h2 style="color:red" th:text="${errmsg}">Error</h2>
+  <p>This service will get spectral data in a binary chunk. It requires a speclogid that can be obtained through the <a href="getDatasetCollection.html">getDatasetCollection</a> service.
+  You can optionally provide a start and end sample number to restrict the range of data returned.  The data will be returned as 4 byte floating point numbers.  You will need to use
+  the spectral log's 'wavelengths' string array to determine how many floats to expect per sample.</p>
+
+  <table class="usageTable"><tr><th>Parameter</th><th>Description</th><th>Required</th><th>Example values</th></tr>
+  <tr><td>speclogid</td><td>obtained by looking at the spectral logs returned by calling the getDatasetCollection service</td><td>yes</td><td>3923f5f9-08f3-415f-8503-7578ab1d784</td></tr>
+  <tr><td>startsampleno</td><td>the sample number of the first spectrum to be returned</td><td>no, Default value=0</td><td>0</td></tr>
+  <tr><td>endsampleno</td><td>the sample number of the last spectrum to be returned</td><td>no, Default value=999999</td><td>10</td></tr>
+  <tr><td>outputformat</td><td>binary or json</td><td>no</td><td>json</td></tr>
+  
+  </table>
+  <h3>Example Queries:</h3>
+  <p>A stadard query for spectral data: getspectraldata.html?speclogid=3923f5f9-08f3-415f-8503-7578ab1d784&amp;startsampleno=0&amp;endsampleno=10</p>
+  </body>
+</html>

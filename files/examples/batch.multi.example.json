@@ -1,0 +1,16 @@
+{
+  "packages": [
+    {
+      "directory": "REPLACE_WITH_STEP_28_PACKAGE_OBJECT_KEY_OR_ABSOLUTE_PATH",
+      "prepared_work_dir": "D:/etl4_work/batch_001"
+    }
+  ],
+  "decisions": {
+    "orders": {
+      "REPLACE_WITH_HOLE_ID": [
+        "REPLACE_WITH_CONFIRMED_FIRST_SOURCE_DATASET_ID",
+        "REPLACE_WITH_CONFIRMED_NEXT_SOURCE_DATASET_ID"
+      ]
+    }
+  }
+}

@@ -126,7 +126,7 @@ const usable = (log) => log.availability_status === "payload_present" && log.axi
 /** The mineral-GROUP log to colour by: Grp1, SWIR/VNIR unless asked for TIR. */
 function groupLog(logs, region) {
   const groups = logs.filter(
-    (l) => l.log_kind === "scalar" && l.metric_key === "mineral_name" && usable(l) && /^grp\s*1/i.test(l.source_log_name)
+    (l) => l.log_kind === "scalar" && l.metric_key === "mineral_group" && usable(l) && /^grp\s*1/i.test(l.source_log_name)
   );
   const isTir = (l) => /TIR/i.test(l.output_region || "") || /TSAT/i.test(l.source_log_name);
   return region === "TIR" ? groups.find(isTir) : groups.find((l) => !isTir(l));
@@ -146,11 +146,11 @@ async function logValues({ revision, axis }, logId) {
   }
 }
 
-/** "White Mica" -> "WHITE-MICA", the config.js MINERAL_COLOURS key. Aspectral = no mineral seen. */
+/** Normalise display labels; preserve non-mineral samples as null calls, not deleted rows. */
 function groupName(row) {
-  if (row.status !== "available" || !row.value_text) return null;
+  if (row.status !== "available" || typeof row.value_text !== "string") return null;
   const name = row.value_text.trim().toUpperCase().replace(/[\s_]+/g, "-");
-  return name === "ASPECTRAL" || name === "NULL" ? null : name;
+  return !name || ["ASPECTRAL", "NULL", "INVALID"].includes(name) ? null : name;
 }
 
 const groupSamples = (holeId, region = "SWIR") =>
@@ -404,7 +404,7 @@ export const getSpectralSample = async (holeId, depthM) => {
     md_m: raw.md_m,
     source: "etl4",
     minerals: raw.results
-      .filter((r) => ok(r) && r.log_kind === "scalar" && r.value?.value_text)
+      .filter((r) => r.log_kind === "scalar" && groupName({ status: r.status, value_text: r.value?.value_text }) !== null)
       .map((r) => ({ log_name: r.source_log_name, mineral: r.value.value_text })),
     spectra: raw.results
       .filter((r) => ok(r) && r.log_kind === "spectral" && r.spectra?.length)
