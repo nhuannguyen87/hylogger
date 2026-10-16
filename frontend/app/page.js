@@ -88,7 +88,7 @@ export default function ExplorePage() {
             <br />
             If the list is empty, check the FastAPI backend is running:
             <br />
-            <code className="mono">cd backend && uvicorn app.main:app</code>
+            <code className="mono">./run-backend.sh</code>
           </p>
         )}
 

@@ -1,11 +1,11 @@
 "use client";
 
-// The core viewer: each chosen hole as a real drill core - its NVCL tray
-// photos wrapped round a cylinder at the depths they were logged, true to
-// scale (a ~6 cm core is 6 cm wide beside a metre of depth), with the mineral
-// log running beside it. Scroll to travel down the hole like a lift going
-// underground, drag to turn the cores, and the strip on the right jumps
-// anywhere in the hole.
+// The core viewer: each chosen hole as a real drill core - its ETL4 core-row
+// photos (cut from the NVCL tray photos) wrapped round a cylinder at the
+// depths they were logged, true to scale (a ~6 cm core is 6 cm wide beside a
+// metre of depth), with the mineral log running beside it. Scroll to travel
+// down the hole like a lift going underground, drag to turn the cores, and
+// the strip on the right jumps anywhere in the hole.
 //
 // Cores stand side by side at the same depth so two holes compare directly.
 // That spacing is not their real distance - the map shows where they are.
@@ -24,8 +24,7 @@ const HOLE_COLOURS = ["#4fd1c5", "#b98cff"]; // --accent, --accent-b: the map's 
 const FALLBACK_DIAMETER_M = 0.06; // a hole with no photos to measure: typical NQ-HQ core
 const START_VISIBLE_M = 1.2; // opening view: about one tray row of core
 const PHOTO_WINDOW_MAX_M = 40; // zoomed out past this, cores draw in mineral colours (no photo fetches)
-const POLL_MS = 5000; // while the backend builds a hole's strip (~1 min, first view only)
-const MAX_SHEETS = 12; // decoded sheet images kept (each up to 120 x 20,000 px)
+const MAX_SHEETS = 12; // decoded photo images kept (one per ETL4 core row, ~400 x 25 px)
 const MAX_ROW_TEXTURES = 200; // cropped tray-row textures kept
 const PHOTO_MATERIAL = { ambient: 0.65, diffuse: 0.45, shininess: 6, specularColor: [25, 25, 25] };
 const VIEW = new OrbitView({ orbitAxis: "Z" });
@@ -129,7 +128,7 @@ export default function Hole3D({ holeIds, distanceKm, onClose }) {
         )}
       </header>
 
-      {scene.ready && scene.cores.every((core) => !core.rows.length && !core.measurements.length && !core.strip?.building) && (
+      {scene.ready && scene.cores.every((core) => !core.rows.length && !core.measurements.length) && (
         <p className="core3d-empty">
           ETL4 has no core photos or mineral log for {holeIds.join(" or ")}, so there is nothing to draw here.
           Pick another hole on the map.
@@ -152,7 +151,7 @@ export default function Hole3D({ holeIds, distanceKm, onClose }) {
         <span className="hint">
           {photosOn ? "Scroll or ↑↓ to go deeper · drag to turn · strip on the right: jump" : "Zoom in (+) to see the core photos"}
           <br />
-          NVCL tray photos (depth within a tray row interpolated) · beside each core its mineral log:
+          ETL4 core-row photos (depth within a row interpolated) · beside each core its mineral log:
           grey = uncertain, amber dot = unusual
         </span>
       </footer>
@@ -175,15 +174,13 @@ export default function Hole3D({ holeIds, distanceKm, onClose }) {
   );
 }
 
-/** Measurements and core-strip for each hole, the strip polled while the
- * backend is still building it from NVCL. */
+/** Measurements and core photo rows for each chosen hole. */
 function useHolesData(holeIds) {
   const [byHole, setByHole] = useState({});
   const key = holeIds.join("|");
 
   useEffect(() => {
     let cancelled = false;
-    const timers = [];
     const put = (holeId, patch) => {
       if (!cancelled) setByHole((all) => ({ ...all, [holeId]: { ...all[holeId], ...patch } }));
     };
@@ -191,17 +188,12 @@ function useHolesData(holeIds) {
       getMeasurements(holeId)
         .then((measurements) => put(holeId, { measurements }))
         .catch(() => put(holeId, { measurements: [] }));
-      const loadStrip = () => getCoreStrip(holeId)
-        .then((strip) => {
-          put(holeId, { strip });
-          if (strip?.building) timers.push(setTimeout(loadStrip, POLL_MS));
-        })
+      getCoreStrip(holeId)
+        .then((strip) => put(holeId, { strip }))
         .catch(() => put(holeId, { strip: { unavailable: "The API didn't answer." } }));
-      loadStrip();
     }
     return () => {
       cancelled = true;
-      timers.forEach(clearTimeout);
     };
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [key]);
@@ -264,7 +256,6 @@ function stripDiameter(strip) {
 function photoStatus(core) {
   const { strip } = core;
   if (strip === undefined) return "loading…";
-  if (strip.building) return "loading core photo…";
   if (strip.unavailable) return "no core photo - mineral colours only";
   return `core photo ${strip.depth_min_m.toFixed(0)}–${strip.depth_max_m.toFixed(0)} m`;
 }
@@ -379,7 +370,7 @@ function buildLayers(scene, [from, to], depth, visible, labelDropM, photosOn, te
         const segment = {
           transform: along(core.x, row.depth_from_m, row.depth_to_m, r),
           holeId: core.holeId, from: row.depth_from_m, to: row.depth_to_m,
-          label: "NVCL tray photo (this tray row)",
+          label: "core photo (this tray row)",
         };
         const texture = textures.get(key);
         if (!texture) {

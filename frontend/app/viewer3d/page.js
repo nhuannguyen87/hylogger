@@ -1,10 +1,10 @@
 "use client";
 
 // 3D: the satellite map on its own until you click a hole - then that hole
-// opens on the right as a real drill core (its NVCL tray photos wrapped round
-// a cylinder at their true depths, see Hole3D). Click a second hole to stand
-// the two cores side by side at the same depth; click a chosen hole again,
-// or its ×, to put it back.
+// opens on the right as a real drill core (its ETL4 core-row photos wrapped
+// round a cylinder at their true depths, see Hole3D). Click a second hole to
+// stand the two cores side by side at the same depth; click a chosen hole
+// again, or its ×, to put it back.
 
 import { Suspense, useEffect, useState } from "react";
 import dynamic from "next/dynamic";
