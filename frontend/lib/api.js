@@ -5,8 +5,6 @@
 // stay as they are.
 
 import { API_BASE } from "@/config";
-import { cached, CATALOG_TTL } from "./dataCache";
-export { clearDataCache } from "./dataCache";
 
 async function get(path) {
   const response = await fetch(`${API_BASE}${path}`, { cache: "no-store" });
@@ -41,15 +39,16 @@ async function pool(items, limit, fn) {
   return out;
 }
 
-// Include the API origin and adapter format so deployments never share
-// incompatible results. Raw millimetre samples stay in memory only.
-function once(key, fn, options) {
-  return cached(JSON.stringify(["adapter-v1", API_BASE, key]), fn, options);
-}
-
-async function datasetOnce(key, holeId, fn, options, suppliedContext) {
-  const ctx = suppliedContext || await context(holeId);
-  return once(JSON.stringify([key, holeId, ctx.revision, ctx.axis]), () => fn(ctx), options);
+// One promise per key, kept for the session - opening a hole twice, or the
+// map and the detail panel both asking, costs one round of requests.
+const cache = new Map();
+function once(key, fn) {
+  if (!cache.has(key)) {
+    const promise = fn();
+    promise.catch(() => cache.delete(key)); // let a failed load retry
+    cache.set(key, promise);
+  }
+  return cache.get(key);
 }
 
 // ---------------------------------------------------------------- holes
@@ -83,7 +82,7 @@ const allHoles = () =>
     const byId = new Map();
     for (const row of items) if (!byId.has(row.hole_id)) byId.set(row.hole_id, toHole(row));
     return [...byId.values()];
-  }, { ttl: CATALOG_TTL });
+  });
 
 export const getHoles = async ({ search = "", anomaliesOnly = false } = {}) => {
   const needle = search.trim().toLowerCase();
@@ -120,7 +119,7 @@ const context = (holeId) =>
     if (!dataset) throw new Error(`${holeId} has no sample axis in ETL4.`);
     const { items: logs } = await get(`/v1/datasets/${dataset.dataset_revision_id}/logs`);
     return { revision: dataset.dataset_revision_id, axis: dataset.axis_id, sampleCount: dataset.sample_count, logs };
-  }, { ttl: CATALOG_TTL });
+  });
 
 const usable = (log) => log.availability_status === "payload_present" && log.axis_binding_status === "verified";
 
@@ -154,16 +153,18 @@ function groupName(row) {
   return !name || ["ASPECTRAL", "NULL", "INVALID"].includes(name) ? null : name;
 }
 
-const groupSamples = (holeId, region = "SWIR", ctx) =>
-  datasetOnce(`grp:${region}`, holeId, async (ctx) => {
+const groupSamples = (holeId, region = "SWIR") =>
+  once(`grp:${holeId}:${region}`, async () => {
+    const ctx = await context(holeId);
     const log = groupLog(ctx.logs, region);
     return log ? logValues(ctx, log.log_id) : [];
-  }, { persist: false }, ctx);
+  });
 
 // ------------------------------------------------------- measurements
 
-const holeAnomalies = (holeId, ctx) =>
-  datasetOnce("anom", holeId, async ({ revision, axis }) => {
+const holeAnomalies = (holeId) =>
+  once(`anom:${holeId}`, async () => {
+    const { revision, axis } = await context(holeId);
     const items = [];
     let offset = 0;
     while (offset != null) {
@@ -172,7 +173,7 @@ const holeAnomalies = (holeId, ctx) =>
       offset = page.next_offset;
     }
     return items;
-  }, undefined, ctx);
+  });
 
 /** Most common value and its count. */
 function dominant(values) {
@@ -190,9 +191,8 @@ function dominant(values) {
  * says is still to come. ponytail: swap for confidence_level once FastAPI exposes it.
  */
 export const getMeasurements = (holeId) =>
-  datasetOnce("meas", holeId, async (ctx) => {
-    // A failed anomaly request must not be saved as a complete, unflagged log.
-    const [samples, anomalies] = await Promise.all([groupSamples(holeId, "SWIR", ctx), holeAnomalies(holeId, ctx)]);
+  once(`meas:${holeId}`, async () => {
+    const [samples, anomalies] = await Promise.all([groupSamples(holeId), holeAnomalies(holeId).catch(() => [])]);
     const metres = new Map();
     for (const s of samples) {
       if (s.depth_m == null) continue;
@@ -282,9 +282,9 @@ export const getDistance = async (a, b) => {
 // ------------------------------------------------------- trays & photos
 
 /** Interval rows (tray or section) with depths read off the sample axis. */
-const intervals = (holeId, kind, ctx) =>
-  datasetOnce(`int:${kind}`, holeId, async (ctx) => {
-    const { revision, axis } = ctx;
+const intervals = (holeId, kind) =>
+  once(`int:${holeId}:${kind}`, async () => {
+    const { revision, axis } = await context(holeId);
     const items = [];
     let offset = 0;
     while (offset != null) {
@@ -293,20 +293,20 @@ const intervals = (holeId, kind, ctx) =>
       offset = page.next_offset;
     }
     // the group log holds every sample's depth, so no extra /samples paging
-    const samples = await groupSamples(holeId, "SWIR", ctx);
+    const samples = await groupSamples(holeId);
     const depth = new Map(samples.map((s) => [s.sample_no, s.depth_m]));
     return items
       .map((it) => ({ ...it, depth_from_m: depth.get(it.sample_no_from), depth_to_m: depth.get(it.sample_no_to) }))
       .filter((it) => it.depth_from_m != null && it.depth_to_m != null);
-  }, undefined, ctx);
+  });
 
 const callsBetween = (rows, from, to) => rows.filter((s) => s.sample_no >= from && s.sample_no <= to).map(groupName);
 
-export const getTrays = (holeId) => datasetOnce("trays", holeId, async (ctx) => {
+export const getTrays = async (holeId) => {
   const [trays, swir, tir] = await Promise.all([
-    intervals(holeId, "tray", ctx),
-    groupSamples(holeId, "SWIR", ctx),
-    groupSamples(holeId, "TIR", ctx),
+    intervals(holeId, "tray"),
+    groupSamples(holeId, "SWIR"),
+    groupSamples(holeId, "TIR"),
   ]);
   return trays.map((tray) => ({
     tray_no: tray.ordinal + 1,
@@ -316,7 +316,7 @@ export const getTrays = (holeId) => datasetOnce("trays", holeId, async (ctx) => 
     swir_vnir_mineral: dominant(callsBetween(swir, tray.sample_no_from, tray.sample_no_to))[0],
     tir_mineral: dominant(callsBetween(tir, tray.sample_no_from, tray.sample_no_to))[0],
   }));
-});
+};
 
 /**
  * ETL4's core photo: one ~400x25 px crop per core section (tray row), depth
@@ -326,15 +326,16 @@ export const getTrays = (holeId) => datasetOnce("trays", holeId, async (ctx) => 
  * /core-strip endpoint returning all mappings at once would make this one call.
  */
 export const getCoreStrip = (holeId) =>
-  datasetOnce("strip", holeId, async (ctx) => {
-    const sections = await intervals(holeId, "section", ctx);
+  once(`strip:${holeId}`, async () => {
+    const ctx = await context(holeId);
+    const sections = await intervals(holeId, "section");
     const anyLog = groupLog(ctx.logs, "SWIR") || ctx.logs.find(usable);
     if (!sections.length || !anyLog) return { unavailable: "ETL4 has no core-section photos for this hole." };
 
     const found = await pool(sections, 8, async (section) => {
       const sample = await get(
         `/v1/datasets/${ctx.revision}/samples/${section.sample_no_from}?${qs({ axis_id: ctx.axis, log_ids: anyLog.log_id })}`
-      );
+      ).catch(() => null);
       const image = sample?.images?.find((im) => im.status === "available" && im.image_asset_id);
       return image && { section, image };
     });
@@ -371,8 +372,10 @@ export const getCoreStrip = (holeId) =>
 // ------------------------------------------------------- spectra
 
 /** Real VSWIR/TIR spectrum + mineral calls at one sample (nearest to depthM, else mid-hole with a call). */
-export const getSpectralSample = (holeId, depthM) => datasetOnce(`spectrum:${depthM ?? "middle"}`, holeId, async (ctx) => {
-  const samples = await groupSamples(holeId, "SWIR", ctx);
+export const getSpectralSample = async (holeId, depthM) => {
+  const ctx = await context(holeId).catch(() => null);
+  if (!ctx) return null;
+  const samples = await groupSamples(holeId);
   if (!samples.length) return null;
 
   let pick;
@@ -407,4 +410,4 @@ export const getSpectralSample = (holeId, depthM) => datasetOnce(`spectrum:${dep
       .filter((r) => ok(r) && r.log_kind === "spectral" && r.spectra?.length)
       .map((r) => ({ region: r.region_code, wavelength: r.wavelength, values: r.spectra, wavelength_unit: r.wavelength_unit || "nm" })),
   };
-});
+};

@@ -5,7 +5,7 @@
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { useEffect, useState } from "react";
-import { getStats, clearDataCache } from "@/lib/api";
+import { getStats } from "@/lib/api";
 
 const VIEWS = [
   { href: "/", label: "Explore" },
@@ -15,20 +15,6 @@ const VIEWS = [
 export default function Nav() {
   const pathname = usePathname();
   const [stats, setStats] = useState(null);
-  const [refreshing, setRefreshing] = useState(false);
-  const [refreshError, setRefreshError] = useState("");
-
-  const refreshData = async () => {
-    setRefreshing(true);
-    setRefreshError("");
-    try {
-      await clearDataCache();
-      window.location.reload();
-    } catch (error) {
-      setRefreshError(error.message);
-      setRefreshing(false);
-    }
-  };
 
   useEffect(() => {
     getStats().then(setStats).catch(() => setStats(null));
@@ -52,17 +38,6 @@ export default function Nav() {
         ))}
       </nav>
 
-      <button
-        type="button"
-        onClick={refreshData}
-        disabled={refreshing}
-        title="Saved data lasts up to 1 hour. Clear it and fetch the latest data."
-        style={{ marginLeft: 12, padding: "5px 10px", color: "var(--text)", background: "var(--panel)", border: "1px solid var(--line)", borderRadius: 5, cursor: refreshing ? "wait" : "pointer", whiteSpace: "nowrap" }}
-      >
-        {refreshing ? "Refreshing…" : "Refresh data"}
-      </button>
-      {refreshError && <span role="alert" style={{ marginLeft: 8, fontSize: 11 }}>{refreshError}</span>}
-
       {stats && (
         <div className="topbar-stats">
           <span>holes <b>{stats.holes.toLocaleString()}</b></span>
@@ -73,3 +48,4 @@ export default function Nav() {
     </header>
   );
 }
+
