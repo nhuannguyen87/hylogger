@@ -27,11 +27,11 @@ data/media/
 data/raw/
 data/state/
 files/data/
-# ...except the real GSWA/NVCL data the site loads, so ./setup.sh works without the pipeline
+# ...except the real GSWA/NVCL data the legacy Django prototype loads (README.md, "Legacy")
 !data/holes.csv
 !data/measurements.csv
 
-# Django (setup.sh / reload-data.sh retrain the model)
+# Legacy Django prototype (reload-data.sh retrains its model)
 backend/**/migrations/**/*.pyc
 backend-django-old/ml_models/
 *.sqlite3
