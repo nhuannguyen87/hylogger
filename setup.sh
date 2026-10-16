@@ -1,15 +1,15 @@
 #!/usr/bin/env bash
-# Sets everything up from scratch. Safe to run again if something goes wrong.
+# One-time setup for the site. Safe to run again if something goes wrong.
 #
 #   ./setup.sh
 #
 # What it does:
-#   1. starts Postgres+PostGIS in Docker
-#   2. makes a Python virtual environment and installs the Django prototype (backend-django-old/)
-#   3. creates the database tables
-#   4. loads the real ETL output (data/holes.csv + data/measurements.csv)
-#   5. trains the anomaly model
-#   6. installs the frontend packages
+#   1. makes backend/.venv and installs the FastAPI backend (backend/requirements.txt)
+#   2. creates backend/.env from backend/.env.example, for you to fill in
+#   3. installs the frontend packages
+#
+# The old Django prototype (backend-django-old/) is no longer part of this -
+# README.md, "Legacy", has its steps.
 
 set -e  # stop at the first error
 
@@ -20,50 +20,30 @@ say() { printf "\n\033[1;36m==> %s\033[0m\n" "$1"; }
 fail() { printf "\n\033[1;31mx %s\033[0m\n" "$1"; exit 1; }
 
 # --- check the tools we need ------------------------------------------------
-command -v docker >/dev/null || fail "Docker isn't installed. Get Docker Desktop from docker.com, start it, then run this again."
-docker info >/dev/null 2>&1 || fail "Docker is installed but not running. Open Docker Desktop and wait for the whale icon to settle."
-command -v python3 >/dev/null || fail "python3 not found. Install it with: brew install python@3.12"
+# backend/requirements.txt pins numpy 2.5, which needs Python 3.12 or newer.
+PYTHON=""
+for candidate in python3.13 python3.12 python3; do
+  if command -v "$candidate" >/dev/null &&
+     "$candidate" -c 'import sys; sys.exit(sys.version_info < (3, 12))' 2>/dev/null; then
+    PYTHON="$candidate"; break
+  fi
+done
+[ -n "$PYTHON" ] || fail "Python 3.12+ not found. Install it with: brew install python@3.12"
 command -v node >/dev/null || fail "Node.js not found. Install it with: brew install node"
 
-[ -f .env ] || cp .env.example .env
+# --- 1. backend -------------------------------------------------------------
+say "Setting up the FastAPI backend (backend/.venv, $("$PYTHON" --version))"
+[ -d backend/.venv ] || "$PYTHON" -m venv backend/.venv
+backend/.venv/bin/python -m pip install --quiet --upgrade pip
+backend/.venv/bin/python -m pip install --quiet -r backend/requirements.txt
 
-# --- 1. database ------------------------------------------------------------
-say "Starting Postgres + PostGIS"
-docker compose up -d
-
-printf "waiting for the database"
-for _ in $(seq 1 40); do
-  if docker compose exec -T db pg_isready -U hylogger -d hylogger >/dev/null 2>&1; then
-    printf " ready\n"; break
-  fi
-  printf "."; sleep 1
-done
-
-# --- 2. backend -------------------------------------------------------------
-say "Setting up the Python environment"
-if [ ! -d .venv ]; then
-  python3 -m venv .venv
+# --- 2. backend settings ----------------------------------------------------
+if [ ! -f backend/.env ]; then
+  cp backend/.env.example backend/.env
+  say "Created backend/.env - fill in the ETL4 database and asset settings before ./run-backend.sh"
 fi
-# shellcheck disable=SC1091
-source .venv/bin/activate
-python -m pip install --quiet --upgrade pip
-pip install --quiet -r backend-django-old/requirements.txt
 
-# --- 3. tables --------------------------------------------------------------
-say "Creating database tables"
-(cd backend-django-old && python manage.py migrate)
-
-# --- 4. data ----------------------------------------------------------------
-[ -f data/holes.csv ] && [ -f data/measurements.csv ] || fail "data/holes.csv or data/measurements.csv missing - run the ETL pipeline first (README: Plugging in your real data)."
-
-say "Loading data into Postgres"
-(cd backend-django-old && python manage.py load_data --replace)
-
-# --- 5. model ---------------------------------------------------------------
-say "Training the anomaly model"
-(cd backend-django-old && python manage.py detect_anomalies)
-
-# --- 6. frontend ------------------------------------------------------------
+# --- 3. frontend ------------------------------------------------------------
 say "Installing frontend packages (this one takes a couple of minutes)"
 (cd frontend && npm install --no-audit --no-fund)
 
@@ -73,8 +53,11 @@ cat <<DONE
 
   Now open two terminal tabs in $ROOT
 
-    tab 1:   ./run-django.sh       ->  http://localhost:8000/api/holes/
+    tab 1:   ./run-backend.sh      ->  http://localhost:8000/docs
     tab 2:   ./run-frontend.sh     ->  http://localhost:3000
+
+  Or skip tab 1 and point the site at an API that is already running:
+  NEXT_PUBLIC_API_BASE=https://... in frontend/.env.local
 
   Read README.md next. CUSTOMISE.md covers the changes you're most likely to make.
 

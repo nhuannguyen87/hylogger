@@ -1,7 +1,7 @@
 #!/usr/bin/env bash
-# Starts the Django prototype API (backend-django-old/) on http://localhost:8000.
-# The website's map colours, core photos and 3D view use it until the FastAPI
-# backend (./run-backend.sh, same port) covers those endpoints.
+# LEGACY: starts the old Django prototype API (backend-django-old/) on
+# http://localhost:8000. The website no longer uses it - it runs on the FastAPI
+# backend (./run-backend.sh, same port). README.md, "Legacy", has its setup.
 set -e
 cd "$(dirname "$0")"
 source .venv/bin/activate

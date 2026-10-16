@@ -38,9 +38,8 @@ export default function HoleDetail({ holeId, onSelect }) {
         setMeasurements(measurementData);
         setTrays(trayData);
         setNearby(nearbyData);
-        // separate request: every hole tries this, but the 5 database5553
-        // holes answer instantly while everyone else is a live NVCL lookup
-        // (a few seconds) - no need to hold up the rest of the panel on it
+        // separate request (one exact-sample read of up to 16 logs) - no need
+        // to hold up the rest of the panel on it
         getSpectralSample(holeId)
           .then((data) => !cancelled && setSpectral(data))
           .catch((err) => !cancelled && setError(err.message));
@@ -95,8 +94,8 @@ export default function HoleDetail({ holeId, onSelect }) {
 
       <table className="facts">
         <tbody>
-          <tr title={'GSWA catalog "Total (m)": metres of core scanned, not the depth of the hole'}>
-            <td>Scanned</td><td>{fmt(hole.borehole_length_m)} m</td>
+          <tr title="Borehole length as reported in the ETL4 borehole record">
+            <td>Reported length</td><td>{fmt(hole.borehole_length_m)} m</td>
           </tr>
           <tr title="Depth range the mineral log covers - often starts below the collar">
             <td>Logged</td>
@@ -190,18 +189,12 @@ function Legend({ measurements, lowConfidence }) {
   );
 }
 
-// One label per backend/holes/*_bridge.py source value - keep in sync with
-// views.hole_spectral_sample's three-tier fallback order.
+// lib/api.js getSpectralSample sets source; ETL4 via FastAPI is the only one now.
 const SPECTRAL_SOURCE_LABELS = {
-  database5553: "restored locally",
-  data5553_tsg: "local TSG file",
-  nvcl_live: "live from NVCL",
   etl4: "ETL4 via FastAPI",
 };
 
-/** Real per-depth mineral calls + a VSWIR/TIR sparkline, from etl4_bridge.py
- * (database5553/, instant), tsg_bridge.py (data5553/, instant) or
- * nvcl_bridge.py (live NVCL, a few seconds). */
+/** Real per-depth mineral calls + a VSWIR/TIR sparkline for one ETL4 sample. */
 function FullSpectrum({ sample }) {
   const uniqueMinerals = [...new Set(sample.minerals.map((m) => m.mineral))];
 

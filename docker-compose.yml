@@ -1,5 +1,5 @@
-# The database. This is the only thing running in Docker - Django and Next.js
-# run directly on your Mac so you can see their output and edit code live.
+# LEGACY: the old Django prototype's database (backend-django-old/). The
+# website's FastAPI backend reads the ETL4 database instead (backend/.env).
 #
 #   docker compose up -d      start it
 #   docker compose down       stop it

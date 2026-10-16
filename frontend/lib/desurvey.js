@@ -7,8 +7,9 @@
 // minimum-curvature desurvey collapses to this exact straight-line projection
 // when there's only one station (see wa-drillhole-map's lib/desurvey.js for the
 // general multi-station version, kept for if survey stations ever get added).
-// This matches backend/holes/geo.py's trace_points() maths - cross-checked
-// against its /trace/ output for the same hole.
+// This matches backend-django-old/holes/geo.py's trace_points() maths -
+// cross-checked against the old Django /trace/ output for the same hole.
+// ETL4 holes carry no dip/azimuth yet, so every hole currently returns null.
 
 const METRES_PER_DEGREE_LAT = 110540;
 
@@ -18,8 +19,8 @@ const METRES_PER_DEGREE_LAT = 110540;
  * @returns {{collar:number[], toe:number[]}|null} null if the hole has nothing to draw (no depth or trajectory)
  */
 export function desurveyStraightLine(hole, exaggeration = 1) {
-  // Not borehole_length_m: that's metres of core scanned, and logging often
-  // starts below the collar - drawn_length_m reaches the deepest logged metre.
+  // Not borehole_length_m (the reported length): logging often starts below
+  // the collar, and drawn_length_m reaches the deepest logged metre.
   const depth = hole.drawn_length_m;
   if (!depth || hole.inclination_deg == null || hole.azimuth_deg == null) return null;
 

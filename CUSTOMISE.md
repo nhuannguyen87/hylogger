@@ -1,22 +1,26 @@
 # How to change things
 
 Recipes for the edits you're most likely to want. Each one names the file and
-the whole change.
+the whole change. The website is `frontend/` (Next.js) on top of `backend/`
+(FastAPI over the ETL4 database) - see README.md for how they fit together.
 
 ---
 
 ## Add a mineral colour
 
-`frontend/config.js`
+`frontend/config.js`. Keys are mineral GROUP names exactly as the ETL4 `Grp1`
+logs spell them, upper-cased with spaces turned into hyphens (`lib/api.js`
+`groupName()` does that), e.g. `"White Mica"` -> `WHITE-MICA`.
 
 ```js
 export const MINERAL_COLOURS = {
-  Quartz: "#e8e3d8",
-  Chalcedony: "#9ad1e0",   // <- new
+  CHLORITE: "#22c55e",
+  "PAL-SEP": "#e879f9",   // <- new
 };
 ```
 
-Anything not listed falls back to grey, so nothing breaks if you forget one.
+Anything not listed falls back to `UNKNOWN_COLOUR`, so nothing breaks if you
+forget one.
 
 ---
 
@@ -36,13 +40,16 @@ export const CONFIDENCE_THRESHOLD = 0.5;   // try 0.7 to be stricter
 ```
 
 Below this, intervals draw as grey hatching instead of a mineral colour.
+"Confidence" here is the share of a metre's samples that agree with its most
+common mineral group (`lib/api.js` `getMeasurements`) - ETL4 does not supply
+a confidence value yet.
 
 ---
 
-## Use a nicer basemap
+## Use a different basemap
 
-`frontend/config.js`. The default needs no account. For topography, sign up for
-a free MapTiler key and use:
+`frontend/config.js`, `MAP_STYLE`. The default (Esri World Imagery) needs no
+account. For topography, sign up for a free MapTiler key and use:
 
 ```js
 export const MAP_STYLE = "https://api.maptiler.com/maps/topo-v2/style.json?key=YOUR_KEY";
@@ -50,72 +57,57 @@ export const MAP_STYLE = "https://api.maptiler.com/maps/topo-v2/style.json?key=Y
 
 ---
 
-## Add a field to the API
+## Show another API field in the site
 
-Three steps, always in this order:
-
-1. `backend/holes/models.py` — add the field to the model
-2. `cd backend && python manage.py makemigrations && python manage.py migrate`
-3. `backend/holes/serializers.py` — add the field name to `fields`
-
-Then it appears in the JSON and you can use it in the frontend.
+1. If FastAPI doesn't return it yet, add the column to the matching query in
+   `backend/app/repository.py` (e.g. `get_boreholes_v1` for `/v1/boreholes`).
+   It appears in the JSON straight away - there are no serializers.
+2. Map it into the shape the components use in `frontend/lib/api.js` (e.g.
+   `toHole()` for hole fields), then read it in the component.
 
 ---
 
 ## Add an API endpoint
 
-1. Write a function in `backend/holes/views.py`:
+1. Write the query as a function in `backend/app/repository.py`.
+2. Add a route in `backend/app/main.py`:
 
    ```python
-   @api_view(["GET"])
-   def deepest_holes(request):
-       rows = Hole.objects.order_by("-borehole_length_m")[:10]
-       return Response(HoleListSerializer(rows, many=True).data)
+   @app.get("/v1/boreholes/deepest")
+   def deepest_boreholes():
+       return {"items": get_deepest_boreholes()}
    ```
 
-2. Add one line to `backend/holes/urls.py`:
-
-   ```python
-   path("deepest/", views.deepest_holes),
-   ```
-
-3. Add a matching line to `frontend/lib/api.js`:
+3. Add a matching call to `frontend/lib/api.js`:
 
    ```js
-   export const getDeepest = () => get("/deepest/");
+   export const getDeepest = () => get("/v1/boreholes/deepest");
    ```
 
+FastAPI lists every route at http://localhost:8000/docs. Keep
+`backend/docs/FRONTEND_API.md` in step - it is the contract the site is built on.
+
 ---
 
-## Make the model flag more or fewer intervals
+## Refresh the anomaly flags
+
+The amber ticks come from `backend/data/anomalies.csv`, which `/anomalies`
+filters to the active ETL4 release. It is the output of the root-level
+`anomaly.py`:
 
 ```bash
-cd backend
-python manage.py detect_anomalies --contamination 0.10   # flag ~10%
-python manage.py detect_anomalies --threshold 0.85       # or set the cutoff directly
+python anomaly.py --out <data-root>   # reads <data-root>/csv/measurements/*.csv
+cp <data-root>/csv/anomalies.csv backend/data/anomalies.csv
 ```
 
-To change the defaults permanently, edit `CONTAMINATION` and `N_COMPONENTS` at
-the top of `backend/holes/ml/anomaly.py`.
+The per-hole CSVs need `release_id`, `dataset_revision_id` and `axis_id`
+columns from the release being served, or the backend matches none of the
+rows. An interval is flagged `high` when its combined score is in the top 5%
+and at least one feature is 6+ robust SDs out (`flag_of()` in `anomaly.py`).
 
 ---
 
-## Swap Isolation Forest for something else
-
-`backend/holes/ml/anomaly.py`, the `fit` function. Keep the same return shape —
-`(model, scores_0_to_1, reconstruction_errors)` — and nothing else has to change.
-
-For example, a LocalOutlierFactor version:
-
-```python
-from sklearn.neighbors import LocalOutlierFactor
-forest = LocalOutlierFactor(n_neighbors=25, novelty=True, contamination=contamination)
-forest.fit(components)
-```
-
----
-
-## Add a fourth page
+## Add a page
 
 Create `frontend/app/clusters/page.js` with `"use client"` at the top and a
 default-exported component. Then add it to `VIEWS` in
@@ -125,41 +117,47 @@ default-exported component. Then add it to `VIEWS` in
 
 ## Look at the raw data
 
-```bash
-cd backend
-python manage.py createsuperuser
-```
+http://localhost:8000/docs - FastAPI's interactive docs; every `/v1` route
+can be tried from there against the live database.
 
-Then http://localhost:8000/admin/ — searchable tables of holes and measurements.
-Useful for checking your ETL output landed properly.
+---
+
+## Saved data in the browser
+
+The site keeps successful API results in the browser (IndexedDB, via
+`frontend/lib/dataCache.js`): the hole catalogue for 5 minutes, everything
+else for 1 hour. **Refresh data** in the top bar clears it. If you change the
+shape of what `lib/api.js` returns, bump `DB_NAME` in `dataCache.js` (or the
+`"adapter-v1"` key in `api.js`) so old saved results aren't reused.
 
 ---
 
 ## Reset everything
 
 ```bash
-docker compose down -v    # deletes the database and its data
-./setup.sh                # rebuild from scratch
+rm -rf backend/.venv frontend/node_modules frontend/.next
+./setup.sh
 ```
+
+`backend/.env` is kept; delete it too to start from `backend/.env.example`.
 
 ---
 
 ## When something breaks
 
-**`connection refused` on port 5432** — Docker isn't running. Open Docker
-Desktop, wait, then `docker compose up -d`.
+**The site loads but the hole list is empty** — the API isn't running, or
+can't reach its database. Open http://localhost:8000/api/health: connected, it
+names the database, role and active release; otherwise it answers 503 and the
+`./run-backend.sh` terminal shows why.
 
-**The site loads but the hole list is empty** — the API isn't running, or has no
-data. Check http://localhost:8000/api/stats/ in a browser.
-
-**`CREATE EXTENSION postgis` fails** — you're pointing at a plain Postgres, not
-the PostGIS image. `docker compose down -v` then `./setup.sh`.
+**`ETL4_READ_DSN is not configured`** (in that terminal) — `backend/.env` is
+missing or still the template. Fill it in (README.md, "Run it").
 
 **Map is blank but holes appear in the list** — the basemap URL in `config.js`
 is unreachable. Check your network, or switch `MAP_STYLE` to
 `https://demotiles.maplibre.org/style.json`.
 
 **Port 3000 or 8000 already in use** — something else is on it.
-`lsof -i :8000` shows what, or run Django on another port:
-`python manage.py runserver 8001` and set `NEXT_PUBLIC_API_BASE` in
-`frontend/.env.local` to match.
+`lsof -i :8000` shows what. Run the frontend on another port with
+`cd frontend && npm run dev -- -p 3002`; for the backend, change `--port` in
+`run-backend.sh` and set `NEXT_PUBLIC_API_BASE` in `frontend/.env.local` to match.

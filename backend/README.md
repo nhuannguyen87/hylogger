@@ -14,7 +14,11 @@ Validated release:
 fd02659c-dc3d-52ea-a8eb-c032b91e7624
 ```
 
-Current dataset:
+As of 16 Oct 2026 the deployed API (the prototype linked from the top-level
+README) serves a later release, `1156d65b-384b-539f-882c-c43d5d08fa79`, with
+405 boreholes. The figures below are from the original pilot validation.
+
+Pilot dataset (release `fd02659c-...`, which `tests/test_api.py` checks):
 
 - 5 drillholes
 - 261,892 samples

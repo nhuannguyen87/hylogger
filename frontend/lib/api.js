@@ -112,7 +112,9 @@ export const getHole = async (holeId) => {
 
 // ------------------------------------------------------- dataset context
 
-/** The hole's dataset revision + sample axis + log catalogue - every later call needs them. */
+/** The hole's dataset revision + sample axis + log catalogue - every later call needs them.
+ * A hole with several datasets (15EIS001, _wedge, _wedge2, ...) shows only the
+ * one with the most samples; splicing them by depth is still to come. */
 const context = (holeId) =>
   once(`ctx:${holeId}`, async () => {
     const { items } = await get(`/v1/boreholes/${encodeURIComponent(holeId)}/datasets`);
@@ -389,8 +391,12 @@ export const getSpectralSample = (holeId, depthM) => datasetOnce(`spectrum:${dep
     pick = samples[best];
   }
 
+  // Spectra first, then mineral calls: the API takes at most 16 log_ids
+  // (12CADD001 has 18, and a 422 here blanks the whole detail panel).
   const logIds = ctx.logs
     .filter((l) => usable(l) && (l.log_kind === "spectral" || (l.log_kind === "scalar" && l.metric_key === "mineral_name")))
+    .sort((a, b) => (a.log_kind === "spectral" ? 0 : 1) - (b.log_kind === "spectral" ? 0 : 1))
+    .slice(0, 16)
     .map((l) => l.log_id);
   const raw = await get(`/v1/datasets/${ctx.revision}/samples/${pick.sample_no}?${qs({ axis_id: ctx.axis, log_ids: logIds })}`);
 

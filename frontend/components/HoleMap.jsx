@@ -8,9 +8,10 @@
 // whenever `holes` changes. Never recreate the map on every render.
 //
 // The "3D core" toggle adds a deck.gl overlay on top of that same map (ported
-// from database5553/wa-drillhole-map/public/index.html): tilting the camera and
+// from the earlier wa-drillhole-map prototype): tilting the camera and
 // drawing each hole's collar-to-toe trajectory as a coloured, exaggerated line
 // is what makes real dip/azimuth read as a leaning drill core instead of a dot.
+// ETL4 withholds dip/azimuth for its holes, so for now only collars are drawn.
 
 import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import maplibregl from "maplibre-gl";
